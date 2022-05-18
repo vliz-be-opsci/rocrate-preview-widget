@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/rocrate-to-html/static/css/main.73cb3088.css",
-    "main.js": "/rocrate-to-html/static/js/main.99ef6647.js",
-    "static/js/787.b4d9a00a.chunk.js": "/rocrate-to-html/static/js/787.b4d9a00a.chunk.js",
+    "main.css": "/rocrate-to-html/static/css/main.013f01d0.css",
+    "main.js": "/rocrate-to-html/static/js/main.71936c42.js",
+    "static/js/787.544f4f49.chunk.js": "/rocrate-to-html/static/js/787.544f4f49.chunk.js",
     "index.html": "/rocrate-to-html/index.html",
-    "main.73cb3088.css.map": "/rocrate-to-html/static/css/main.73cb3088.css.map",
-    "main.99ef6647.js.map": "/rocrate-to-html/static/js/main.99ef6647.js.map",
-    "787.b4d9a00a.chunk.js.map": "/rocrate-to-html/static/js/787.b4d9a00a.chunk.js.map"
+    "main.013f01d0.css.map": "/rocrate-to-html/static/css/main.013f01d0.css.map",
+    "main.71936c42.js.map": "/rocrate-to-html/static/js/main.71936c42.js.map",
+    "787.544f4f49.chunk.js.map": "/rocrate-to-html/static/js/787.544f4f49.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.73cb3088.css",
-    "static/js/main.99ef6647.js"
+    "static/css/main.013f01d0.css",
+    "static/js/main.71936c42.js"
   ]
 }

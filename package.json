@@ -1,5 +1,5 @@
 {
-  "name": "rocrate-to-html",
+  "name": "ro-crate-preview.html",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -16,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build && cp ./tocopy/* ./build/ -r",
+    "predeploy": "npm run build && cp ./src/tocopy/* ./build/ -r",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
@@ -39,6 +40,6 @@
   },
   "devDependencies": {
     "gh-pages": "^4.0.0"
-  }, 
+  },
   "homepage": "http://vliz-be-opsci.github.io/rocrate-to-html"
 }
