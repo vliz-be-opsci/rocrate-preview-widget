@@ -1,0 +1,188 @@
+{"@context": "https://w3id.org/ro/crate/1.1/context",
+    "@graph": [
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "datePublished": "2021-11-25T11:27:08+00:00",
+            "hasPart": [
+                {
+                    "@id": "Documentation/"
+                },
+                {
+                    "@id": "QualityControlledData/"
+                },
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "LICENSE"
+                }
+            ]
+        },
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            }
+        },
+        {
+            "@id": "Documentation/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "2019_OSD_Protocol_A_v3.0.pdf"
+                },
+                {
+                    "@id": "2019_OSD_Protocol_B_v.3.0.pdf"
+                },
+                {
+                    "@id": "Definitions of the OSD Metadata & Instructions to fill in.pdf"
+                },
+                {
+                    "@id": "OSD2019_ABS.docx"
+                },
+                {
+                    "@id": "OSD2019_Data Policy.pdf"
+                },
+                {
+                    "@id": "OSD2019_Legal_Permits_Procedure.pdf"
+                },
+                {
+                    "@id": "OSD2019_MTA.pdf"
+                },
+                {
+                    "@id": "OSDStations.csv"
+                },
+                {
+                    "@id": "OSD_Handbook_2016.pdf"
+                },
+                {
+                    "@id": "README.md"
+                }
+            ]
+        },
+        {
+            "@id": "2019_OSD_Protocol_A_v3.0.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "2019_OSD_Protocol_B_v.3.0.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "Definitions of the OSD Metadata & Instructions to fill in.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD2019_ABS.docx",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD2019_Data Policy.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD2019_Legal_Permits_Procedure.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD2019_MTA.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "OSDStations.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD_Handbook_2016.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "QualityControlledData/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "version1/"
+                },
+                {
+                    "@id": "version2/"
+                },
+                {
+                    "@id": "README.md"
+                }
+            ]
+        },
+        {
+            "@id": "version1/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "OSD19Data_HumanReadable_version1.csv"
+                },
+                {
+                    "@id": "OSD19Data_MachineReadable_version1.csv"
+                },
+                {
+                    "@id": "OSD19Data_MachineReadable_version1.ldt"
+                },
+                {
+                    "@id": "OSD19Data_MachineReadable_version1.ttl"
+                },
+                {
+                    "@id": "OSD19Metadata_HumanReadable_version1.csv"
+                },
+                {
+                    "@id": "OSD19Metadata_MachineReadable_version1.csv"
+                }
+            ]
+        },
+        {
+            "@id": "version2/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                }
+            ]
+        },
+        {
+            "@id": "OSD19Data_HumanReadable_version1.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD19Data_MachineReadable_version1.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD19Data_MachineReadable_version1.ldt",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD19Data_MachineReadable_version1.ttl",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD19Metadata_HumanReadable_version1.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "OSD19Metadata_MachineReadable_version1.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "README.md",
+            "@type": "File"
+        },
+        {
+            "@id": "LICENSE",
+            "@type": "File"
+        }
+    ]
+}
