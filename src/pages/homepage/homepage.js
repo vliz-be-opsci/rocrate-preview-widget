@@ -7,6 +7,8 @@ function HomePage() {
   const [dataFilePaths, setDataFilePaths] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentdirectory, setCurrentDirectory] = useState('./');
+  const [lastdirectory, setLastDirectory] = useState('');
+  const [selectedfile, setSelectedFile] = useState('');
 
   //import the rocrate-metadata-json file and store it in a variable
   const metadata = require('../../tocopy/ro-crate-metadata.json');
@@ -27,9 +29,7 @@ function HomePage() {
         obj["@id"] = metadata["@graph"][i]["@id"];
         obj["metadata"] = [];
         for (let key in metadata["@graph"][i]) {
-          if (key !== "@id" && key !== "@type") {
             obj["metadata"].push({metadata_key: key, metadata_value: metadata["@graph"][i][key]});
-          }
         }
         data.push(obj);
       }
@@ -185,15 +185,127 @@ function HomePage() {
     return(<></>);
   }
 
-  function Currentnavigation() {
-    for (let i = 0; i < dataFilePaths.length; i++) {
-        //if the path contains the id then return the path
-        console.log(i);
+  //child function that will determine if there is a go back button and a ./ button
+    function GoBack(props) {
+        var unique = props.dir_paths;
+        console.log(unique);
+        //if lastdirectory == "" then there is no go back button
+        if (lastdirectory == "") {
+            return(<></>);
+        }
+        //if current directory is "./" then there is no go back button
+        else if (currentdirectory == "./") {
+            return(<></>);
+        }
+        //if lastdirectory is not "" and current directory is not "./" then display the go back button
+        else {
+            //if lastdirectory == './' only return one button
+            if (lastdirectory == './') {
+                return(
+                    <button onClick={() => {
+                        //set the current directory to the last directory
+                        setCurrentDirectory(lastdirectory);
+                        //set the last directory to the current directory
+                        setLastDirectory(currentdirectory);
+                        setSelectedFile("");
+                    }
+                    }>{lastdirectory}</button>
+                )
+                
+            }else{
+                //if lastdirectory is in the unique array then display the go back button
+                if (unique.includes(lastdirectory)) {
+                    return(
+                        <div className="go-back">
+                            <button onClick={() => {
+                                //set the current directory to the root directory
+                                setCurrentDirectory("./");
+                                //set the last directory to the current directory
+                                setLastDirectory(currentdirectory);
+                                setSelectedFile("");
+                            }}>./</button>
+                        </div>
+                    );
+                }else{
+                    return(
+                        <div className="go-back">
+                            <button onClick={() => {
+                                //set the current directory to the last directory
+                                setCurrentDirectory(lastdirectory);
+                                //set the last directory to the current directory
+                                setLastDirectory(currentdirectory);
+                                setSelectedFile("");
+                            }
+                            }>{lastdirectory}</button>
+                            <button onClick={() => {
+                                //set the current directory to the root directory
+                                setCurrentDirectory("./");
+                                //set the last directory to the current directory
+                                setLastDirectory(currentdirectory);
+                                setSelectedFile("");
+                            }}>./</button>
+                        </div>
+                    );
+                }
+            }
+        }
     }
-    return(
-        <></>
-    )
+
+
+  function Currentnavigation() {
+    var unique_paths = [];
+    //loop over the metadata grapths and get all the dirs of the currentdirectry
+    for (let i = 0; i < metadata["@graph"].length; i++) {
+        //if the current directory is the same as the current directory then add it to the unique_paths array
+        if (metadata["@graph"][i]["@id"] === currentdirectory) {
+            //look into the hasparts and get all the dirs
+            for (let j = 0; j < metadata["@graph"][i]["hasPart"].length; j++) {
+                //if last part is / then add to the unique_paths array
+                if (metadata["@graph"][i]["hasPart"][j]["@id"].split("/")[metadata["@graph"][i]["hasPart"][j]["@id"].split("/").length - 1] === "") {
+                    unique_paths.push(metadata["@graph"][i]["hasPart"][j]["@id"]);
+                }
+            }
+        }
+    }
+
+    //return a list of all the unique paths
+    return (
+        <div className="currentnavigation">
+            {unique_paths.map((unique_path) => (
+                <button onClick={() => { setLastDirectory(currentdirectory); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
+            ))}
+            <GoBack dir_paths = {unique_paths}/>
+        </div>
+    );
   }
+
+  //child function that return an overview of the given file @id
+    function FileOverview(props) {
+        var file_id = props.file_id;
+
+        // if file_d == none or "" then return nothing
+        if (file_id == "none" || file_id == "") {
+            return(<></>);
+        }
+
+        //loop over the datafiles and find the file with the given id
+        for (let i = 0; i < dataFiles.length; i++) {
+            //if the datafile id is the same as the given id then return the datafile
+            if (dataFiles[i]["@id"] === file_id) {
+                var metadata = <Metadata metadata={dataFiles[i]["metadata"]}/>;
+                var path = find_path_in_data(file_id);
+                var folder_file = path.split("/")[path.split("/").length - 2];
+                return(
+                    <div className='fileitem'> 
+                    <h4>Folder file : {folder_file}</h4>
+                    <a href = {path} ><p>{file_id}</p></a>
+                    {metadata}
+                </div>
+                )
+            }
+        }
+    }
+
 
 
   if(loading){
@@ -214,19 +326,29 @@ function HomePage() {
         </div>
         <div className='fileitem'>
             <h4>Current Directory : {currentdirectory}</h4>
+            <Currentnavigation/>
         </div>
         <div className='fileitem'>
             {dataFilePaths.map((item, index) => {
                 var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
+                var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
                 if (folder_file == currentdirectory.split("/")[0]){
                     return(
-                        <p>{item["path"]}</p>
+                        <button onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
                     )
                 }
             })}
-
         </div>
-        {dataFiles.map((item, index) => {
+        <FileOverview file_id = {selectedfile}/>
+    </>
+    );
+  }
+}
+
+export default HomePage;
+
+/*
+{dataFiles.map((item, index) => {
           var metadata = <Metadata metadata={item["metadata"]} /> 
           var path = find_path_in_data(item["@id"]);
           //get second to last element of the path
@@ -241,10 +363,4 @@ function HomePage() {
             </>
           )
         })}
-    </>
-    );
-  }
-}
-
-export default HomePage;
-
+*/ 
