@@ -1,6 +1,9 @@
 //imports here
 import React, {useEffect,useState} from 'react';
 
+
+const mime = require('mime');
+
 function HomePage() {
     //constants
   const [dataFiles, setDataFiles] = useState([]);
@@ -279,6 +282,16 @@ function HomePage() {
     );
   }
 
+  //function that will  get the type of the file that was given
+  function get_file_type(file) {
+    //get extention of the file
+    let extention = file.split(".").pop();
+    //get mimetype of the extention
+    let mimetype = mime.getType(extention);
+    return mimetype;
+  }
+
+
   //child function that return an overview of the given file @id
     function FileOverview(props) {
         var file_id = props.file_id;
@@ -298,6 +311,7 @@ function HomePage() {
                 return(
                     <div className='fileitem'> 
                     <h4>Folder file : {folder_file}</h4>
+                    <h5>Mimetype : {get_file_type(file_id)}</h5>
                     <a href = {path} ><p>{file_id}</p></a>
                     {metadata}
                 </div>
