@@ -8,13 +8,8 @@ inputs:
     description: 'Path to rocrate files'
     required: false
     default: '.'
-  loglevel:
-    description: 'Logging verbosity level. Choose from DEBUG, INFO, WARNING, ERROR or CRITICAL'
-    required: false
-    default: 'INFO' 
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.crate_path }}
-    - ${{ inputs.loglevel }}
