@@ -1,0 +1,223 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@graph": [
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "datePublished": "2021-11-25T11:27:08+00:00",
+            "hasPart": [
+                {
+                    "@id": "audio/"
+                },
+                {
+                    "@id": "compressed_files/"
+                },
+                {
+                    "@id": "images/"
+                },
+                {
+                    "@id": "microsoft/"
+                },
+                {
+                    "@id": "pdf/"
+                },
+                {
+                    "@id": "video/"
+                }
+            ]
+        },
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            }
+        },
+        {
+            "@id": "audio/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_MP3.mp3"
+                },
+                {
+                    "@id": "test_OOG.ogg"
+                },
+                {
+                    "@id": "test_WAV.wav"
+                }
+            ]
+        },
+        {
+            "@id": "test_MP3.mp3",
+            "@type": "File"
+        },
+        {
+            "@id": "test_OOG.ogg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WAV.wav",
+            "@type": "File"
+        },
+        {
+            "@id": "compressed_files/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_zip.zip"
+                }
+            ]
+        },
+        {
+            "@id": "test_zip.zip",
+            "@type": "File"
+        },
+        {
+            "@id": "images/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_GIF.gif"
+                },
+                {
+                    "@id": "test_ICO.ico"
+                },
+                {
+                    "@id": "test_jpg.jpg"
+                },
+                {
+                    "@id": "test_png.png"
+                },
+                {
+                    "@id": "test_svg.svg"
+                },
+                {
+                    "@id": "test_WEBP.webp"
+                }
+            ]
+        },
+        {
+            "@id": "test_GIF.gif",
+            "@type": "File"
+        },
+        {
+            "@id": "test_ICO.ico",
+            "@type": "File"
+        },
+        {
+            "@id": "test_jpg.jpg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_png.png",
+            "@type": "File"
+        },
+        {
+            "@id": "test_svg.svg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WEBP.webp",
+            "@type": "File"
+        },
+        {
+            "@id": "microsoft/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_csv.csv"
+                },
+                {
+                    "@id": "test_ppt.pptx"
+                },
+                {
+                    "@id": "test_word.docx"
+                },
+                {
+                    "@id": "test_xlsx.xlsx"
+                }
+            ]
+        },
+        {
+            "@id": "test_csv.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "test_ppt.pptx",
+            "@type": "File"
+        },
+        {
+            "@id": "test_word.docx",
+            "@type": "File"
+        },
+        {
+            "@id": "test_xlsx.xlsx",
+            "@type": "File"
+        },
+        {
+            "@id": "pdf/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_pdf.pdf"
+                }
+            ]
+        },
+        {
+            "@id": "test_pdf.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "video/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_AVI.avi"
+                },
+                {
+                    "@id": "test_MKV.mkv"
+                },
+                {
+                    "@id": "test_mp4.mp4"
+                },
+                {
+                    "@id": "test_MPG.mpg"
+                },
+                {
+                    "@id": "test_WEBM.webm"
+                },
+                {
+                    "@id": "test_WMV.wmv"
+                }
+            ]
+        },
+        {
+            "@id": "test_AVI.avi",
+            "@type": "File"
+        },
+        {
+            "@id": "test_MKV.mkv",
+            "@type": "File"
+        },
+        {
+            "@id": "test_mp4.mp4",
+            "@type": "File"
+        },
+        {
+            "@id": "test_MPG.mpg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WEBM.webm",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WMV.wmv",
+            "@type": "File"
+        }
+    ]
+}

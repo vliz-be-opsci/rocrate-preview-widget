@@ -1,0 +1,79 @@
+/*!
+
+JSZip v3.10.0 - A JavaScript class for generating and reading zip files
+<http://stuartk.com/jszip>
+
+(c) 2009-2016 Stuart Knightley <stuart [at] stuartk.com>
+Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/jszip/main/LICENSE.markdown.
+
+JSZip uses the library pako released under the MIT license :
+https://github.com/nodeca/pako/blob/main/LICENSE
+*/
+
+/*! exports provided: default */
+
+/*! no static exports found */
+
+/*!**********************!*\
+    !*** ./src/index.js ***!
+    \**********************/
+
+/*!*************************************!*\
+    !*** ./node_modules/react/index.js ***!
+    \*************************************/
+
+/*!*********************************************!*\
+    !*** ./node_modules/object-assign/index.js ***!
+    \*********************************************/
+
+/*!***************************************************!*\
+    !*** ./node_modules/prop-types/checkPropTypes.js ***!
+    \***************************************************/
+
+/*!*****************************************************!*\
+    !*** ./node_modules/react/cjs/react.development.js ***!
+    \*****************************************************/
+
+/*!*************************************************************!*\
+    !*** ./node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
+    \*************************************************************/
+
+/**
+ * @license React
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react-jsx-runtime.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
+ * @license React
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */

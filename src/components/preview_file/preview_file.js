@@ -1,6 +1,9 @@
 //imports here
 import React, {useEffect,useState} from 'react';
 import FilePreview from "react-file-preview-latest";
+import ReactAudioPlayer from 'react-audio-player';
+import ReactPlayer from 'react-player';
+import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
 
 function PreviewFile(props) {
     //constants
@@ -42,9 +45,19 @@ function PreviewFile(props) {
                 />
             )
         } else if (file_mimetype.includes("video")) {
-            return "video";
+            console.log("video");
+            return(
+                <ReactPlayer url={file_url} controls={true} />
+            )
         } else if (file_mimetype.includes("audio")) {
-            return "audio";
+            console.log("audio");
+            return(
+                <ReactAudioPlayer
+                    src={file_url}
+                    autoPlay="false"
+                    controls="true"
+                />
+            )
         } else if (file_mimetype.includes("pdf")) {
             console.log("pdf");
             return (
@@ -54,7 +67,6 @@ function PreviewFile(props) {
                   onError={console.log('error has occured')}
                 />
             )
-            
         } else if (file_mimetype.includes("word")) {
             return "word";
         } else if (file_mimetype.includes("excel")) {
@@ -64,12 +76,18 @@ function PreviewFile(props) {
         } else if (file_mimetype.includes("zip")) {
             return "zip";
         } else {
-            return "other";
+            //check i file name includes xlsx
+            if (file_url.includes("xlsx")) {
+                console.log("excel");
+                return (
+                    <XlsxViewer file={file_url} />
+                )
+            } else {
+                return "other";
+            }
         }
     }
     
-
-
     //rendering
     return (
         <>
