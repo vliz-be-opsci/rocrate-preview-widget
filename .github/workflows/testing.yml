@@ -1,0 +1,25 @@
+name: On_Push_Testing
+
+on:
+  push:
+    branches: [ action ]
+  pull_request:
+    branches: [ action ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Environment
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.1.0
+      run: npm run install
+
+    - name: Verify that the Docker image for the action builds
+      run: docker build . --file Dockerfile
