@@ -5,6 +5,10 @@ time=$(date)
 echo "::set-output name=time::$time"
 pwd
 ls -a
+echo "listing all the files that are in the ../.. directory"
+cd ../..
+pwd
+ls -a
 echo "making tocopy dir in src"
 mkdir ./src/topcopy
 echo "copying everything in current dir into tocopy"
