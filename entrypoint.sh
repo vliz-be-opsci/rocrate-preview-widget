@@ -5,8 +5,10 @@ time=$(date)
 echo "::set-output name=time::$time"
 echo "cd into the right folder"
 pwd
+ls -a
 cd ../../
 pwd
+ls -a
 echo "installing dependencies for building react app"
 npm install
 echo "npm run build"
