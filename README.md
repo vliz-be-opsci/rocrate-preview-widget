@@ -1,6 +1,8 @@
 # Github Action to publish rocrate objects as Github Pages
 This takes the [files files from research object](https://www.researchobject.org/) and creates an HTML page from them. This allows the human readable preview file to be hosted as an html page, possibly on GH-Pages, and the machine readable json file to be reachable from anywhere. 
 
+[![.github/workflows/testing.yml](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml/badge.svg)](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml)
+
 ## Steps
 This action is to be used on git projects that include rocrate files that comply to the [rocrate standard](https://www.researchobject.org/ro-crate/1.0/):
 
