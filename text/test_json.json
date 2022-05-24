@@ -23,9 +23,6 @@
                 },
                 {
                     "@id": "video/"
-                },
-                {
-                    "@id": "text/"
                 }
             ]
         },
@@ -159,19 +156,6 @@
         },
         {
             "@id": "test_xlsx.xlsx",
-            "@type": "File"
-        },
-        {
-            "@id": "text/",
-            "@type": "Dataset",
-            "hasPart": [
-                {
-                    "@id": "test_json.json"
-                }
-            ]
-        },
-        {
-            "@id": "test_json.json",
             "@type": "File"
         },
         {
