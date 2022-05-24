@@ -1,0 +1,54 @@
+name: On_Push_Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    
+    - name: Pip Setup
+      run: pip install -r requirements.txt
+
+    - name: Run Python unit tests
+      run: python3 -u -m unittest tests/tests.py
+
+    - name: Verify that the Docker image for the action builds
+      run: docker build . --file Dockerfile
+
+    - name: Build HTML File Test
+      id: integration
+      uses: ./
+      with:
+        crate_path: ./tests/test_crate/.
+        loglevel: DEBUG
+
+    - uses: actions/cache@v2
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+
+    - name: Wrap preview with Jekyll
+      id: jekyll-wrap
+      uses: helaili/jekyll-action@v2
+      with:
+        jekyll_src: ./tests/test_crate/. 
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Verify integration test results
+      run: python3 -u -m unittest tests/integration.py

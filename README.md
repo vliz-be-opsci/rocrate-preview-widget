@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+# Github Action to publish rocrate objects as Github Pages
+This takes the [files files from research object](https://www.researchobject.org/) and creates an HTML page from them. This allows the human readable preview file to be hosted as an html page, possibly on GH-Pages, and the machine readable json file to be reachable from anywhere. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Steps
+This action is to be used on git projects that include rocrate files that comply to the [rocrate standard](https://www.researchobject.org/ro-crate/1.0/):
 
-## Available Scripts
+  - The project *must* include a metadata file named "ro-crate-metadata.jsonld"
+  - The project *may* include a human-readable preview file that *must* be called "ro-crate-preview.html"
+  - In this first iteration of the action it is assumed that the preview file does exist. In future versions a fallback process could create a standard preview file using the metadata file. 
+   
+Gitlab pages routes traffic to an "index.html" file by default and is incapable of handling content negotiation. Due to these (and other) GH-Pages limitations the following steps are taken:
+  
+  - Some preperation steps are handled by other actions
+  - A symbolic link is created that maps an "index.html" file to "ro-crate-preview.html"
+  - A symbolic link is created that maps "ro-crate-metadata.json" to "ro-crate-metadata.jsonld"
+  - Some publishing and cleanup steps are handled by other actions
 
-In the project directory, you can run:
+## Example
 
-### `npm start`
+Below is an example yaml file that once copied to "/.github/workflows/rocrate_to_pages.yml" would trigger the publishing to github pages action on push to the "main" branch.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```yml
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+name: RoCrate to GitHub Pages
+on:
+  push:
+    branches:
+      - main  # Set a branch name to trigger deployment
+  pull_request:
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with: 
+          python-version: '3.x'
 
-### `npm test`
+      - name: Build Pages
+        uses: vliz-be-opsci/rocrate-to-pages@v0
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
 
-### `npm run build`
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Known Issues
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+There seems to be an issue with the first commit not triggering the github controlled gh-pages runner. [Decribed here](https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-first-deployment-with-github_token) and [here](https://github.com/peaceiris/actions-gh-pages/issues/9). One method to work around this is to commit/push to gh-pages branch on a system that has SSH access or to supply an SSH deploy key to the peaceiris/actions-gh-pages@v3 step.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The result of this bug is that the a user with admin priviledges must FIRST commit to the gh-pages branch before a gh-pages publication will happen. 
 
-### `npm run eject`
+The following would work to create an empty gh-pages branch that has been touched by an admin user:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+git checkout gh-pages
+git push origin --delete gh-pages
+git push origin
+git checkout main
+```
