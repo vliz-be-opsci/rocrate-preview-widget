@@ -1,4 +1,5 @@
-{"@context": "https://w3id.org/ro/crate/1.1/context",
+{
+    "@context": "https://w3id.org/ro/crate/1.1/context",
     "@graph": [
         {
             "@id": "./",
@@ -6,16 +7,22 @@
             "datePublished": "2021-11-25T11:27:08+00:00",
             "hasPart": [
                 {
-                    "@id": "Documentation/"
+                    "@id": "audio/"
                 },
                 {
-                    "@id": "QualityControlledData/"
+                    "@id": "compressed_files/"
                 },
                 {
-                    "@id": "README.md"
+                    "@id": "images/"
                 },
                 {
-                    "@id": "LICENSE"
+                    "@id": "microsoft/"
+                },
+                {
+                    "@id": "pdf/"
+                },
+                {
+                    "@id": "video/"
                 }
             ]
         },
@@ -30,158 +37,186 @@
             }
         },
         {
-            "@id": "Documentation/",
+            "@id": "audio/",
             "@type": "Dataset",
             "hasPart": [
                 {
-                    "@id": "2019_OSD_Protocol_A_v3.0.pdf"
+                    "@id": "test_MP3.mp3"
                 },
                 {
-                    "@id": "2019_OSD_Protocol_B_v.3.0.pdf"
+                    "@id": "test_OOG.ogg"
                 },
                 {
-                    "@id": "Definitions of the OSD Metadata & Instructions to fill in.pdf"
-                },
-                {
-                    "@id": "OSD2019_ABS.docx"
-                },
-                {
-                    "@id": "OSD2019_Data Policy.pdf"
-                },
-                {
-                    "@id": "OSD2019_Legal_Permits_Procedure.pdf"
-                },
-                {
-                    "@id": "OSD2019_MTA.pdf"
-                },
-                {
-                    "@id": "OSDStations.csv"
-                },
-                {
-                    "@id": "OSD_Handbook_2016.pdf"
-                },
-                {
-                    "@id": "README.md"
+                    "@id": "test_WAV.wav"
                 }
             ]
         },
         {
-            "@id": "2019_OSD_Protocol_A_v3.0.pdf",
+            "@id": "test_MP3.mp3",
             "@type": "File"
         },
         {
-            "@id": "2019_OSD_Protocol_B_v.3.0.pdf",
+            "@id": "test_OOG.ogg",
             "@type": "File"
         },
         {
-            "@id": "Definitions of the OSD Metadata & Instructions to fill in.pdf",
+            "@id": "test_WAV.wav",
             "@type": "File"
         },
         {
-            "@id": "OSD2019_ABS.docx",
-            "@type": "File"
-        },
-        {
-            "@id": "OSD2019_Data Policy.pdf",
-            "@type": "File"
-        },
-        {
-            "@id": "OSD2019_Legal_Permits_Procedure.pdf",
-            "@type": "File"
-        },
-        {
-            "@id": "OSD2019_MTA.pdf",
-            "@type": "File"
-        },
-        {
-            "@id": "OSDStations.csv",
-            "@type": "File"
-        },
-        {
-            "@id": "OSD_Handbook_2016.pdf",
-            "@type": "File"
-        },
-        {
-            "@id": "QualityControlledData/",
+            "@id": "compressed_files/",
             "@type": "Dataset",
             "hasPart": [
                 {
-                    "@id": "version1/"
-                },
-                {
-                    "@id": "version2/"
-                },
-                {
-                    "@id": "README.md"
+                    "@id": "test_zip.zip"
                 }
             ]
         },
         {
-            "@id": "version1/",
+            "@id": "test_zip.zip",
+            "@type": "File"
+        },
+        {
+            "@id": "images/",
             "@type": "Dataset",
             "hasPart": [
                 {
-                    "@id": "README.md"
+                    "@id": "test_GIF.gif"
                 },
                 {
-                    "@id": "OSD19Data_HumanReadable_version1.csv"
+                    "@id": "test_ICO.ico"
                 },
                 {
-                    "@id": "OSD19Data_MachineReadable_version1.csv"
+                    "@id": "test_jpg.jpg"
                 },
                 {
-                    "@id": "OSD19Data_MachineReadable_version1.ldt"
+                    "@id": "test_png.png"
                 },
                 {
-                    "@id": "OSD19Data_MachineReadable_version1.ttl"
+                    "@id": "test_svg.svg"
                 },
                 {
-                    "@id": "OSD19Metadata_HumanReadable_version1.csv"
-                },
-                {
-                    "@id": "OSD19Metadata_MachineReadable_version1.csv"
+                    "@id": "test_WEBP.webp"
                 }
             ]
         },
         {
-            "@id": "version2/",
+            "@id": "test_GIF.gif",
+            "@type": "File"
+        },
+        {
+            "@id": "test_ICO.ico",
+            "@type": "File"
+        },
+        {
+            "@id": "test_jpg.jpg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_png.png",
+            "@type": "File"
+        },
+        {
+            "@id": "test_svg.svg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WEBP.webp",
+            "@type": "File"
+        },
+        {
+            "@id": "microsoft/",
             "@type": "Dataset",
             "hasPart": [
                 {
-                    "@id": "README.md"
+                    "@id": "test_csv.csv"
+                },
+                {
+                    "@id": "test_ppt.pptx"
+                },
+                {
+                    "@id": "test_word.docx"
+                },
+                {
+                    "@id": "test_xlsx.xlsx"
                 }
             ]
         },
         {
-            "@id": "OSD19Data_HumanReadable_version1.csv",
+            "@id": "test_csv.csv",
             "@type": "File"
         },
         {
-            "@id": "OSD19Data_MachineReadable_version1.csv",
+            "@id": "test_ppt.pptx",
             "@type": "File"
         },
         {
-            "@id": "OSD19Data_MachineReadable_version1.ldt",
+            "@id": "test_word.docx",
             "@type": "File"
         },
         {
-            "@id": "OSD19Data_MachineReadable_version1.ttl",
+            "@id": "test_xlsx.xlsx",
             "@type": "File"
         },
         {
-            "@id": "OSD19Metadata_HumanReadable_version1.csv",
+            "@id": "pdf/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_pdf.pdf"
+                }
+            ]
+        },
+        {
+            "@id": "test_pdf.pdf",
             "@type": "File"
         },
         {
-            "@id": "OSD19Metadata_MachineReadable_version1.csv",
+            "@id": "video/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_AVI.avi"
+                },
+                {
+                    "@id": "test_MKV.mkv"
+                },
+                {
+                    "@id": "test_mp4.mp4"
+                },
+                {
+                    "@id": "test_MPG.mpg"
+                },
+                {
+                    "@id": "test_WEBM.webm"
+                },
+                {
+                    "@id": "test_WMV.wmv"
+                }
+            ]
+        },
+        {
+            "@id": "test_AVI.avi",
             "@type": "File"
         },
         {
-            "@id": "README.md",
+            "@id": "test_MKV.mkv",
             "@type": "File"
         },
         {
-            "@id": "LICENSE",
+            "@id": "test_mp4.mp4",
+            "@type": "File"
+        },
+        {
+            "@id": "test_MPG.mpg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WEBM.webm",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WMV.wmv",
             "@type": "File"
         }
     ]
