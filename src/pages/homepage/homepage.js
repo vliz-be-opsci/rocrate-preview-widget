@@ -1,5 +1,7 @@
 //imports here
 import React, {useEffect,useState} from 'react';
+import PreviewFile from '../../components/preview_file/preview_file';
+
 
 
 const mime = require('mime');
@@ -308,10 +310,12 @@ function HomePage() {
                 var metadata = <Metadata metadata={dataFiles[i]["metadata"]}/>;
                 var path = find_path_in_data(file_id);
                 var folder_file = path.split("/")[path.split("/").length - 2];
+                var mimetype = get_file_type(file_id);
                 return(
                     <div className='fileitem'> 
                     <h4>Folder file : {folder_file}</h4>
-                    <h5>Mimetype : {get_file_type(file_id)}</h5>
+                    <h5>Mimetype : {mimetype}</h5>
+                    <PreviewFile file_mimetype={mimetype} file_url={path}/>
                     <a href = {path} ><p>{file_id}</p></a>
                     {metadata}
                 </div>
