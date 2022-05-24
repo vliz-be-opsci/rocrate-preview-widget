@@ -1,4 +1,4 @@
-name: 'rocrate-to-pages'
+name: 'rocrate-to-html'
 description: 'This takes the rocrate json and preview.html files and publishes them on github pages'
 branding:
   icon: 'upload-cloud'
