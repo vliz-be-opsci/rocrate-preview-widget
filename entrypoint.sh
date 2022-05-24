@@ -3,6 +3,8 @@
 echo "Hello $1"
 time=$(date)
 echo "::set-output name=time::$time"
+echo "cd into the right folder"
+cd ../../
 echo "installing dependencies for building react app"
 npm install
 echo "npm run build"
