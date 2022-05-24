@@ -19,7 +19,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 18.1.0
-    - run: npm run install
+    - run: npm install
+    # - run: npm run build
 
     - name: Verify that the Docker image for the action builds
       run: docker build . --file Dockerfile
