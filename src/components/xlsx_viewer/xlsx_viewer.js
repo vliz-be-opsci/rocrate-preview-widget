@@ -1,6 +1,7 @@
 //imports
 import React, {useEffect,useState} from 'react';
 import readXlsxFile from 'read-excel-file';
+const excelToJson = require('convert-excel-to-json');
 
 function XlsxViewer(props) {
     //variables
@@ -20,16 +21,13 @@ function XlsxViewer(props) {
 
     //function that will take the file and parse it through the readXlsxFile function adn put the data in setData
     function parseFile(file) {
-        readXlsxFile(file).then((rows) => {
-            console.log(rows);
-            setData(rows);
-        });
+        const result = excelToJson({sourceFile: file});
+        console.log(result);
+        setData(result);
     }
 
-    //on mount do parseFile
-    useEffect(() => {
-        parseFile(file);
-    }, []);
+     parseFile(file);
+
 
     //return table of the data
     if(data.length > 0) {
