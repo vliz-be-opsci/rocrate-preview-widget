@@ -1,0 +1,53 @@
+
+/*close button that will be at the top right of its current div */
+#close {   
+    position: relative;
+    left: 49%;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* create @keyframe animation to change color and size of span */
+@keyframes change {
+    0% {
+        color: black;
+        font-size: 20px;
+    }
+    100% {
+        color: red;
+        font-size: 25px;
+    }
+}
+
+/* animation that changes the size and color of a span */
+#close:hover {
+    animation:change 1s infinite linear alternate;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 4px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 60%;
+}
+
+button:hover {
+    opacity: 0.8;
+    background-color: #3e8e41;;
+}
+
+button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
+
+button:focus {
+    outline: 0;
+    background-color: #3e8e41;
+    opacity: 0.8;
+}
