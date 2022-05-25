@@ -46,5 +46,5 @@
   "devDependencies": {
     "gh-pages": "^4.0.0"
   },
-  "homepage": "http://vliz-be-opsci.github.io/rocrate-to-html"
+  "homepage": "./"
 }
