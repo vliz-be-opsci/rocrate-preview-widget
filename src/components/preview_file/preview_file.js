@@ -32,8 +32,8 @@ function PreviewFile(props) {
                 <FilePreview
                   type={"url"}
                   url={file_url}
-                  width={"100%"}
-                  height={"100%"}
+                  width={"400px"}
+                  height={"400px"}
                   onError={console.log('error has occured')}
                 />
             )
@@ -43,8 +43,8 @@ function PreviewFile(props) {
                 <FilePreview
                   type={"url"}
                   url={file_url}
-                  width={"100%"}
-                  height={"100%"}
+                  width={"400px"}
+                  height={"400px"}
                   onError={console.log('error has occured')}
                 />
             )
@@ -68,8 +68,8 @@ function PreviewFile(props) {
                 <FilePreview
                   type={"url"}
                   url={file_url}
-                  width={"100%"}
-                  height={"100%"}
+                  width={"400px"}
+                  height={"400px"}
                   onError={console.log('error has occured')}
                 />
             )
