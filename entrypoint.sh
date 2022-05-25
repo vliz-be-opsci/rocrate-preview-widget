@@ -27,12 +27,5 @@ echo "copying over scr files to build folder"
 cp ./src/tocopy/* ./build/ -r
 echo "renaming index.html in the build folder to ro-crate-preview.html"
 mv ./build/index.html ./build/ro-crate-preview.html
-mkdir ./github/workspace/build
-if [ -d "/github/workspace/build" ] 
-then
-    echo "Directory /github/workspace/build exists." 
-else
-    echo "Error: Directory /github/workspace/build does not exists."
-fi
-rsync --recursive --progress ./build/* ./github/workspace/build
-ls -a ./github/workspace/build
+rsync --recursive --progress ./build/* ./github/workspace/unicornfolder
+ls -a ./github/workspace/unicornfolder
