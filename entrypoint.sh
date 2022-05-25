@@ -18,7 +18,7 @@ else
     echo "Error: Directory /src/topcopy does not exists."
 fi
 echo "copying everything in current dir into tocopy"
-rsync --recursive --progress --exclude=".*" ./github/workspace/* ./src/tocopy
+rsync --recursive --progress --exclude=".*" ./github/workspace/prebuild/* ./src/tocopy
 echo "installing dependencies for building react app"
 npm install
 echo "npm run build"
@@ -29,3 +29,5 @@ echo "renaming index.html in the build folder to ro-crate-preview.html"
 mv ./build/index.html ./build/ro-crate-preview.html
 rsync --recursive --progress ./build/* ./github/workspace/
 ls -a ./github/workspace/
+echo "deleting prebuild folder"
+rm -r ./github/workspace/prebuild
