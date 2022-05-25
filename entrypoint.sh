@@ -18,7 +18,7 @@ else
     echo "Error: Directory /src/topcopy does not exists."
 fi
 echo "copying everything in current dir into tocopy"
-rsync --recursive --progress --exclude=".*" ./github/workspace/prebuild/* ./src/tocopy
+rsync --recursive --progress --exclude=".* unicornpages/*" ./github/workspace/* ./src/tocopy
 echo "installing dependencies for building react app"
 npm install
 echo "npm run build"
