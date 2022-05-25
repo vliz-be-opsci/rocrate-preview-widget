@@ -11,8 +11,14 @@ pwd
 ls -a
 echo "making tocopy dir in src"
 mkdir ./src/topcopy
+if [ -d "/src/topcopy" ] 
+then
+    echo "Directory /src/topcopy exists." 
+else
+    echo "Error: Directory /src/topcopy does not exists."
+fi
 echo "copying everything in current dir into tocopy"
-rsync --recursive --progress --exclude=".* .src" ./ ./src/tocopy
+rsync --recursive --progress --exclude=".*" ./github/workspace/* ./src/tocopy
 echo "installing dependencies for building react app"
 npm install
 echo "npm run build"
