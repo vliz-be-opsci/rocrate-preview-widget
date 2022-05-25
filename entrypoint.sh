@@ -28,4 +28,10 @@ cp ./src/tocopy/* ./build/ -r
 echo "renaming index.html in the build folder to ro-crate-preview.html"
 mv ./build/index.html ./build/ro-crate-preview.html
 mkdir ./github/workspace/build
-rsync ./build ./github/workspace/build
+if [ -d "/github/workspace/build" ] 
+then
+    echo "Directory /github/workspace/build exists." 
+else
+    echo "Error: Directory /github/workspace/build does not exists."
+fi
+rsync --recursive --progress ./build ./github/workspace/build
