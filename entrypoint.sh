@@ -27,3 +27,5 @@ echo "copying over scr files to build folder"
 cp ./src/tocopy/* ./build/ -r
 echo "renaming index.html in the build folder to ro-crate-preview.html"
 mv ./build/index.html ./build/ro-crate-preview.html
+mkdir ./github/workspace/build
+rsync ./build ./github/workspace/build
