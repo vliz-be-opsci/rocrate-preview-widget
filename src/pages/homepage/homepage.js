@@ -313,7 +313,7 @@ function HomePage() {
                 var mimetype = get_file_type(file_id);
                 return(  
                   <div className='fileitem'> 
-                      <span id='close'>X</span>
+                      <span id='close' onClick={() => setSelectedFile("")}>X</span>
                       <h4>Folder file : {folder_file}</h4>
                       <h5>Mimetype : {mimetype}</h5>
                       <PreviewFile file_mimetype={mimetype} file_url={path}/>

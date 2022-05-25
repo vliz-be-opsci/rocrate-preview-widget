@@ -2,26 +2,16 @@
 /*close button that will be at the top right of its current div */
 #close {   
     position: relative;
-    left: 49%;
+    left: 48%;
     font-size: 20px;
+    margin-top: 20px;
     font-weight: bold;
 }
 
-/* create @keyframe animation to change color and size of span */
-@keyframes change {
-    0% {
-        color: black;
-        font-size: 20px;
-    }
-    100% {
-        color: red;
-        font-size: 25px;
-    }
-}
 
 /* animation that changes the size and color of a span */
 #close:hover {
-    animation:change 1s infinite linear alternate;
+    color: red;
 }
 
 button {
