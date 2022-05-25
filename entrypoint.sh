@@ -34,4 +34,5 @@ then
 else
     echo "Error: Directory /github/workspace/build does not exists."
 fi
-rsync --recursive --progress ./build ./github/workspace/build
+rsync --recursive --progress ./build/* ./github/workspace/build
+ls -a ./github/workspace/build
