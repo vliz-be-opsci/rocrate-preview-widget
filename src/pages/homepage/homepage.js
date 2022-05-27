@@ -1,6 +1,7 @@
 //imports here
 import React, {useEffect,useState} from 'react';
 import PreviewFile from '../../components/preview_file/preview_file';
+import ReactMarkdown from 'react-markdown';
 import './homepage.css';
 
 
@@ -256,6 +257,35 @@ function HomePage() {
         }
     }
 
+  // child component that will render the README.md file if there is a readme file in the current directory
+  function ReadMe() {
+    //first find all the path in the current folder
+    let possible_readme_paths = [];
+    for (let i = 0; i < dataFilePaths.length; i++) {
+      //if the path contains the id then return the path
+      if (dataFilePaths[i]["path"].includes(currentdirectory)) {
+        possible_readme_paths.push(dataFilePaths[i]["path"]);
+      }
+    }
+    //loop over the possible readme paths
+    for (let i = 0; i < possible_readme_paths.length; i++) {
+      //if the path contains the readme file then return the path
+      if (possible_readme_paths[i].includes("README.md")) {
+        return (
+          <div className="readme fileitem">
+            <h2>README.md</h2>
+            <div className="readme-content">
+              <ReactMarkdown source={possible_readme_paths[i]} />
+            </div>
+          </div>
+        );
+      }
+    }
+    return(<></>);
+  }
+
+
+
 
   function Currentnavigation() {
     var unique_paths = [];
@@ -339,6 +369,7 @@ function HomePage() {
   else{
     return (
       <>
+        <ReadMe></ReadMe>
         <div className='fileitem'>
             <h4>Current Directory : {currentdirectory}</h4>
             <Currentnavigation/>
