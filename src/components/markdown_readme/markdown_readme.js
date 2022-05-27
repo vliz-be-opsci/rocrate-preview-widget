@@ -1,5 +1,6 @@
 //imports
 import React, {useEffect,useState} from 'react';
+import ReactMarkdown from 'react-markdown';
 
 function MarkdownReadme(props) {
     //variables
@@ -26,7 +27,9 @@ function MarkdownReadme(props) {
 
     //return table of the data
     return (
-        <>mardown text : {mdText}</>
+        <>
+        <ReactMarkdown>{mdText}</ReactMarkdown>
+        </>
     )
     
 }

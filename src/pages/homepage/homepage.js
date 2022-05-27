@@ -276,7 +276,6 @@ function HomePage() {
           <div className="readme fileitem">
             <h2>README.md</h2>
             <div className="readme-content">
-              <a href={possible_readme_paths[i]}>path to readme file</a>
               <MarkdownReadme url={possible_readme_paths[i]}/>
             </div>
           </div>
