@@ -13,7 +13,7 @@ function MarkdownReadme(props) {
         const fetchurlarray = url.split("./");
         const fetchurl = fetchurlarray[1];
         console.log(fetchurl);
-        fetch("https://raw.githubusercontent.com/Beamanator/fdi/master/README.md")
+        fetch(fetchurl)
             .then((response) => {
                 if (response.ok) return response.text();
                 else return Promise.reject("Didn't fetch text correctly");
@@ -26,7 +26,7 @@ function MarkdownReadme(props) {
 
     //return table of the data
     return (
-        <>markdown here</>
+        <>mardown text : {mdText}</>
     )
     
 }
