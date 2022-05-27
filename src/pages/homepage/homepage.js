@@ -2,6 +2,7 @@
 import React, {useEffect,useState} from 'react';
 import PreviewFile from '../../components/preview_file/preview_file';
 import ReactMarkdown from 'react-markdown';
+import MarkdownReadme from '../../components/markdown_readme/markdown_readme';
 import './homepage.css';
 
 
@@ -276,7 +277,7 @@ function HomePage() {
             <h2>README.md</h2>
             <div className="readme-content">
               <a href={possible_readme_paths[i]}>path to readme file</a>
-              <ReactMarkdown source={possible_readme_paths[i]} />
+              <MarkdownReadme url={possible_readme_paths[i]}/>
             </div>
           </div>
         );
