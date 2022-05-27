@@ -274,7 +274,6 @@ function HomePage() {
       if (possible_readme_paths[i].includes("README.md")) {
         return (
           <div className="readme fileitem">
-            <h2>README.md</h2>
             <div className="readme-content">
               <MarkdownReadme url={possible_readme_paths[i]}/>
             </div>
