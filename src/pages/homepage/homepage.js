@@ -273,11 +273,7 @@ function HomePage() {
       //if the path contains the readme file then return the path
       if (possible_readme_paths[i].includes("README.md")) {
         return (
-          <div className="readme fileitem">
-            <div className="readme-content">
-              <MarkdownReadme url={possible_readme_paths[i]}/>
-            </div>
-          </div>
+            <MarkdownReadme url={possible_readme_paths[i]} currentdir={currentdirectory}/>
         );
       }
     }

@@ -26,11 +26,20 @@ function MarkdownReadme(props) {
     });
 
     //return table of the data
-    return (
-        <>
-        <ReactMarkdown>{mdText}</ReactMarkdown>
-        </>
-    )
+    if(props.currentdir == "./"){
+        return (
+            <></>
+        )
+    }else{
+        return (
+          <div className="readme fileitem">
+            <div className="readme-content">
+              <ReactMarkdown>{mdText}</ReactMarkdown>
+            </div>
+          </div>
+        )
+    }
+    
     
 }
 
