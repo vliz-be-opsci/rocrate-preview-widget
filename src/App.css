@@ -31,3 +31,15 @@ table tbody tr:nth-child(even) {
 table tbody tr:hover {
     background-color: #e0dcdc;
 }
+
+.blue {
+    background: #006582;
+}
+
+.light {
+    background: #6cb2c5;
+}
+
+.dark {
+    background: #2c3e50;
+}

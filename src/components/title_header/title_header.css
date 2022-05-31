@@ -1,0 +1,54 @@
+.title-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/*have title header be on the left side*/
+.title-header-title {
+    float: left;
+    text-align: left;
+}
+
+/* have the buttons be on the right side */
+.title-header-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: right;
+    margin-right: 10px;
+    padding: 10px;
+}
+
+/* git button css */
+.title-header-buttons-git {
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    transform: scale(1.4);
+}
+
+.title-header-buttons-info {
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* on hover buttons git button expand and info button shrink */
+.title-header-buttons-git:hover {
+    color: rgb(38, 69, 209);
+    transform: scale(2);
+}
+
+/* on hover buttons git button expand and info button shrink */
+.title-header-buttons-info:hover {
+    color: rgb(38, 69, 209);
+    transform: scale(1.5);
+}

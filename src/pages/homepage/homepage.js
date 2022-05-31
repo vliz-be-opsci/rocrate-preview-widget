@@ -161,8 +161,6 @@ function HomePage() {
     }
   }
 
-
-    
   //run the function to extract the data on mount 
   useEffect(() => {create_data_file_paths(metadata);}, []);
   useEffect(() => {extract_data_files(metadata);} , [dataFilePaths]);
@@ -279,9 +277,6 @@ function HomePage() {
     }
     return(<></>);
   }
-
-
-
 
   function Currentnavigation() {
     var unique_paths = [];
