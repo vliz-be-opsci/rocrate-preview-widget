@@ -26,6 +26,7 @@ function HomePage() {
   const [selectedfile, setSelectedFile] = useState('');
   const url = window.location.href;
   const reponame = url.split('//')[1].split('/')[1];
+  //const reponame = "test";
   console.log(currentbreadcrumb);
   console.log(selectedfile);
   console.log(currentdirectory);

@@ -270,6 +270,7 @@ function HomePage() {
     for (let i = 0; i < possible_readme_paths.length; i++) {
       //if the path contains the readme file then return the path
       if (possible_readme_paths[i].includes("README.md")) {
+        console.log(possible_readme_paths[i]);
         return (
             <MarkdownReadme url={possible_readme_paths[i]} currentdir={currentdirectory}/>
         );

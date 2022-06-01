@@ -1,7 +1,7 @@
 /*have title header be on the left side*/
 .title-header-title {
-    float: left;
-    text-align: left;
+    float: center;
+    text-align: center;
 }
 
 /* have the buttons be on the right side */

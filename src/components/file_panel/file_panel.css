@@ -1,3 +1,78 @@
 .file-panel {
     height: 100%;
+    background-color: #006582;
+    border: 1px solid #2c3e50;
+    border-radius: 5px;
+}
+
+#downloadbuttontab {
+    position: relative;
+    left: -35%;
+    top: 35px;
+    font-size: 20px;
+    margin-top: 50px;
+    font-weight: bold;
+    color:#fff;
+}
+
+#downloadbuttontab > a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#downloadbuttontab:hover {
+    border: 1px solid #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding-left: 6%;
+    padding-right: 6%;
+    padding-bottom: 8px;
+    padding-top: 5px;
+}
+
+#uncontrolled-tab-example-tab-name {
+    color: #fff;
+    width: 100%;
+}
+
+#uncontrolled-tab-example-tab-data {
+    color: #fff;
+    width: 100%;
+}
+
+#uncontrolled-tab-example-tab-metadata {
+    color: #fff;
+    width: 100%;
+}
+
+#uncontrolled-tab-example-tab-data:hover {
+    background-color: #2c3e50;
+}
+
+#uncontrolled-tab-example-tab-data.active {
+    background-color: #2c3e50;
+}
+
+#uncontrolled-tab-example-tab-data:focus{
+    background-color: #2c3e50;
+}
+
+#uncontrolled-tab-example-tab-metadata {
+    color: #fff;
+}
+
+#uncontrolled-tab-example-tab-metadata:hover {
+    background-color: #2c3e50;
+}
+
+#uncontrolled-tab-example-tab-metadata.active {
+    background-color: #2c3e50;
+}
+
+#uncontrolled-tab-example-tab-metadata:focus{
+    background-color: #2c3e50;
+}
+
+li {
+    width: 30%;
 }

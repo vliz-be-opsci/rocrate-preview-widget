@@ -1,9 +1,12 @@
-//imports here
+//3th party imports here
 import React, {useEffect,useState} from 'react';
 import FilePreview from "react-file-preview-latest";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
+
+//css import here
+import './preview_file.css';
 
 function PreviewFile(props) {
     //constants
@@ -30,10 +33,10 @@ function PreviewFile(props) {
             console.log("text");
             return (
                 <FilePreview
+                  className='general_file_preview'
                   type={"url"}
                   url={file_url}
-                  width={"400px"}
-                  height={"400px"}
+                  height={"100%"}
                   onError={console.log('error has occured')}
                 />
             )
@@ -41,17 +44,17 @@ function PreviewFile(props) {
             console.log("image");
             return (
                 <FilePreview
+                  className='general_file_preview'
                   type={"url"}
                   url={file_url}
-                  width={"400px"}
-                  height={"400px"}
+                  height={"100%"}
                   onError={console.log('error has occured')}
                 />
             )
         } else if (file_mimetype.includes("video")) {
             console.log("video");
             return(
-                <ReactPlayer url={file_url} controls={true} />
+                <ReactPlayer url={file_url} controls={true} className='videoplayer'/>
             )
         } else if (file_mimetype.includes("audio")) {
             console.log("audio");
@@ -68,8 +71,7 @@ function PreviewFile(props) {
                 <FilePreview
                   type={"url"}
                   url={file_url}
-                  width={"400px"}
-                  height={"400px"}
+                  height={"100%"}
                   onError={console.log('error has occured')}
                 />
             )
@@ -94,13 +96,13 @@ function PreviewFile(props) {
         }
     }
     
-    //rendering
+   
     return (
-        <>
-        <h5>preview : {getFileType(file_mimetype)}</h5>
-        </>
+        <div className="preview-file">
+            {getFileType(file_mimetype)}
+        </div>
     );
-    
+
 
 }
 

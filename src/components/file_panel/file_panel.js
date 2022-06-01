@@ -1,5 +1,7 @@
 //3th party imports here
 import React, {useEffect,useState} from 'react';
+import {Tabs, Tab} from 'react-bootstrap';
+import {AiOutlineCloudDownload} from 'react-icons/ai';
 //component inports here
 import MarkdownReadme from '../markdown_readme/markdown_readme';
 import PreviewFile from '../preview_file/preview_file';
@@ -18,24 +20,28 @@ function FilePanel(props) {
     const currentdirectory = props.currentdirectory;
     const dataFilePaths = props.dataFilePaths;
     const dataFiles = props.dataFiles;
-    console.log(dataFilePaths);
-
     //functions
 
     // child component that will render the README.md file if there is a readme file in the current directory
     function ReadMe(props) {
         //first find all the path in the current folder
         let possible_readme_paths = [];
+        console.log(props.dataFilePaths);
         for (let i = 0; i < props.dataFilePaths.length; i++) {
         //if the path contains the id then return the path
         if (props.dataFilePaths[i]["path"].includes(props.currentdirectory)) {
             possible_readme_paths.push(props.dataFilePaths[i]["path"]);
         }
         }
+        console.log(possible_readme_paths);
         //loop over the possible readme paths
         for (let i = 0; i < possible_readme_paths.length; i++) {
         //if the path contains the readme file then return the path
         if (possible_readme_paths[i].includes("README.md")) {
+            console.log(possible_readme_paths[i]);
+            if(!possible_readme_paths[i].includes("./")){
+              possible_readme_paths[i] = "./" + possible_readme_paths[i];
+            }
             return (
                 <MarkdownReadme url={possible_readme_paths[i]} currentdir={props.currentdirectory}/>
             );
@@ -49,6 +55,9 @@ function FilePanel(props) {
         for (let i = 0; i < dataFilePaths.length; i++) {
           //if the path contains the id then return the path
           if (dataFilePaths[i]["path"].includes(id)) {
+            if(!dataFilePaths[i]["path"].includes("./")){
+              dataFilePaths[i]["path"] = "./" + dataFilePaths[i]["path"];
+            }
             return dataFilePaths[i]["path"];
           }
         }
@@ -61,6 +70,8 @@ function FilePanel(props) {
         let mimetype = mime.getType(extention);
         return mimetype;
       }
+
+
 
     //child function that return an overview of the given file @id
     function FileOverview(props) {
@@ -79,19 +90,34 @@ function FilePanel(props) {
                 var path = find_path_in_data(file_id);
                 var folder_file = path.split("/")[path.split("/").length - 2];
                 var mimetype = get_file_type(file_id);
+                var downloadbutton = <DownloadButton file_id={file_id} path={path}/>;
                 return(  
-                  <div> 
-                      <span id='close' onClick={() => setSelectedFile("")}>X</span>
-                      <h4>Folder file : {folder_file}</h4>
-                      <h5>Mimetype : {mimetype}</h5>
-                      <PreviewFile file_mimetype={mimetype} file_url={path}/>
-                      <a href = {path} ><p>{file_id}</p></a>
-                      {metadata}
-                  </div>
+                  <>
+                    <span id='downloadbuttontab' onClick={() => setSelectedFile("")}>{downloadbutton}</span>
+                    <span id='close' onClick={() => setSelectedFile("")}>X</span>
+                    <Tabs  id="uncontrolled-tab-example" className="mb-3" defaultActiveKey="data">
+                      <Tab eventKey="name" title="" disabled>
+                      </Tab>
+                      <Tab eventKey="data" title="Data" >
+                        <PreviewFile file_mimetype={mimetype} file_url={path}/>  
+                      </Tab>
+                      <Tab eventKey="metadata" title="Metadata">
+                        {metadata}
+                      </Tab>
+                    </Tabs>
+                  </>
                 )
             }
         }
     }
+
+  //child function that return a button for downloading a file
+  function DownloadButton(props) {
+    var path = props.path;
+    var file_id = props.file_id;
+    return(<a href={path} target="_blank">{file_id} <AiOutlineCloudDownload></AiOutlineCloudDownload></a>)
+  }
+
 
     //child component to display metadata
   function Metadata(props) {
@@ -128,7 +154,6 @@ function FilePanel(props) {
             </>
         )
     }else{
-        console.log(currentdirectory);console.log(dataFilePaths);
         return(
             <>
                 <div className="file-panel">
