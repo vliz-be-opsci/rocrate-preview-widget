@@ -20,6 +20,7 @@ function FilePanel(props) {
     const currentdirectory = props.currentdirectory;
     const dataFilePaths = props.dataFilePaths;
     const dataFiles = props.dataFiles;
+    const currentbreadcrumb = props.currentbreadcrumb;
     //functions
 
     // child component that will render the README.md file if there is a readme file in the current directory
@@ -27,11 +28,12 @@ function FilePanel(props) {
         //first find all the path in the current folder
         let possible_readme_paths = [];
         console.log(props.dataFilePaths);
+        console.log(props.currentbreadcrumb);
         for (let i = 0; i < props.dataFilePaths.length; i++) {
         //if the path contains the id then return the path
-        if (props.dataFilePaths[i]["path"].includes(props.currentdirectory)) {
-            possible_readme_paths.push(props.dataFilePaths[i]["path"]);
-        }
+          if (props.dataFilePaths[i]["path"].includes(props.currentdirectory)) {
+              possible_readme_paths.push(props.dataFilePaths[i]["path"]);
+          }
         }
         console.log(possible_readme_paths);
         //loop over the possible readme paths
@@ -42,9 +44,17 @@ function FilePanel(props) {
             if(!possible_readme_paths[i].includes("./")){
               possible_readme_paths[i] = "./" + possible_readme_paths[i];
             }
-            return (
+            console.log(props.currentbreadcrumb);
+            if(props.currentbreadcrumb != "./"){
+              var urltosend = props.currentbreadcrumb + "README.md";
+              return (
+                <MarkdownReadme url={urltosend} currentdir={props.currentdirectory}/>
+              );
+            }else{
+              return (
                 <MarkdownReadme url={possible_readme_paths[i]} currentdir={props.currentdirectory}/>
-            );
+              );
+            }
         }
         }
         return(<></>);
@@ -99,7 +109,9 @@ function FilePanel(props) {
                       <Tab eventKey="name" title="" disabled>
                       </Tab>
                       <Tab eventKey="data" title="Data" >
-                        <PreviewFile file_mimetype={mimetype} file_url={path}/>  
+                        <div class="container">
+                          <div class="preview_section"><PreviewFile file_mimetype={mimetype} file_url={path}/>  </div>
+                        </div>
                       </Tab>
                       <Tab eventKey="metadata" title="Metadata">
                         {metadata}
@@ -158,7 +170,7 @@ function FilePanel(props) {
             <>
                 <div className="file-panel">
                     <div className="file-panel-title">
-                        <ReadMe dataFilePaths={dataFilePaths} currentdirectory={currentdirectory}></ReadMe>
+                        <ReadMe dataFilePaths={dataFilePaths} currentdirectory={currentdirectory} currentbreadcrumb={currentbreadcrumb}></ReadMe>
                     </div>
                 </div>
             </>

@@ -1,5 +1,7 @@
 //3th party imports here
 import React, {useEffect,useState} from 'react';
+import {AiFillFolderOpen, AiOutlineLink} from 'react-icons/ai';
+import {BsFillFileEarmarkBreakFill} from 'react-icons/bs';
 
 //component inports here
 
@@ -42,7 +44,7 @@ function Sidebar(props) {
             //if lastdirectory == './' only return one button
             if (lastdirectory == './') {
                 return(
-                    <button className="folderbutton" onClick={() => {
+                    <button className="folderbutton navbarbutton" onClick={() => {
                         //set the current directory to the last directory
                         setCurrentDirectory(lastdirectory);
                         //set the last directory to the current directory
@@ -60,7 +62,7 @@ function Sidebar(props) {
                 if (unique.includes(lastdirectory)) {
                     return(
                         <div className="go-back">
-                            <button className="folderbutton" onClick={() => {
+                            <button className="folderbutton navbarbutton" onClick={() => {
                                 //set the current directory to the root directory
                                 setCurrentDirectory("./");
                                 //set the last directory to the current directory
@@ -74,7 +76,7 @@ function Sidebar(props) {
                 }else{
                     return(
                         <div className="go-back">
-                            <button className="folderbutton" onClick={() => {
+                            <button className="folderbutton navbarbutton" onClick={() => {
                                 //set the current directory to the last directory
                                 setCurrentDirectory(lastdirectory);
                                 //set the last directory to the current directory
@@ -84,7 +86,7 @@ function Sidebar(props) {
                                 setCurrentBreadcrumb(lastbreadcrumb);
                             }
                             }>{lastdirectory}</button>
-                            <button className="folderbutton" onClick={() => {
+                            <button className="folderbutton navbarbutton" onClick={() => {
                                 //set the current directory to the root directory
                                 setCurrentDirectory("./");
                                 //set the last directory to the current directory
@@ -122,7 +124,7 @@ function Sidebar(props) {
         return (
             <div className="currentnavigation">
                 {unique_paths.map((unique_path) => (
-                    <button className="folderbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path); setLastDirectory(currentdirectory); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
+                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path); setLastDirectory(currentdirectory); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
                 ))}
                 <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
             </div>
@@ -131,27 +133,32 @@ function Sidebar(props) {
     //if loading is true return loading
     return(
         <>
-            <div className="sidebar blue">
-                <div className="sidebar-folders blue">
-                    <div className='sidebar-subtitle'>folders</div>
-                    <Currentnavigation/>
+            <div class="containersidebar blue">
+                <div className='icons'>
+                    <div class="folder_icon"><AiFillFolderOpen></AiFillFolderOpen></div>
+                    <div class="files_icon"><BsFillFileEarmarkBreakFill></BsFillFileEarmarkBreakFill></div>
+                    <div class="resources_icon"><AiOutlineLink></AiOutlineLink></div>
                 </div>
-                <div className="sidebar-files light">
-                    <div className='sidebar-subtitle'>files</div>
-                    {dataFilePaths.map((item, index) => {
-                        var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
-                        var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
-                        if (folder_file == currentdirectory.split("/")[0]){
-                            return(
-                                <button className="filebutton" onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
-                            )
-                        }
-                    })}
-                </div>
-                <div className="sidebar-resources dark">
-                    <div className='sidebar-subtitle'>Resources</div>
-                    <button className='resourcebutton'>resources here</button>
-                    
+                <div class="navbar_space">
+                    <div className="sidebar">
+                        <div className="sidebar-folders">
+                            <Currentnavigation/>
+                        </div>
+                        <div className="sidebar-files">
+                            {dataFilePaths.map((item, index) => {
+                                var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
+                                var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
+                                if (folder_file == currentdirectory.split("/")[0]){
+                                    return(
+                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
+                                    )
+                                }
+                            })}
+                        </div>
+                        <div className="sidebar-resources">
+                            <button className='resourcebutton navbarbutton'>resources here</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
@@ -159,3 +166,28 @@ function Sidebar(props) {
 }
 
 export default Sidebar;
+/*
+            <div className="sidebar blue">
+                <div className="sidebar-folders blue">
+                    <div className='sidebar-subtitle'>folders</div>
+                    <Currentnavigation/>
+                </div>
+                <div className="sidebar-files blue">
+                    <div className='sidebar-subtitle'>files</div>
+                    {dataFilePaths.map((item, index) => {
+                        var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
+                        var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
+                        if (folder_file == currentdirectory.split("/")[0]){
+                            return(
+                                <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
+                            )
+                        }
+                    })}
+                </div>
+                <div className="sidebar-resources blue">
+                    <div className='sidebar-subtitle'>Resources</div>
+                    <button className='resourcebutton navbarbutton'>resources here</button>
+                    
+                </div>
+            </div>
+*/

@@ -89,6 +89,7 @@ function HomePage() {
             dataFilePaths={dataFilePaths}
             dataFiles={dataFiles}
             setSelectedFile={setSelectedFile}
+            currentbreadcrumb={currentbreadcrumb}
           ></FilePanel>
         </div>
       </div>
