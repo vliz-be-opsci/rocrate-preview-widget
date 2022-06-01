@@ -1,6 +1,5 @@
 //3th party imports here
 import React, {useEffect,useState} from 'react';
-
 //component inports here
 import MarkdownReadme from '../markdown_readme/markdown_readme';
 import PreviewFile from '../preview_file/preview_file';
@@ -24,13 +23,13 @@ function FilePanel(props) {
     //functions
 
     // child component that will render the README.md file if there is a readme file in the current directory
-    function ReadMe() {
+    function ReadMe(props) {
         //first find all the path in the current folder
         let possible_readme_paths = [];
-        for (let i = 0; i < dataFilePaths.length; i++) {
+        for (let i = 0; i < props.dataFilePaths.length; i++) {
         //if the path contains the id then return the path
-        if (dataFilePaths[i]["path"].includes(currentdirectory)) {
-            possible_readme_paths.push(dataFilePaths[i]["path"]);
+        if (props.dataFilePaths[i]["path"].includes(props.currentdirectory)) {
+            possible_readme_paths.push(props.dataFilePaths[i]["path"]);
         }
         }
         //loop over the possible readme paths
@@ -38,7 +37,7 @@ function FilePanel(props) {
         //if the path contains the readme file then return the path
         if (possible_readme_paths[i].includes("README.md")) {
             return (
-                <MarkdownReadme url={possible_readme_paths[i]} currentdir={currentdirectory}/>
+                <MarkdownReadme url={possible_readme_paths[i]} currentdir={props.currentdirectory}/>
             );
         }
         }
@@ -129,6 +128,7 @@ function FilePanel(props) {
             </>
         )
     }else{
+        console.log(currentdirectory);console.log(dataFilePaths);
         return(
             <>
                 <div className="file-panel">

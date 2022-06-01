@@ -1,10 +1,7 @@
 //3th party imports here
 import React, {useEffect,useState} from 'react';
-import ReactMarkdown from 'react-markdown';
 
 //component inports here
-import PreviewFile from '../../components/preview_file/preview_file';
-import MarkdownReadme from '../../components/markdown_readme/markdown_readme';
 import TitleHeader from '../../components/title_header/title_header';
 import Sidebar from '../../components/sidebar/sidebar';
 import FilePanel from '../../components/file_panel/file_panel';
@@ -28,8 +25,7 @@ function HomePage() {
   const [lastbreadrumb, setLastBreadcrumb] = useState('');
   const [selectedfile, setSelectedFile] = useState('');
   const url = window.location.href;
-  const reponame = url.split('//')[1].split('/')[2];
-
+  const reponame = url.split('//')[1].split('/')[1];
   console.log(currentbreadcrumb);
   console.log(selectedfile);
   console.log(currentdirectory);
