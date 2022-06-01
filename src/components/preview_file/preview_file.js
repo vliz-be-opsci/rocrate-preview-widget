@@ -4,7 +4,6 @@ import FilePreview from "react-file-preview-latest";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
-import DocViewer from 'react-doc-viewer';
 
 //css import here
 import './preview_file.css';
@@ -68,51 +67,29 @@ function PreviewFile(props) {
             )
         } else if (file_mimetype.includes("pdf")) {
             console.log("pdf");
-            try {
-                return (
-                    <DocViewer documents={[{uri: file_url}]} />
-                )
-            } catch (error) {
-                return(<>pdf</>)
-            }
+            return (
+                <FilePreview
+                  type={"url"}
+                  url={file_url}
+                  height={"100%"}
+                  onError={console.log('error has occured')}
+                />
+            )
         } else if (file_mimetype.includes("word")) {
-            try {
-                return (
-                    <DocViewer documents={[{uri: file_url}]} />
-                )
-            } catch (error) {
-                return(<>word</>)
-            }
-            
+            return "word";
         } else if (file_mimetype.includes("excel")) {
-            try {
-                return (
-                    <DocViewer documents={[{uri: file_url}]} />
-                )
-            } catch (error) {
-                return(<>excel</>)
-            }
+            return "excel";
         } else if (file_mimetype.includes("ppt")) {
-            try {
-                return (
-                    <DocViewer documents={[{uri: file_url}]} />
-                )
-            } catch (error) {
-                return(<>ppt</>)
-            }
+            return "ppt";
         } else if (file_mimetype.includes("zip")) {
             return "zip";
         } else {
             //check i file name includes xlsx
             if (file_url.includes("xlsx")) {
                 console.log("excel");
-                try {
-                    return (
-                        <DocViewer documents={[{uri: file_url}]} />
-                    )
-                } catch (error) {
-                    return(<>ppt</>)
-                }
+                return (
+                    <XlsxViewer file={file_url} />
+                )
             } else {
                 return "other";
             }

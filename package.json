@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@cyntler/react-doc-viewer": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,7 +12,6 @@
     "react": "^18.1.0",
     "react-audio-player": "^0.17.0",
     "react-bootstrap": "^2.4.0",
-    "react-doc-viewer": "^0.1.5",
     "react-dom": "^18.1.0",
     "react-file-preview-latest": "^1.0.3",
     "react-icons": "^4.4.0",
