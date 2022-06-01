@@ -4,6 +4,7 @@ import FilePreview from "react-file-preview-latest";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
+import FileViewer from 'react-file-viewer';
 
 //css import here
 import './preview_file.css';
@@ -36,7 +37,9 @@ function PreviewFile(props) {
                   className='general_file_preview'
                   type={"url"}
                   url={file_url}
-                  height={"100%"}
+                  min-height={"200px"}
+                  height={"35vh"}
+                  width={"50vw"}
                   onError={console.log('error has occured')}
                 />
             )
@@ -44,24 +47,29 @@ function PreviewFile(props) {
             console.log("image");
             return (
                 <FilePreview
-                  className='general_file_preview'
+                  className={'general_file_preview'}
                   type={"url"}
                   url={file_url}
-                  height={"100%"}
+                  min-height={"200px"}
+                  height={"35vh"}
+                  width={"50vw"}
                   onError={console.log('error has occured')}
                 />
             )
         } else if (file_mimetype.includes("video")) {
             console.log("video");
             return(
-                <ReactPlayer url={file_url} controls={true} className='videoplayer'/>
+                <ReactPlayer 
+                    url={file_url} 
+                    controls={true} 
+                    className='videoplayer'
+                />
             )
         } else if (file_mimetype.includes("audio")) {
             console.log("audio");
             return(
                 <ReactAudioPlayer
                     src={file_url}
-                    autoPlay="false"
                     controls="true"
                 />
             )
@@ -88,7 +96,11 @@ function PreviewFile(props) {
             if (file_url.includes("xlsx")) {
                 console.log("excel");
                 return (
-                    <XlsxViewer file={file_url} />
+                    <FileViewer
+                        fileType={file_url.split(".").pop()}
+                        filePath={file_url}
+                        errorComponent={CustomErrorComponent}
+                        onError={console.log('error has occured')}/>
                 )
             } else {
                 return "other";
