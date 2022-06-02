@@ -2,6 +2,8 @@
 import React, {useEffect,useState} from 'react';
 import {AiFillFolderOpen, AiOutlineLink} from 'react-icons/ai';
 import {BsFillFileEarmarkBreakFill} from 'react-icons/bs';
+import {VscRootFolder} from 'react-icons/vsc';
+import {IoMdArrowDropleft} from 'react-icons/io';
 
 //component inports here
 
@@ -45,7 +47,7 @@ function Sidebar(props) {
                 setLastBreadcrumb(currentbreadcrumb);
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
+            }}><VscRootFolder></VscRootFolder>: ./</button>
         </div>);
         }
         //if current directory is "./" then there is no go back button
@@ -60,7 +62,7 @@ function Sidebar(props) {
                 setLastBreadcrumb(currentbreadcrumb);
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
+            }}><VscRootFolder></VscRootFolder>: ./</button>
         </div>);
         }
         //if lastdirectory is not "" and current directory is not "./" then display the go back button
@@ -79,7 +81,7 @@ function Sidebar(props) {
                         setHash('./');
                         
                     }
-                    }><AiFillFolderOpen></AiFillFolderOpen>: {lastdirectory}</button>
+                    }><VscRootFolder></VscRootFolder>: {lastdirectory}</button>
                 )
                 
             }else{
@@ -96,7 +98,7 @@ function Sidebar(props) {
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
                                 setHash('./');
-                            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
+                            }}><VscRootFolder></VscRootFolder>: ./</button>
                         </div>
                     );
                 }else{
@@ -112,7 +114,7 @@ function Sidebar(props) {
                                 setCurrentBreadcrumb(lastbreadcrumb);
                                 setHash(lastbreadcrumb);
                             }
-                            }><AiFillFolderOpen></AiFillFolderOpen>: {lastdirectory}</button>
+                            }><IoMdArrowDropleft></IoMdArrowDropleft>: {lastdirectory}</button>
                             <button className="folderbutton navbarbutton" onClick={() => {
                                 //set the current directory to the root directory
                                 setCurrentDirectory("./");
@@ -122,7 +124,7 @@ function Sidebar(props) {
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
                                 setHash('./');
-                            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
+                            }}><VscRootFolder></VscRootFolder>: ./</button>
                         </div>
                     );
                 }

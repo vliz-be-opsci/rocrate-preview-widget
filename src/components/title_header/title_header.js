@@ -9,6 +9,8 @@ import './title_header.css';
 function TitleHeader(props) {
   //props
   const [title, setTitle] = useState(props.title);
+  const setHash = props.setHash;
+  const setSelectedFile = props.setSelectedFile;
   
   //constants
   //get the current url
@@ -22,14 +24,14 @@ function TitleHeader(props) {
     //return 2 buttons , one is for info the other is to link to github repo
     <>
       <div className="title-header">
-        <div className="title-header-title">
+        <div className="title-header-title" onClick={()=> {setHash("./");setSelectedFile("");window.location.reload(false);}}>
           <h1>{title}</h1>
         </div>
         <div className="title-header-buttons">
           <div className="title-header-buttons-git">
             <a href={githuburl} target="_blank"><DiGit size={30}/></a>
           </div>
-          <div className="title-header-buttons-info">
+          <div className="title-header-buttons-info" onClick={()=> {setHash("./");setSelectedFile("");window.location.reload(false);}}>
             <BsInfoCircle size={30}/>
           </div>
         </div>

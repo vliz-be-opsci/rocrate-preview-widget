@@ -131,7 +131,7 @@ function FilePanel(props) {
   function DownloadButton(props) {
     var path = props.path;
     var file_id = props.file_id;
-    return(<a href={path} target="_blank">{file_id} <AiOutlineCloudDownload></AiOutlineCloudDownload></a>)
+    return(<a href={path} target="_blank" download>{file_id} <AiOutlineCloudDownload></AiOutlineCloudDownload></a>)
   }
 
 

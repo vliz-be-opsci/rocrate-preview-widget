@@ -122,10 +122,10 @@ function HomePage() {
       <>
       <div class="teamcard">
         <div class="title-bar">
-          <TitleHeader title={reponame}/>
+          <TitleHeader title={reponame} setHash={setHash} setSelectedFile={setSelectedFile}/>
         </div>
         <div class="breadcrumb-bar">
-          <div className='breadcrumb-contents'><AiFillFolderOpen></AiFillFolderOpen>: {currentbreadcrumb}</div>
+          <div className='breadcrumb-contents' onClick={()=> {setHash(currentbreadcrumb);setSelectedFile("");}}><AiFillFolderOpen></AiFillFolderOpen>: {currentbreadcrumb}</div>
           <ErrorHash/>
         </div>
         <div class="search-bar">

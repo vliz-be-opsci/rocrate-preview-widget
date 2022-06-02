@@ -3,6 +3,10 @@
     float: left;
     text-align: left;
     color: #006582;
+    margin-left: 10px;
+    padding-left: 15px;
+    font-size: 40px;
+    text-decoration: underline;
 }
 
 /* have the buttons be on the right side */
@@ -24,27 +28,28 @@
 }
 
 .title-header-buttons-git > a {
-    color: black;
+    color: #006582;
 }
 
 .title-header-buttons-git > a:hover {
-    color: #006582;
+    color: #2c3e50;
 }
 
 .title-header-buttons-info {
     margin-right: 10px;
     padding: 10px;
     border-radius: 5px;
+    color: #006582;
 }
 
 /* on hover buttons git button expand and info button shrink */
 .title-header-buttons-git:hover {
-    color: #006582;
+    color: #2c3e50;
     transform: scale(2);
 }
 
 /* on hover buttons git button expand and info button shrink */
 .title-header-buttons-info:hover {
-    color: #006582;
+    color: #2c3e50;
     transform: scale(1.5);
 }
