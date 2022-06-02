@@ -6,6 +6,7 @@ import {BsFillFileEarmarkBreakFill} from 'react-icons/bs';
 //component inports here
 
 //import util functions here
+import {check_name_file_display } from '../../utils/rocrate_metadata_functions';
 
 //css import here
 import './sidebar.css';
@@ -25,6 +26,7 @@ function Sidebar(props) {
     const currentbreadcrumb = props.currentbreadcrumb;
     const lastbreadcrumb = props.lastbreadcrumb;
     const setLastBreadcrumb = props.setLastBreadcrumb;
+    const setHash = props.setHash;
 
     //perform functions here
     //child function that will determine if there is a go back button and a ./ button
@@ -52,6 +54,7 @@ function Sidebar(props) {
                         setSelectedFile("");
                         setLastBreadcrumb(currentbreadcrumb);
                         setCurrentBreadcrumb('./');
+                        setHash('./');
                         
                     }
                     }>{lastdirectory}</button>
@@ -70,6 +73,7 @@ function Sidebar(props) {
                                 setSelectedFile("");
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
+                                setHash('./');
                             }}>./</button>
                         </div>
                     );
@@ -84,6 +88,7 @@ function Sidebar(props) {
                                 setSelectedFile("");
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb(lastbreadcrumb);
+                                setHash(lastbreadcrumb);
                             }
                             }>{lastdirectory}</button>
                             <button className="folderbutton navbarbutton" onClick={() => {
@@ -94,6 +99,7 @@ function Sidebar(props) {
                                 setSelectedFile("");
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
+                                setHash('./');
                             }}>./</button>
                         </div>
                     );
@@ -105,7 +111,7 @@ function Sidebar(props) {
     function Currentnavigation() {
         var unique_paths = [];
         //loop over the metadata grapths and get all the dirs of the currentdirectry
-        console.log(currentdirectory);
+        console.log(String(currentdirectory));
         console.log(metadata)
         for (let i = 0; i < metadata["@graph"].length; i++) {
             //if the current directory is the same as the current directory then add it to the unique_paths array
@@ -121,16 +127,20 @@ function Sidebar(props) {
         }
 
         //return a list of all the unique paths
+        console.log(currentbreadcrumb);
         return (
             <div className="currentnavigation">
                 {unique_paths.map((unique_path) => (
-                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path); setLastDirectory(currentdirectory); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
+                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
                 ))}
                 <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
             </div>
         );
     }
     //if loading is true return loading
+
+    
+
     return(
         <>
             <div class="containersidebar blue">
@@ -148,9 +158,11 @@ function Sidebar(props) {
                             {dataFilePaths.map((item, index) => {
                                 var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
                                 var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
+                                
                                 if (folder_file == currentdirectory.split("/")[0]){
+                                    var toreturnfile_id = check_name_file_display(file_id);
                                     return(
-                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
+                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id);setHash(currentbreadcrumb+file_id);}}>{toreturnfile_id}</button>
                                     )
                                 }
                             })}

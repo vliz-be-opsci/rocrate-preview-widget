@@ -7,6 +7,7 @@ import MarkdownReadme from '../markdown_readme/markdown_readme';
 import PreviewFile from '../preview_file/preview_file';
 
 //import util functions here
+import {check_name_file_display } from '../../utils/rocrate_metadata_functions';
 
 //css import here
 import './file_panel.css';
@@ -102,7 +103,8 @@ function FilePanel(props) {
                 console.log(path);
                 var folder_file = path.split("/")[path.split("/").length - 2];
                 var mimetype = get_file_type(file_id);
-                var downloadbutton = <DownloadButton file_id={file_id} path={path}/>;
+                var to_give_file_id = check_name_file_display(file_id);
+                var downloadbutton = <DownloadButton file_id={to_give_file_id} path={path}/>;
                 return(  
                   <>
                     <span id='downloadbuttontab' onClick={() => setSelectedFile("")}>{downloadbutton}</span>
@@ -110,7 +112,7 @@ function FilePanel(props) {
                     <Tabs  id="uncontrolled-tab-example" className="mb-3" defaultActiveKey="data">
                       <Tab eventKey="name" title="" disabled>
                       </Tab>
-                      <Tab eventKey="data" title="Data" >
+                      <Tab eventKey="data" title="Data" className='datatab'>
                         <div class="container">
                           <div class="preview_section"><PreviewFile file_mimetype={mimetype} file_url={path}/>  </div>
                         </div>

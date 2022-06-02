@@ -28,6 +28,72 @@ const extract_data_files = async(metadata, setDataFiles, setLoading) => {
     setLoading(false);
 }
 
+const define_constants_from_fragment_identifier = async(fragment_identifier, setCurrentDirectory, setCurrentBreadcrumb, setSelectedFile, setLastDirectory, setErrorHash) => {
+  //check if fragment identifier starts with ./ => if not return false
+  console.log(fragment_identifier);
+
+  //if fragment identifier starts with # remove the #
+  if (fragment_identifier.startsWith("#")) {
+    fragment_identifier = fragment_identifier.substring(1);
+  }
+  if (fragment_identifier.length == 0){
+    setCurrentDirectory('./');
+    setCurrentBreadcrumb('./');
+    return
+  }
+  if (!fragment_identifier.startsWith("./")) {
+    console.log("false fragment identifier given")
+    setErrorHash(true);
+    return
+  }
+  //check if the fragment identifier ends in a / => if true then set the current breadcrumb to the fragment identifier and set the current directory to the second to last part of the fragment identifier splitted by / + "/"
+  if (fragment_identifier[fragment_identifier.length - 1] == "/") {
+    setCurrentBreadcrumb(fragment_identifier);
+    setCurrentDirectory(fragment_identifier.split("/")[fragment_identifier.split("/").length - 2]+"/");
+    setLastDirectory('./');
+  }
+  //check if the last part of the fragment identifier splitted by "/" contains a "." => if so then set the selected file to the last part of the fragment identifier splitted by "/"
+  else if (fragment_identifier.split("/")[fragment_identifier.split("/").length - 1].includes(".")) {
+    setSelectedFile(fragment_identifier.split("/")[fragment_identifier.split("/").length - 1]);
+    var file = fragment_identifier.split("/")[fragment_identifier.split("/").length - 1];
+    //set current directory to the second to last part of the fragment identifier splitted by "/" + "/"
+    setCurrentDirectory(fragment_identifier.split("/")[fragment_identifier.split("/").length - 2]+"/");
+    //set current breadcrumb to the first part of the fragment identifier splitted by file
+    setCurrentBreadcrumb(fragment_identifier.split(file)[0]);
+    setLastDirectory('./');
+  }else{
+    setErrorHash(true);
+  }
+}
+
+const check_name_file_display = (filename) => {
+  //if filename is bigger then 15 characters, take the first 3 and every char after the "." and the 3 charcaters before the . and place 3 doss between them
+  console.log(filename);
+  console.log(filename.length);
+  if (filename.length > 20) {
+    try {
+      //get the first 3 characters
+      var first_three = filename.substring(0,12);
+      //get the part after the "."
+      var part_after_dot = filename.split(".")[1];
+      //get the 3 characters before the "."
+      var part_before_dot = filename.split(".")[0].substring(filename.split(".")[0].length - 3, filename.split(".")[0].length);
+      //create a new string with the first 3 characters, 3 doss and the part after the "."
+      var new_string = first_three + "..." + part_before_dot + "." + part_after_dot;
+
+      let new_name = new_string;
+      
+      return new_name;
+    } catch (error) {
+      console.log(error);
+      return filename;
+    }
+    
+  }else{
+    return filename;
+  }
+}
+
 const get_data_file_paths = async(metadata,root, path) => {
     //create an empty array to store the data
     let data = [];
@@ -145,6 +211,7 @@ export {
     get_data_file_paths,
     create_data_file_paths,
     reciproce_path_making,
-    find_path_in_data
+    find_path_in_data,define_constants_from_fragment_identifier,
+    check_name_file_display
 }
 
