@@ -9,9 +9,14 @@ import './title_header.css';
 function TitleHeader(props) {
   //props
   const [title, setTitle] = useState(props.title);
-
-  //constants
   
+  //constants
+  //get the current url
+  const url = window.location.href;
+  //get the repo name from the url
+  const gitparturl = url.split('//')[1].split('/')[1];
+  console.log(gitparturl);
+  const githuburl = 'https://github.com/search?q='+gitparturl;
   //title header doesn't have the name of the crate in it so we need to add it in the future #TODO
   return (
     //return 2 buttons , one is for info the other is to link to github repo
@@ -22,7 +27,7 @@ function TitleHeader(props) {
         </div>
         <div className="title-header-buttons">
           <div className="title-header-buttons-git">
-            <DiGit size={30}/>
+            <a href={githuburl} target="_blank"><DiGit size={30}/></a>
           </div>
           <div className="title-header-buttons-info">
             <BsInfoCircle size={30}/>

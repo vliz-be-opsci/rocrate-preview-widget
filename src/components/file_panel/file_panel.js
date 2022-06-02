@@ -97,7 +97,9 @@ function FilePanel(props) {
             //if the datafile id is the same as the given id then return the datafile
             if (dataFiles[i]["@id"] === file_id) {
                 var metadata = <Metadata metadata={dataFiles[i]["metadata"]}/>;
-                var path = find_path_in_data(file_id);
+                //var path = find_path_in_data(file_id);
+                var path = props.currentbreadcrumb + file_id;
+                console.log(path);
                 var folder_file = path.split("/")[path.split("/").length - 2];
                 var mimetype = get_file_type(file_id);
                 var downloadbutton = <DownloadButton file_id={file_id} path={path}/>;
@@ -160,7 +162,7 @@ function FilePanel(props) {
             <>
                 <div className="file-panel">
                     <div className="file-panel-title">
-                        <FileOverview file_id = {selectedfile}/>
+                        <FileOverview file_id = {selectedfile} currentbreadcrumb={currentbreadcrumb}/>
                     </div>
                 </div>
             </>

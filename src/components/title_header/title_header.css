@@ -19,9 +19,14 @@
     padding: 10px;
     border-radius: 5px;
     transform: scale(1.4);
+    color: #fff;
     position: absolute;
     right: 40px;
     top: 5px;
+}
+
+.title-header-buttons-git > a {
+    color: black;
 }
 
 .title-header-buttons-info {
