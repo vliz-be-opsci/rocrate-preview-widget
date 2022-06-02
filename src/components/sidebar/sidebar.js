@@ -35,11 +35,33 @@ function Sidebar(props) {
         console.log(unique);
         //if lastdirectory == "" then there is no go back button
         if (lastdirectory == "") {
-            return(<></>);
+            return(<div className="go-back">
+            <button className="folderbutton navbarbutton" onClick={() => {
+                //set the current directory to the root directory
+                setCurrentDirectory("./");
+                //set the last directory to the current directory
+                setLastDirectory(currentdirectory);
+                setSelectedFile("");
+                setLastBreadcrumb(currentbreadcrumb);
+                setCurrentBreadcrumb('./');
+                setHash('./');
+            }}>./</button>
+        </div>);
         }
         //if current directory is "./" then there is no go back button
         else if (currentdirectory == "./") {
-            return(<></>);
+            return(<div className="go-back">
+            <button className="folderbutton navbarbutton" onClick={() => {
+                //set the current directory to the root directory
+                setCurrentDirectory("./");
+                //set the last directory to the current directory
+                setLastDirectory(currentdirectory);
+                setSelectedFile("");
+                setLastBreadcrumb(currentbreadcrumb);
+                setCurrentBreadcrumb('./');
+                setHash('./');
+            }}>./</button>
+        </div>);
         }
         //if lastdirectory is not "" and current directory is not "./" then display the go back button
         else {
