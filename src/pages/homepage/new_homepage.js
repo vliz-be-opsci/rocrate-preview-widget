@@ -1,6 +1,7 @@
 //3th party imports here
 import React, {useEffect,useState} from 'react';
 import {Alert} from 'react-bootstrap';
+import {AiFillFolderOpen} from 'react-icons/ai';
 
 //component inports here
 import TitleHeader from '../../components/title_header/title_header';
@@ -123,8 +124,8 @@ function HomePage() {
         <div class="title-bar">
           <TitleHeader title={reponame}/>
         </div>
-        <div class="breadcrumb-bar blue">
-          <h3>{currentbreadcrumb}</h3>
+        <div class="breadcrumb-bar">
+          <div className='breadcrumb-contents'><AiFillFolderOpen></AiFillFolderOpen>: {currentbreadcrumb}</div>
           <ErrorHash/>
         </div>
         <div class="search-bar">

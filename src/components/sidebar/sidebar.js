@@ -45,7 +45,7 @@ function Sidebar(props) {
                 setLastBreadcrumb(currentbreadcrumb);
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}>./</button>
+            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
         </div>);
         }
         //if current directory is "./" then there is no go back button
@@ -60,7 +60,7 @@ function Sidebar(props) {
                 setLastBreadcrumb(currentbreadcrumb);
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}>./</button>
+            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
         </div>);
         }
         //if lastdirectory is not "" and current directory is not "./" then display the go back button
@@ -79,7 +79,7 @@ function Sidebar(props) {
                         setHash('./');
                         
                     }
-                    }>{lastdirectory}</button>
+                    }><AiFillFolderOpen></AiFillFolderOpen>: {lastdirectory}</button>
                 )
                 
             }else{
@@ -96,7 +96,7 @@ function Sidebar(props) {
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
                                 setHash('./');
-                            }}>./</button>
+                            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
                         </div>
                     );
                 }else{
@@ -112,7 +112,7 @@ function Sidebar(props) {
                                 setCurrentBreadcrumb(lastbreadcrumb);
                                 setHash(lastbreadcrumb);
                             }
-                            }>{lastdirectory}</button>
+                            }><AiFillFolderOpen></AiFillFolderOpen>: {lastdirectory}</button>
                             <button className="folderbutton navbarbutton" onClick={() => {
                                 //set the current directory to the root directory
                                 setCurrentDirectory("./");
@@ -122,7 +122,7 @@ function Sidebar(props) {
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
                                 setHash('./');
-                            }}>./</button>
+                            }}><AiFillFolderOpen></AiFillFolderOpen>: ./</button>
                         </div>
                     );
                 }
@@ -153,7 +153,7 @@ function Sidebar(props) {
         return (
             <div className="currentnavigation">
                 {unique_paths.map((unique_path) => (
-                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}>{unique_path}</button>
+                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}><AiFillFolderOpen></AiFillFolderOpen>: {unique_path}</button>
                 ))}
                 <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
             </div>
@@ -166,32 +166,20 @@ function Sidebar(props) {
     return(
         <>
             <div class="containersidebar blue">
-                <div className='icons'>
-                    <div class="folder_icon"><AiFillFolderOpen></AiFillFolderOpen></div>
-                    <div class="files_icon"><BsFillFileEarmarkBreakFill></BsFillFileEarmarkBreakFill></div>
-                    <div class="resources_icon"><AiOutlineLink></AiOutlineLink></div>
-                </div>
                 <div class="navbar_space">
                     <div className="sidebar">
-                        <div className="sidebar-folders">
                             <Currentnavigation/>
-                        </div>
-                        <div className="sidebar-files">
                             {dataFilePaths.map((item, index) => {
                                 var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
                                 var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
-                                
                                 if (folder_file == currentdirectory.split("/")[0]){
                                     var toreturnfile_id = check_name_file_display(file_id);
                                     return(
-                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id);setHash(currentbreadcrumb+file_id);}}>{toreturnfile_id}</button>
+                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id);setHash(currentbreadcrumb+file_id);}}><BsFillFileEarmarkBreakFill></BsFillFileEarmarkBreakFill>: {toreturnfile_id}</button>
                                     )
                                 }
                             })}
-                        </div>
-                        <div className="sidebar-resources">
-                            <button className='resourcebutton navbarbutton'>resources here</button>
-                        </div>
+                            <button className='resourcebutton navbarbutton'><AiOutlineLink></AiOutlineLink>: resources here</button>
                     </div>
                 </div>
             </div>

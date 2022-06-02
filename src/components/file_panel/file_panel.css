@@ -1,7 +1,6 @@
 .file-panel {
     height: 100%;
     background-color: #4D99F022;
-    border: 1px solid #2c3e50;
     border-radius: 5px;
 }
 
@@ -9,18 +8,21 @@
     text-align: left;
     content: left;
     align-items: left;
+    color: #006582;
 }
 
 .readme-content > ul > li {
     text-align: center;
     content: center;
     align-items: center;
+    color: #006582;
 }
 
 .readme-content > ol > li {
     text-align: center;
     content: center;
     align-items: center;
+    color: #006582;
 }
 
 .readme-content > h1 , .readme-content > h2 , .readme-content > h3 , .readme-content > h4 , .readme-content > h5 , .readme-content > h6 {
@@ -28,6 +30,7 @@
     text-align: left;
     content: left;
     align-items: left;
+    color: #006582;
 }
 
 #downloadbuttontab {
@@ -40,13 +43,13 @@
 }
 
 #downloadbuttontab > a {
-    color: black;
+    color: #006582;
     text-decoration: none;
     word-break: break-word;
 }
 
 #downloadbuttontab:hover {
-    border: 1px solid #BBBBBB;
+    border: 1px solid #006582;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     padding-bottom: 8px;

@@ -33,39 +33,6 @@
     overflow: hidden;
 }
 
-.sidebar-files{
-    height: 34%;
-    overflow: auto;
-    padding-top:5px;
-    padding-bottom:5px;
-}
-
-.sidebar-folders{
-    height: 33%;
-    overflow: auto;
-    padding-top:5px;
-    padding-bottom:5px;
-    border-bottom: 1px dotted #fff;
-}
-
-.sidebar-resources{
-    height: 33%;
-    overflow: auto;
-    padding-bottom:5px;
-    padding-top:5px;
-    padding-bottom:5px;
-    border-top: 1px dotted #fff;
-}
-
-.sidebar-subtitle {
-    font-size: 1.2em;
-    margin-left: 5%;
-    margin-right: 5%;
-    text-align: center;
-    text-decoration: underline;
-    color: #fff;
-}
-
 .containersidebar {  display: grid;
     grid-template-columns: 0.3fr 1.7fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -77,42 +44,11 @@
     margin-right: 7px;
     border-radius: 5px;
     grid-template-areas:
-      "icons navbar_space navbar_space"
-      "icons navbar_space navbar_space"
-      "icons navbar_space navbar_space";
-}
-
-.icons {
-    grid-area: icons;
-    border-right: 1px dotted #fff;
-}
-
-  
-.folder_icon { 
-    height: 33%;
-    color: #fff;
-    position: relative; 
-    top: 15%;
-    left:30%;
-    
-}
-
-.files_icon { 
-    height: 34%;
-    color: #fff; 
-    position: relative; 
-    top: 15%;
-    left:30%;
-}
-
-.resources_icon { 
-    height: 33%;
-    color: #fff;
-    position: relative;
-    top: 14%;
-    left:30%;
+      "navbar_space navbar_space navbar_space"
+      "navbar_space navbar_space navbar_space"
+      "navbar_space navbar_space navbar_space";
 }
   
-  .navbar_space { grid-area: navbar_space; }
+  .navbar_space { grid-area: navbar_space; margin-top: 10px; margin-bottom: 10px;}
   
   

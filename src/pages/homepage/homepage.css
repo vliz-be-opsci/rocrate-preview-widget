@@ -37,13 +37,14 @@
 .breadcrumb-bar { 
     grid-area: breadcrumb-bar; 
     border-radius: 5px;
-    border: 1px solid #2c3e5062;
+    border: 1px solid #006582;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 10px;
     margin-right: 10px;
-    text-align: center;
-    color: #fff;
+    text-align: left;
+    color:#006582;
+    font-size: 30px;
 }
 
 .navigation-sidebar { grid-area: navigation-sidebar; }
@@ -51,7 +52,7 @@
 .search-bar { 
     grid-area: search-bar; 
     border-radius: 5px;
-    border: 1px solid #2c3e5062;
+    border: 1px solid #006582;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 10px;
@@ -63,7 +64,7 @@
 .object-preview-panel { 
     grid-area: object-preview-panel; 
     border-radius: 5px;
-    border: 1px solid #2c3e5062;
+    border: 1px solid #006582;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 30px;
