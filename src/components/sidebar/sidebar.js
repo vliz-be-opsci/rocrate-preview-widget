@@ -47,7 +47,7 @@ function Sidebar(props) {
                 setLastBreadcrumb(currentbreadcrumb);
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}><VscRootFolder></VscRootFolder>: ./</button>
+            }}><VscRootFolder></VscRootFolder>: ~./</button>
         </div>);
         }
         //if current directory is "./" then there is no go back button
@@ -57,12 +57,12 @@ function Sidebar(props) {
                 //set the current directory to the root directory
                 setCurrentDirectory("./");
                 //set the last directory to the current directory
-                setLastDirectory(currentdirectory);
+                setLastDirectory("");
                 setSelectedFile("");
-                setLastBreadcrumb(currentbreadcrumb);
+                setLastBreadcrumb('./');
                 setCurrentBreadcrumb('./');
                 setHash('./');
-            }}><VscRootFolder></VscRootFolder>: ./</button>
+            }}><VscRootFolder></VscRootFolder>: ~./</button>
         </div>);
         }
         //if lastdirectory is not "" and current directory is not "./" then display the go back button
@@ -98,35 +98,58 @@ function Sidebar(props) {
                                 setLastBreadcrumb(currentbreadcrumb);
                                 setCurrentBreadcrumb('./');
                                 setHash('./');
-                            }}><VscRootFolder></VscRootFolder>: ./</button>
+                            }}><VscRootFolder></VscRootFolder>: ~./</button>
                         </div>
                     );
                 }else{
-                    return(
-                        <div className="go-back">
-                            <button className="folderbutton navbarbutton" onClick={() => {
-                                //set the current directory to the last directory
-                                setCurrentDirectory(lastdirectory);
-                                //set the last directory to the current directory
-                                setLastDirectory(currentdirectory);
-                                setSelectedFile("");
-                                setLastBreadcrumb(currentbreadcrumb);
-                                setCurrentBreadcrumb(lastbreadcrumb);
-                                setHash(lastbreadcrumb);
-                            }
-                            }><IoMdArrowDropleft></IoMdArrowDropleft>: {lastdirectory}</button>
-                            <button className="folderbutton navbarbutton" onClick={() => {
-                                //set the current directory to the root directory
-                                setCurrentDirectory("./");
-                                //set the last directory to the current directory
-                                setLastDirectory(currentdirectory);
-                                setSelectedFile("");
-                                setLastBreadcrumb(currentbreadcrumb);
-                                setCurrentBreadcrumb('./');
-                                setHash('./');
-                            }}><VscRootFolder></VscRootFolder>: ./</button>
-                        </div>
-                    );
+                    if(!currentbreadcrumb == "./"){
+                        console.log(currentbreadcrumb);
+                        //take the current breadcrumb , split by '/' and remove the last 2 elements then join array again by '/'
+                        var breadcrumb = currentbreadcrumb.split('/');
+                        breadcrumb.splice(-2,1);
+                        breadcrumb = breadcrumb.join('/');
+                        console.log(breadcrumb);
+                        return(
+                            <div className="go-back">
+                                <button className="folderbutton navbarbutton" onClick={() => {
+                                    //set the current directory to the last directory
+                                    setCurrentDirectory(currentbreadcrumb.split("/")[currentbreadcrumb.split("/").length-2]);
+                                    //set the last directory to the current directory
+                                    setLastDirectory(currentdirectory);
+                                    setSelectedFile("");
+                                    setLastBreadcrumb(currentbreadcrumb);
+                                    setCurrentBreadcrumb(breadcrumb);
+                                    setHash(breadcrumb);
+                                }
+                                }><IoMdArrowDropleft></IoMdArrowDropleft>: .. /</button>
+                                <button className="folderbutton navbarbutton" onClick={() => {
+                                    //set the current directory to the root directory
+                                    setCurrentDirectory("./");
+                                    //set the last directory to the current directory
+                                    setLastDirectory(currentdirectory);
+                                    setSelectedFile("");
+                                    setLastBreadcrumb(currentbreadcrumb);
+                                    setCurrentBreadcrumb('./');
+                                    setHash('./');
+                                }}><VscRootFolder></VscRootFolder>: ~. /</button>
+                            </div>
+                        );
+                    }else{
+                        return(
+                            <div className="go-back">
+                                <button className="folderbutton navbarbutton" onClick={() => {
+                                    //set the current directory to the root directory
+                                    setCurrentDirectory("./");
+                                    //set the last directory to the current directory
+                                    setLastDirectory(currentdirectory);
+                                    setSelectedFile("");
+                                    setLastBreadcrumb(currentbreadcrumb);
+                                    setCurrentBreadcrumb('./');
+                                    setHash('./');
+                                }}><VscRootFolder></VscRootFolder>: ~. /</button>
+                            </div>
+                        );
+                    }  
                 }
             }
         }
