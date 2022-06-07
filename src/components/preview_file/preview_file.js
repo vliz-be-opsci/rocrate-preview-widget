@@ -57,10 +57,20 @@ function PreviewFile(props) {
                 for (let i = 0; i < results.data.length; i++) {
                     if(i==0){
                         for (let j = 0; j < results.data[i].length; j++) {
-                            columns.push({
-                                key: results.data[i][j],
-                                name: results.data[i][j]
-                            });
+                            if(j==0){
+                                columns.push({
+                                    key: results.data[i][j],
+                                    name: results.data[i][j],
+                                    resizable: true,
+                                    frozen: true
+                                });
+                            }else{
+                                columns.push({
+                                    key: results.data[i][j],
+                                    name: results.data[i][j],
+                                    resizable: true
+                                });
+                            }
                         }
                     }
                     else{
