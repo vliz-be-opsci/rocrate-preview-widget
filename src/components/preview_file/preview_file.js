@@ -65,7 +65,12 @@ function PreviewFile(props) {
                     else{
                         var currrow = {};
                         for (let j = 0; j < results.data[i].length; j++) {
-                            currrow[columns[j].key] = results.data[i][j];
+                            //if results.data[i][j] is null then set it to empty string
+                            if(results.data[i][j] == null){
+                                currrow[columns[j].key] = "null";
+                            }else{
+                                currrow[columns[j].key] = results.data[i][j];
+                            }
                         }
                         rows.push(currrow);
                     }
