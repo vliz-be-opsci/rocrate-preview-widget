@@ -10,6 +10,7 @@ import DataGrid from 'react-data-grid';
 import './preview_file.css';
 
 // const imports here  
+import CodeHightlight from '../code_highlight/code_highlight';
 
 function PreviewFile(props) {
     //constants
@@ -88,6 +89,37 @@ function PreviewFile(props) {
     }
     //function to get the file type, text, image, video, audio, pdf, word, excel, ppt, zip, etc
     function getFileType(file_mimetype) {
+        //go over each code mimetype and return the file type py, r, sh , js, etc
+        if(file_url.split(".").pop().includes("py")){
+            return <CodeHightlight url= {file_url} language="python"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("r")){
+            return <CodeHightlight url= {file_url} language="r"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("sh")){
+            return <CodeHightlight url= {file_url} language="shell"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("js")){
+            return <CodeHightlight url= {file_url} language="javascript"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("css")){
+            return <CodeHightlight url= {file_url} language="css"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("json")){
+            return <CodeHightlight url= {file_url} language="json"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("md")){
+            return <CodeHightlight url= {file_url} language="markdown"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("xml")){
+            return <CodeHightlight url= {file_url} language="xml"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("sql")){
+            return <CodeHightlight url= {file_url} language="sql"></CodeHightlight>;
+        }
+        if(file_url.split(".").pop().includes("php")){
+            return <CodeHightlight url= {file_url} language="php"></CodeHightlight>;
+        }
         if (file_mimetype.includes("text")) {
             console.log(file_url.split(".").pop());
             if(file_url.split(".").pop().includes("csv")){
