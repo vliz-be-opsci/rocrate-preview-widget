@@ -107,17 +107,16 @@ function FilePanel(props) {
                 var downloadbutton = <DownloadButton file_id={to_give_file_id} path={path}/>;
                 return(  
                   <>
-                    <span id='downloadbuttontab' onClick={() => setSelectedFile("")}>{downloadbutton}</span>
-                    <span id='close' onClick={() => setSelectedFile("")}>X</span>
+                    <span id='downloadbuttontab'>{downloadbutton}</span>
                     <Tabs  id="uncontrolled-tab-example" className="mb-3" defaultActiveKey="data">
                       <Tab eventKey="name" title="" disabled>
                       </Tab>
-                      <Tab eventKey="data" title="Data" className='datatab'>
+                      <Tab eventKey="data" title="Content" className='datatab'>
                         <div class="container">
                           <div class="preview_section"><PreviewFile file_mimetype={mimetype} file_url={path}/>  </div>
                         </div>
                       </Tab>
-                      <Tab eventKey="metadata" title="Metadata">
+                      <Tab eventKey="metadata" title="Annotation">
                         {metadata}
                       </Tab>
                     </Tabs>
@@ -141,7 +140,7 @@ function FilePanel(props) {
     if (props.metadata.length > 0) {
     return (
       <div className="metadata">
-        <table>
+        <table className='table-center'>
           <tbody>
             {props.metadata.map((metadata) => (
               <tr>

@@ -42,6 +42,56 @@
     font-weight: bold;
 }
 
+/* have a centered table with content aligned to the left and with alternating colors between 0090B8 and 0B73D4*/
+.table-center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    content: center;
+    align-items: center;
+    color: #006582;
+    min-width: 50%;
+    margin-bottom: 25px;
+}
+
+/* have tr alternate colors between 0090B8 and 0B73D4*/
+.table-center tr:nth-child(even) {
+    background-color: #0066825d;
+    color: #fff;
+}
+
+.table-center tr:nth-child(odd) {
+    background-color: #0066829a;
+    color: #fff;
+}
+
+.table-center tr:hover {
+    background-color: #006682cc;
+    color: #fff;
+}
+
+/* have first column of table be bold and centered and min width of 100 px with margin of 20 px to the right*/
+.table-center td:first-child {
+    font-weight: bold;
+    text-align: center;
+    content: center;
+    align-items: center;
+    min-width: 100px;
+    margin-right: 20px;
+    border-right: 1px solid #fff;
+}
+
+/* have second child of td have margin left of 10px and right of 10px*/
+.table-center td:nth-child(2) {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
+
+
+
 #downloadbuttontab > a {
     color: #006582;
     text-decoration: none;

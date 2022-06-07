@@ -4,8 +4,10 @@ import {AiFillFolderOpen, AiOutlineLink} from 'react-icons/ai';
 import {BsFillFileEarmarkBreakFill} from 'react-icons/bs';
 import {VscRootFolder} from 'react-icons/vsc';
 import {IoMdArrowDropleft} from 'react-icons/io';
+import {RiFolderReceivedFill} from 'react-icons/ri';
 
-//component inports here
+//component imports here
+import FileIconElement from '../file_icon_element/file_icon_element';
 
 //import util functions here
 import {check_name_file_display } from '../../utils/rocrate_metadata_functions';
@@ -36,8 +38,17 @@ function Sidebar(props) {
         var unique = props.dir_paths;
         console.log(unique);
         //if lastdirectory == "" then there is no go back button
-        if (lastdirectory == "") {
-            return(<div className="go-back">
+        if(currentbreadcrumb == "./") {
+            return (<></>);
+        }
+        // split the current breadcrumb by / and keep everything but the second and last and then join them with /
+        var split_current_breadcrumb = currentbreadcrumb.split('/');
+        var joined_current_breadcrumb = split_current_breadcrumb.slice(0, split_current_breadcrumb.length - 2).join('/')+'/';
+        if(joined_current_breadcrumb == "./") {
+            return (<></>);
+        }
+
+        return(
             <button className="folderbutton navbarbutton" onClick={() => {
                 //set the current directory to the root directory
                 setCurrentDirectory("./");
@@ -45,114 +56,10 @@ function Sidebar(props) {
                 setLastDirectory(currentdirectory);
                 setSelectedFile("");
                 setLastBreadcrumb(currentbreadcrumb);
-                setCurrentBreadcrumb('./');
-                setHash('./');
-            }}><VscRootFolder></VscRootFolder>: ~./</button>
-        </div>);
-        }
-        //if current directory is "./" then there is no go back button
-        else if (currentdirectory == "./") {
-            return(<div className="go-back">
-            <button className="folderbutton navbarbutton" onClick={() => {
-                //set the current directory to the root directory
-                setCurrentDirectory("./");
-                //set the last directory to the current directory
-                setLastDirectory("");
-                setSelectedFile("");
-                setLastBreadcrumb('./');
-                setCurrentBreadcrumb('./');
-                setHash('./');
-            }}><VscRootFolder></VscRootFolder>: ~./</button>
-        </div>);
-        }
-        //if lastdirectory is not "" and current directory is not "./" then display the go back button
-        else {
-            //if lastdirectory == './' only return one button
-            if (lastdirectory == './') {
-                return(
-                    <button className="folderbutton navbarbutton" onClick={() => {
-                        //set the current directory to the last directory
-                        setCurrentDirectory(lastdirectory);
-                        //set the last directory to the current directory
-                        setLastDirectory(currentdirectory);
-                        setSelectedFile("");
-                        setLastBreadcrumb(currentbreadcrumb);
-                        setCurrentBreadcrumb('./');
-                        setHash('./');
-                        
-                    }
-                    }><VscRootFolder></VscRootFolder>: {lastdirectory}</button>
-                )
-                
-            }else{
-                //if lastdirectory is in the unique array then display the go back button
-                if (unique.includes(lastdirectory)) {
-                    return(
-                        <div className="go-back">
-                            <button className="folderbutton navbarbutton" onClick={() => {
-                                //set the current directory to the root directory
-                                setCurrentDirectory("./");
-                                //set the last directory to the current directory
-                                setLastDirectory(currentdirectory);
-                                setSelectedFile("");
-                                setLastBreadcrumb(currentbreadcrumb);
-                                setCurrentBreadcrumb('./');
-                                setHash('./');
-                            }}><VscRootFolder></VscRootFolder>: ~./</button>
-                        </div>
-                    );
-                }else{
-                    if(!currentbreadcrumb == "./"){
-                        console.log(currentbreadcrumb);
-                        //take the current breadcrumb , split by '/' and remove the last 2 elements then join array again by '/'
-                        var breadcrumb = currentbreadcrumb.split('/');
-                        breadcrumb.splice(-2,1);
-                        breadcrumb = breadcrumb.join('/');
-                        console.log(breadcrumb);
-                        return(
-                            <div className="go-back">
-                                <button className="folderbutton navbarbutton" onClick={() => {
-                                    //set the current directory to the last directory
-                                    setCurrentDirectory(currentbreadcrumb.split("/")[currentbreadcrumb.split("/").length-2]);
-                                    //set the last directory to the current directory
-                                    setLastDirectory(currentdirectory);
-                                    setSelectedFile("");
-                                    setLastBreadcrumb(currentbreadcrumb);
-                                    setCurrentBreadcrumb(breadcrumb);
-                                    setHash(breadcrumb);
-                                }
-                                }><IoMdArrowDropleft></IoMdArrowDropleft>: .. /</button>
-                                <button className="folderbutton navbarbutton" onClick={() => {
-                                    //set the current directory to the root directory
-                                    setCurrentDirectory("./");
-                                    //set the last directory to the current directory
-                                    setLastDirectory(currentdirectory);
-                                    setSelectedFile("");
-                                    setLastBreadcrumb(currentbreadcrumb);
-                                    setCurrentBreadcrumb('./');
-                                    setHash('./');
-                                }}><VscRootFolder></VscRootFolder>: ~. /</button>
-                            </div>
-                        );
-                    }else{
-                        return(
-                            <div className="go-back">
-                                <button className="folderbutton navbarbutton" onClick={() => {
-                                    //set the current directory to the root directory
-                                    setCurrentDirectory("./");
-                                    //set the last directory to the current directory
-                                    setLastDirectory(currentdirectory);
-                                    setSelectedFile("");
-                                    setLastBreadcrumb(currentbreadcrumb);
-                                    setCurrentBreadcrumb('./');
-                                    setHash('./');
-                                }}><VscRootFolder></VscRootFolder>: ~. /</button>
-                            </div>
-                        );
-                    }  
-                }
-            }
-        }
+                setCurrentBreadcrumb(joined_current_breadcrumb);
+                setHash(joined_current_breadcrumb);
+            }}><RiFolderReceivedFill></RiFolderReceivedFill>: /(parent)</button>
+        );
     }
 
     function Currentnavigation() {
@@ -177,17 +84,25 @@ function Sidebar(props) {
         console.log(currentbreadcrumb);
         return (
             <div className="currentnavigation">
+                <button className="folderbutton navbarbutton" onClick={() => {
+                    //set the current directory to the root directory
+                    setCurrentDirectory("./");
+                    //set the last directory to the current directory
+                    setLastDirectory(currentdirectory);
+                    setSelectedFile("");
+                    setLastBreadcrumb(currentbreadcrumb);
+                    setCurrentBreadcrumb('./');
+                    setHash('./');
+                }}><VscRootFolder></VscRootFolder>: /(root)</button>
+                <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
                 {unique_paths.map((unique_path) => (
                     <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}><AiFillFolderOpen></AiFillFolderOpen>: {unique_path}</button>
                 ))}
-                <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
+                
             </div>
         );
     }
     //if loading is true return loading
-
-    
-
     return(
         <>
             <div class="containersidebar blue">
@@ -200,7 +115,10 @@ function Sidebar(props) {
                                 if (folder_file == currentdirectory.split("/")[0]){
                                     var toreturnfile_id = check_name_file_display(file_id);
                                     return(
-                                        <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id);setHash(currentbreadcrumb+file_id);}}><BsFillFileEarmarkBreakFill></BsFillFileEarmarkBreakFill>: {toreturnfile_id}</button>
+                                        <>
+                                        <FileIconElement className="filebutton navbarbutton" setHash={setHash} currentbreadcrumb={currentbreadcrumb} setSelectedFile={setSelectedFile} file_id={file_id} toreturnfile_id={toreturnfile_id}></FileIconElement>
+                                        </>
+                                        
                                     )
                                 }
                             })}
@@ -213,28 +131,3 @@ function Sidebar(props) {
 }
 
 export default Sidebar;
-/*
-            <div className="sidebar blue">
-                <div className="sidebar-folders blue">
-                    <div className='sidebar-subtitle'>folders</div>
-                    <Currentnavigation/>
-                </div>
-                <div className="sidebar-files blue">
-                    <div className='sidebar-subtitle'>files</div>
-                    {dataFilePaths.map((item, index) => {
-                        var folder_file = item["path"].split("/")[item["path"].split("/").length - 2];
-                        var file_id = item["path"].split("/")[item["path"].split("/").length - 1];
-                        if (folder_file == currentdirectory.split("/")[0]){
-                            return(
-                                <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id)}}>{file_id}</button>
-                            )
-                        }
-                    })}
-                </div>
-                <div className="sidebar-resources blue">
-                    <div className='sidebar-subtitle'>Resources</div>
-                    <button className='resourcebutton navbarbutton'>resources here</button>
-                    
-                </div>
-            </div>
-*/

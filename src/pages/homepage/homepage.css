@@ -14,22 +14,38 @@
     color: red;
 }
 
-.teamcard {  display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 0.5fr 0.7fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
-    grid-template-areas:
-      "title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar"
-      "breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar"
-      "search-bar search-bar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
-      "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel";
+@media only screen and (max-width: 950px) {
+    .teamcard {  
+        display: block;
+    }
+    .navigation-sidebar {  
+        margin-left: 20px;
+        margin-right: 20px;
+        min-height: 100px;
+        max-height: 141px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+}
+
+@media only screen and (min-width: 950px) {
+    .teamcard {  display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 0.5fr 0.7fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-auto-flow: row;
+        grid-template-areas:
+          "title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar title-bar"
+          "breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar breadcrumb-bar"
+          "search-bar search-bar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel"
+          "navigation-sidebar navigation-sidebar object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel object-preview-panel";
+    }
 }
   
 .title-bar { grid-area: title-bar; }

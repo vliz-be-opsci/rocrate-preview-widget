@@ -4,9 +4,14 @@ import FilePreview from "react-file-preview-latest";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
-
+import Papa from 'papaparse';
+import DataGrid from 'react-data-grid';
 //css import here
 import './preview_file.css';
+
+// const imports here  
+
+
 
 function PreviewFile(props) {
     //constants
@@ -25,12 +30,55 @@ function PreviewFile(props) {
     }
 
     //bindings and state
+    const [dataset, setDataset] = useState({});
+    const [columns, setColumns] = useState([]);
+    const [rows, setRows] = useState([]);
 
     //methods
+    function GetCsvdata(props) {
+        var file_url = props.file_url;
+        //file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
+        Papa.parse(file_url, {
+            download: true,
+            dynamicTyping: true,
+            error: function(error) {
+                console.log(error);
+            },
+            complete: function(results) {
+                var columns  = [];
+                var rows = [];
+                for (let i = 0; i < results.data.length; i++) {
+                    if(i==0){
+                        for (let j = 0; j < results.data[i].length; j++) {
+                            columns.push({
+                                key: results.data[i][j],
+                                name: results.data[i][j]
+                            });
+                        }
+                    }
+                    else{
+                        var currrow = {};
+                        for (let j = 0; j < results.data[i].length; j++) {
+                            currrow[columns[j].key] = results.data[i][j];
+                        }
+                        rows.push(currrow);
+                    }
+                }
+                setColumns(columns);
+                setRows(rows);
+                setDataset(results.data);
+            }
+        });
+    }
     //function to get the file type, text, image, video, audio, pdf, word, excel, ppt, zip, etc
     function getFileType(file_mimetype) {
         if (file_mimetype.includes("text")) {
-            console.log("text");
+            console.log(file_url.split(".").pop());
+            if(file_url.split(".").pop().includes("csv")){
+                console.log(columns);
+                console.log(rows);
+                return <DataGrid columns={columns} rows={rows} />;
+            }
             return (
                 <FilePreview
                   className='general_file_preview'
@@ -98,6 +146,12 @@ function PreviewFile(props) {
             }
         }
     }
+
+    // on component mount 
+    useEffect(() => {
+        console.log("component mounted");
+        GetCsvdata(file_url);
+    }, []);
     
    
     return (

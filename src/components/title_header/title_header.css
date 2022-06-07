@@ -6,6 +6,15 @@
     margin-left: 10px;
     padding-left: 15px;
     font-size: 40px;
+}
+
+.title-header-title:hover {
+    float: left;
+    text-align: left;
+    color: #2c3e50;
+    margin-left: 10px;
+    padding-left: 15px;
+    font-size: 40px;
     text-decoration: underline;
 }
 
