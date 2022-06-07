@@ -31,7 +31,7 @@ function CodeHightlight(props) {
     //return table of the data
     try {
         return (
-            <SyntaxHighlighter language={language} style={monokai}>
+            <SyntaxHighlighter language={language} style={monokai} showLineNumbers={true} wrapLongLines={true}>
             {codeText}
             </SyntaxHighlighter>
         )
