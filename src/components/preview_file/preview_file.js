@@ -11,32 +11,38 @@ import './preview_file.css';
 
 // const imports here  
 
-
-
 function PreviewFile(props) {
     //constants
-    console.log(props);
-    var file_url = "";
+    //bindings and state
+    const [dataset, setDataset] = useState({});
+    const [columns, setColumns] = useState([]);
+    const [rows, setRows] = useState([]);
+    const [file_url, setFileurl] = useState("");
+
     var file_mimetype = "";
     try {
         file_mimetype = props.file_mimetype;
     } catch (error) {
         console.log(error);
     }
-    try {
-        file_url = props.file_url;
-    } catch (error) {
-        console.log(error);
+
+    function Getfileurl(){
+        console.log(props);
+        var file_urle = "";
+        try {
+            file_urle = props.file_url;
+            setFileurl(file_urle);
+            GetCsvdata(file_urle);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    //bindings and state
-    const [dataset, setDataset] = useState({});
-    const [columns, setColumns] = useState([]);
-    const [rows, setRows] = useState([]);
-
     //methods
-    function GetCsvdata(props) {
-        var file_url = props.file_url;
+
+
+    function GetCsvdata() {
+        console.log(file_url);
         //file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
         Papa.parse(file_url, {
             download: true,
@@ -150,8 +156,11 @@ function PreviewFile(props) {
     // on component mount 
     useEffect(() => {
         console.log("component mounted");
+        Getfileurl();
         GetCsvdata(file_url);
     }, []);
+
+    useEffect(() => {GetCsvdata(file_url);}, [file_url]);
     
    
     return (
