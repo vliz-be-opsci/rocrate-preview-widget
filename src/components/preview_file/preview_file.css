@@ -3,3 +3,7 @@
     align-content: center;
     text-align: center;
 }
+
+.code-preview {
+    text-align: left;
+}

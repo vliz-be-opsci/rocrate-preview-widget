@@ -29,11 +29,16 @@ function CodeHightlight(props) {
     });
 
     //return table of the data
-    return (
-        <SyntaxHighlighter language={language} style={monokai}>
-        {codeText}
-        </SyntaxHighlighter>
-    )
+    try {
+        return (
+            <SyntaxHighlighter language={language} style={monokai} onerror={}>
+            {codeText}
+            </SyntaxHighlighter>
+        )
+    } catch (error) {
+        return (<>{codeText}</>)
+    }
+    
     
     
     
