@@ -69,7 +69,12 @@ function PreviewFile(props) {
                             if(results.data[i][j] == null){
                                 currrow[columns[j].key] = "null";
                             }else{
-                                currrow[columns[j].key] = results.data[i][j];
+                                //if the results.data[i][j] is an object then convert it to string
+                                if(typeof results.data[i][j] === "object"){
+                                    currrow[columns[j].key] = JSON.stringify(results.data[i][j]);
+                                }else{
+                                    currrow[columns[j].key] = results.data[i][j];
+                                }
                             }
                         }
                         rows.push(currrow);
@@ -108,7 +113,6 @@ function PreviewFile(props) {
                   type={"url"}
                   url={file_url}
                   height={"50vh"}
-                  width={"100%"}
                   onError={console.log('error has occured')}
                 />
             )
