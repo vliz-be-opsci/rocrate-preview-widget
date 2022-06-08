@@ -26,6 +26,7 @@ function CodeHightlight(props) {
             })
             .then((text) => {
                 setcodeText(text);
+                console.log(text);
             })
             .catch((error) => console.error(error));
     });
@@ -56,7 +57,7 @@ function CodeHightlight(props) {
     try {
         return (
             <SyntaxHighlighter language={language} style={monokai} showLineNumbers wrapLongLines>
-            {codeText}
+                {codeText}
             </SyntaxHighlighter>
         )
     } catch (error) {

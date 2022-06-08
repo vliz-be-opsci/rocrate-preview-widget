@@ -51,7 +51,7 @@ function Sidebar(props) {
         return(
             <button className="folderbutton navbarbutton" onClick={() => {
                 //set the current directory to the root directory
-                setCurrentDirectory("./");
+                setCurrentDirectory(joined_current_breadcrumb);
                 //set the last directory to the current directory
                 setLastDirectory(currentdirectory);
                 setSelectedFile("");

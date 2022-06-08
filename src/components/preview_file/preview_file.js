@@ -101,108 +101,130 @@ function PreviewFile(props) {
     //function to get the file type, text, image, video, audio, pdf, word, excel, ppt, zip, etc
     function getFileType(file_mimetype) {
         //go over each code mimetype and return the file type py, r, sh , js, etc
-        if(file_url.split(".").pop().includes("py")){
-            return <CodeHightlight className='code-preview' url= {file_url} language="python"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("r")){
-            return <CodeHightlight className='code-preview' url= {file_url} language="r"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("sh")){
-            return <CodeHightlight className='code-preview' url= {file_url} language="shell"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("js")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="javascript"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("css")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="css"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("json")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="json"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("md")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="markdown"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("xml")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="xml"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("sql")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="sql"></CodeHightlight>;
-        }
-        if(file_url.split(".").pop().includes("php")){
-            return <CodeHightlight className='code-preview' url ={file_url} language="php"></CodeHightlight>;
-        }
-        if (file_mimetype.includes("text")) {
-            console.log(file_url.split(".").pop());
-            if(file_url.split(".").pop().includes("csv")){
-                console.log(columns);
-                console.log(rows);
-                return <DataGrid columns={columns} rows={rows} />;
+        console.log(file_url);
+        try {
+            if(file_url.split(".").pop().includes("py")){
+                console.log("python");
+                return <CodeHightlight className='code-preview' url= {file_url} language="python"></CodeHightlight>;
             }
-            return (
-                <FilePreview
-                  className='general_file_preview'
-                  type={"url"}
-                  url={file_url}
-                  height={"50vh"}
-                  width={"100%"}
-                  onError={console.log('error has occured')}
-                />
-            )
-        } else if (file_mimetype.includes("image")) {
-            console.log("image");
-            return (
-                <FilePreview
-                  className='general_file_preview'
-                  type={"url"}
-                  url={file_url}
-                  height={"50vh"}
-                  onError={console.log('error has occured')}
-                />
-            )
-        } else if (file_mimetype.includes("video")) {
-            console.log("video");
-            return(
-                <ReactPlayer url={file_url} controls={true} className='videoplayer'/>
-            )
-        } else if (file_mimetype.includes("audio")) {
-            console.log("audio");
-            return(
-                <ReactAudioPlayer
-                    src={file_url}
-                    autoPlay="false"
-                    controls="true"
-                />
-            )
-        } else if (file_mimetype.includes("pdf")) {
-            console.log("pdf");
-            return (
-                <FilePreview
-                  type={"url"}
-                  url={file_url}
-                  height={"50vh"}
-                  width={"100%"}
-                  onError={console.log('error has occured')}
-                />
-            )
-        } else if (file_mimetype.includes("word")) {
-            return "word";
-        } else if (file_mimetype.includes("excel")) {
-            return "excel";
-        } else if (file_mimetype.includes("ppt")) {
-            return "ppt";
-        } else if (file_mimetype.includes("zip")) {
-            return "zip";
-        } else {
-            //check i file name includes xlsx
-            if (file_url.includes("xlsx")) {
-                console.log("excel");
+            if(file_url.split(".").pop().includes("r")){
+                return <CodeHightlight className='code-preview' url= {file_url} language="r"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("sh")){
+                return <CodeHightlight className='code-preview' url= {file_url} language="shell"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("js")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="javascript"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("css")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="css"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("json")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="json"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("md")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="markdown"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("xml")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="xml"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("sql")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="sql"></CodeHightlight>;
+            }
+            if(file_url.split(".").pop().includes("php")){
+                return <CodeHightlight className='code-preview' url ={file_url} language="php"></CodeHightlight>;
+            }
+            if (file_mimetype.includes("text")) {
+                console.log(file_url.split(".").pop());
+                if(file_url.split(".").pop().includes("csv")){
+                    console.log(columns);
+                    console.log(rows);
+                    return <DataGrid columns={columns} rows={rows} />;
+                }
                 return (
-                    <XlsxViewer file={file_url} />
+                    <FilePreview
+                      className='general_file_preview'
+                      type={"url"}
+                      url={file_url}
+                      height={"50vh"}
+                      width={"100%"}
+                      onError={console.log('error has occured')}
+                    />
                 )
+            } else if (file_mimetype.includes("image")) {
+                console.log("image");
+                return (
+                    <FilePreview
+                      className='general_file_preview'
+                      type={"url"}
+                      url={file_url}
+                      height={"50vh"}
+                      onError={console.log('error has occured')}
+                    />
+                )
+            } else if (file_mimetype.includes("video")) {
+                console.log("video");
+                return(
+                    <ReactPlayer url={file_url} controls={true} className='videoplayer'/>
+                )
+            } else if (file_mimetype.includes("audio")) {
+                console.log("audio");
+                return(
+                    <ReactAudioPlayer
+                        src={file_url}
+                        autoPlay="false"
+                        controls="true"
+                    />
+                )
+            } else if (file_mimetype.includes("pdf")) {
+                console.log("pdf");
+                return (
+                    <FilePreview
+                      type={"url"}
+                      url={file_url}
+                      height={"50vh"}
+                      width={"100%"}
+                      onError={console.log('error has occured')}
+                    />
+                )
+            } else if (file_mimetype.includes("word")) {
+                return "word";
+            } else if (file_mimetype.includes("excel")) {
+                return "excel";
+            } else if (file_mimetype.includes("ppt")) {
+                return "ppt";
+            } else if (file_mimetype.includes("zip")) {
+                return "zip";
             } else {
-                return "other";
+                //check i file name includes xlsx
+                if (file_url.includes("xlsx")) {
+                    console.log("excel");
+                    return (
+                        <XlsxViewer file={file_url} />
+                    )
+                } else {
+                    return "other";
+                }
             }
+        } catch (error) {
+            console.log(error);
+            //convert error object to text
+            var error = JSON.stringify(error);
+            return(
+                <Alert variant="danger">
+                  <div className="errorhash">
+                    <Alert.Heading>Preview file error</Alert.Heading>
+                    <p>
+                        {error}
+                    </p>
+                    <p>
+                        You can still download the file from this <a href={file_url}>link</a>
+                    </p>
+                  </div>
+                </Alert>
+              );
         }
+        
     }
 
     // on component mount 
