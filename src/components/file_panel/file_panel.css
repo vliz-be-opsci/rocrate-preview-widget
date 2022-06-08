@@ -161,18 +161,10 @@ li {
     width: 30%;
 }
 
-.container {  display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.6fr 0.4fr;
-    grid-template-rows: 0.4fr 1.7fr 1.6fr 0.4fr;
-    gap: 0px 0px;
-    grid-auto-flow: row;
-    grid-template-areas:
-      ". . . ."
-      ". preview_section preview_section ."
-      ". preview_section preview_section ."
-      ". . . .";
-    width: 100%;
-    height: 100%;
+.container {  
+    display: flexbox;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   
   .preview_section { grid-area: preview_section; }

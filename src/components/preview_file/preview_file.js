@@ -153,12 +153,14 @@ function PreviewFile(props) {
                 )
             } else if (file_mimetype.includes("image")) {
                 console.log("image");
+                var w = window.innerWidth*0.5 + "px";
                 return (
                     <FilePreview
                       className='general_file_preview'
                       type={"url"}
                       url={file_url}
-                      height={"50vh"}
+                      height={w}
+                      width={w}
                       onError={console.log('error has occured')}
                     />
                 )
@@ -200,7 +202,7 @@ function PreviewFile(props) {
                 if (file_url.includes("xlsx")) {
                     console.log("excel");
                     return (
-                        <XlsxViewer file={file_url} />
+                        <>zip</>
                     )
                 } else {
                     return "other";

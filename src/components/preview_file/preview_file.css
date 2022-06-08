@@ -4,6 +4,10 @@
     text-align: center;
 }
 
+.general_file_preview {
+    width: 500px;
+}
+
 .code-preview {
     text-align: left;
 }
