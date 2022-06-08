@@ -6,6 +6,7 @@ import ReactPlayer from 'react-player';
 import XlsxViewer from '../xlsx_viewer/xlsx_viewer';
 import Papa from 'papaparse';
 import DataGrid from 'react-data-grid';
+import {Alert} from 'react-bootstrap';
 //css import here
 import './preview_file.css';
 
@@ -213,12 +214,30 @@ function PreviewFile(props) {
 
     useEffect(() => {GetCsvdata(file_url);}, [file_url]);
     
-   
-    return (
-        <div className="preview-file">
-            {getFileType(file_mimetype)}
-        </div>
-    );
+    //have elegant fail for file preview
+    try {
+        return (
+            <div className="preview-file">
+                {getFileType(file_mimetype)}
+            </div>
+        );
+    } catch (error) {
+        return(
+            <Alert variant="danger">
+              <div className="errorhash">
+                <Alert.Heading>Preview file error</Alert.Heading>
+                <p>
+                    {error}
+                </p>
+                <p>
+                    You can still download the file from this <a href={file_url}>link</a>
+                </p>
+              </div>
+            </Alert>
+          );
+    } 
+
+    
 
 
 }

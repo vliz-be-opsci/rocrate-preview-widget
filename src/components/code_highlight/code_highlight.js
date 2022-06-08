@@ -1,8 +1,9 @@
 //imports
 import React, {useEffect,useState} from 'react';
-import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import FilePreview from "react-file-preview-latest";
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {Alert} from 'react-bootstrap';
 
 function CodeHightlight(props) {
     //variables
@@ -11,6 +12,7 @@ function CodeHightlight(props) {
 
     //bindings and state
     const [codeText, setcodeText] = useState('');
+    const [errorhash, setErrorHash] = useState(false);
 
     //methods
     useEffect(() => {
@@ -28,15 +30,49 @@ function CodeHightlight(props) {
             .catch((error) => console.error(error));
     });
 
+    //child function to display the error
+    function ErrorHash(props) {
+        if (errorhash) {
+          var error = props.error;
+          return(
+            <Alert variant="warning" onClose={() => setErrorHash(false)} dismissible>
+              <div className="errorhash">
+                <Alert.Heading>Code hightlight failed</Alert.Heading>
+                <p>
+                    {error}
+                </p>
+                <p>
+                    The code will be displayed as plain text.
+                </p>
+              </div>
+            </Alert>
+          );
+        }else{
+          return (<></>);
+        }
+      }
+
     //return table of the data
     try {
         return (
-            <SyntaxHighlighter language={language} style={monokai} showLineNumbers={true} wrapLongLines={true}>
+            <SyntaxHighlighter language={language} style={monokai} showLineNumbers wrapLongLines>
             {codeText}
             </SyntaxHighlighter>
         )
     } catch (error) {
-        return (<>{codeText}</>)
+        setErrorHash(true);
+        return (
+        <>
+            <ErrorHash error={error}></ErrorHash>
+            <FilePreview
+                className='general_file_preview'
+                type={"url"}
+                url={url}
+                height={"50vh"}
+                width={"100%"}
+                onError={console.log('error has occured')}
+            />
+        </>)
     } 
 }
 
