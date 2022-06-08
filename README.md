@@ -71,3 +71,9 @@ git push origin --delete gh-pages
 git push origin
 git checkout main
 ```
+
+## Updating tags
+
+This repo also has automated versioning and latest release management.
+When pushing a change , the user can add the following tags to the commit header to trigger a new release of the repo. (#major , #minor , #patch, #none)
+[more info on repo relase tags here](https://github.com/marketplace/actions/github-tag-bump)
