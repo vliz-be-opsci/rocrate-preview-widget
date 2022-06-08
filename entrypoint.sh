@@ -26,8 +26,6 @@ npm run build
 echo "copying over scr files to build folder"
 cp ./src/tocopy/* ./build/ -r
 echo "renaming index.html in the build folder to ro-crate-preview.html"
-mv ./build/index.html ./build/ro-crate-preview.html
+cp ./build/index.html ./build/ro-crate-preview.html
 rsync --recursive --progress ./build/* ./github/workspace/unicornpages
 ls -a ./github/workspace/unicornpages
-echo "deleting unicornpages in unicornpages folder if it exists"
-rm -r ./github/workspace/unicornpages/unicornpages
