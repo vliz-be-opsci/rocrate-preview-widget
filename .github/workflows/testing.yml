@@ -44,7 +44,7 @@ jobs:
 
         # Force-update a branch instead of using a tag.
         # Default: false
-        force-branch: true
+        force-branch: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         token: ${{ secrets.GITHUB_TOKEN }}
