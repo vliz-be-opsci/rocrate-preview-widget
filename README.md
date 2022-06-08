@@ -3,6 +3,14 @@ This takes the [files files from research object](https://www.researchobject.org
 
 [![.github/workflows/testing.yml](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml/badge.svg)](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml)
 
+## Updating tags
+
+This repo also has automated versioning and latest release management.
+When pushing a change , the user can add the following tags to the commit header to trigger a new release of the repo. (#major , #minor , #patch, #none)
+[more info on repo relase tags here](https://github.com/marketplace/actions/github-tag-bump)
+
+When using the #major appendix in the commit header, the repo will push out a release.
+
 ## Steps
 This action is to be used on git projects that include rocrate files that comply to the [rocrate standard](https://www.researchobject.org/ro-crate/1.0/):
 
@@ -72,8 +80,4 @@ git push origin
 git checkout main
 ```
 
-## Updating tags
 
-This repo also has automated versioning and latest release management.
-When pushing a change , the user can add the following tags to the commit header to trigger a new release of the repo. (#major , #minor , #patch, #none)
-[more info on repo relase tags here](https://github.com/marketplace/actions/github-tag-bump)
