@@ -146,21 +146,19 @@ function PreviewFile(props) {
                       className='general_file_preview'
                       type={"url"}
                       url={file_url}
-                      height={"50vh"}
-                      width={"100%"}
+                      height={"70vh"}
                       onError={console.log('error has occured')}
                     />
                 )
             } else if (file_mimetype.includes("image")) {
                 console.log("image");
-                var w = window.innerWidth*0.5 + "px";
+                var h = window.innerHeight*0.7 + "px";
                 return (
                     <FilePreview
                       className='general_file_preview'
                       type={"url"}
                       url={file_url}
-                      height={w}
-                      width={w}
+                      height={h}
                       onError={console.log('error has occured')}
                     />
                 )
@@ -184,7 +182,7 @@ function PreviewFile(props) {
                     <FilePreview
                       type={"url"}
                       url={file_url}
-                      height={"50vh"}
+                      height={"70vh"}
                       width={"100%"}
                       onError={console.log('error has occured')}
                     />

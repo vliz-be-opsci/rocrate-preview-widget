@@ -4,6 +4,10 @@
     text-align: center;
 }
 
+.preview-file > div > img {
+    aspect-ratio: 1;
+}
+
 .general_file_preview {
     width: 500px;
 }

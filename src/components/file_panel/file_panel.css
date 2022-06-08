@@ -90,8 +90,6 @@
     text-align: left;
 }
 
-
-
 #downloadbuttontab > a {
     color: #006582;
     text-decoration: none;
@@ -167,8 +165,7 @@ li {
     margin-bottom: 20px;
   }
   
-  .preview_section { grid-area: preview_section; }
-  
+.preview_section { grid-area: preview_section; }
   
 .preview_section { grid-area: preview_section; }
   
