@@ -72,7 +72,7 @@ There seems to be an issue with the first commit not triggering the github contr
 
 The result of this bug is that the a user with admin priviledges must FIRST commit to the gh-pages branch before a gh-pages publication will happen. 
 
-The following would work to create an empty gh-pages branch that has been touched by an admin user:
+The following would work to create an empty gh-pages branch that has been touched by an admin user: 
 
 ```
 git checkout gh-pages
