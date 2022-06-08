@@ -24,3 +24,10 @@ jobs:
 
     - name: Verify that the Docker image for the action builds
       run: docker build . --file Dockerfile
+      
+  actions-tagger:
+    runs-on: windows-latest
+    steps:
+      - uses: Actions-R-Us/actions-tagger@latest
+        with:
+          publish_latest_tag: true
