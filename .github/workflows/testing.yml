@@ -53,4 +53,5 @@ jobs:
       - uses: Actions-R-Us/actions-tagger@latest
         with:
           publish_latest_tag: true
+        env:
           token: ${{ secrets.GITHUB_TOKEN }}
