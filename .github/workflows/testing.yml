@@ -9,9 +9,12 @@ on:
 jobs:
 
   test_build:
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup Environment
       uses: actions/setup-node@v3
       with:
@@ -21,25 +24,15 @@ jobs:
 
     - name: Verify that the Docker image for the action builds
       run: docker build . --file Dockerfile
-        
-  bump-tag:
-    needs: test_build
-    name: Run create new tag
-    runs-on: ubuntu-latest
-    steps:
-    - name: create new tag
+      
+    - name: Bump version and push tag
       uses: anothrNick/github-tag-action@1.36.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
         
-  change-latest-tag: 
-    needs: bump-tag
-    name: Run latest-tag
-    runs-on: ubuntu-latest
-    steps:
-    - name: change latest tag
+    - name: Run latest-tag
       uses: EndBug/latest-tag@latest
       with:
         # You can change the name of the tag or branch with this input.
@@ -59,7 +52,7 @@ jobs:
     
           
   release-manager:
-    needs: [bump-tag, change-latest-tag] 
+    needs: test_build 
     name: Check if ready for release
     runs-on: ubuntu-latest
     env:
@@ -80,8 +73,6 @@ jobs:
         with:
           text: ${{ steps.vliz-be-opsci.outputs.tag }}
           regex: 'v[0-9].0.0'
-        name: echo the outcome of the rege-match
-      - run: echo ${{ steps.regex-match.outputs.match }}
         name: Create release
         if: ${{ steps.regex-match.outputs.match != '' }}
       - uses: rymndhng/release-on-push-action@master
