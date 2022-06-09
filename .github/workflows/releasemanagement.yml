@@ -11,6 +11,8 @@ jobs:
   release_management:
     name: Check if ready for release
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - run: echo ${{ github.event.repository.name }}
         name: Get latest tag of repo 
