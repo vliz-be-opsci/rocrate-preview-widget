@@ -158,7 +158,6 @@ function PreviewFile(props) {
                       className='general_file_preview'
                       type={"url"}
                       url={file_url}
-                      height={h}
                       onError={console.log('error has occured')}
                     />
                 )

@@ -1,16 +1,16 @@
+#on push look if the current tag is v*.0.0
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
+
+#check if the current tag is v*.0.0
+name: Release Management
 
 jobs:
-  release-on-push:
+  release_management:
+    name: Check if ready for release
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: rymndhng/release-on-push-action@master
-        with:
-          bump_version_scheme: patch
-          tag_prefix: v
-          use_github_release_notes: true
+      name: find name of the current repo 
+    - run: echo ${{ github.event.repository.name }}
