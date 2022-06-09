@@ -48,7 +48,7 @@ Gitlab pages routes traffic to an "index.html" file by default and is incapable 
   - Some preperation steps are handled by other actions
   - A symbolic link is created that maps an "index.html" file to "ro-crate-preview.html"
   - A symbolic link is created that maps "ro-crate-metadata.json" to "ro-crate-metadata.jsonld"
-  - Some publishing and cleanup steps are handled by other actions
+  - Some publishing and cleanup steps are handled by other actions.
 
 ## Updating tags
 
