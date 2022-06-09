@@ -27,5 +27,5 @@ echo "copying over scr files to build folder"
 cp ./src/tocopy/* ./build/ -r
 echo "renaming index.html in the build folder to ro-crate-preview.html"
 cp ./build/index.html ./build/ro-crate-preview.html
-rsync --recursive --progress ./build/* ./github/workspace/unicornpages
-ls -a ./github/workspace/unicornpages
+#rsync --recursive --progress ./build/* ./github/workspace/unicornpages
+#ls -a ./github/workspace/unicornpages
