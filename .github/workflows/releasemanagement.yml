@@ -12,5 +12,4 @@ jobs:
     name: Check if ready for release
     runs-on: ubuntu-latest
     steps:
-      name: find name of the current repo 
-    - run: echo ${{ github.event.repository.name }}
+      - run: echo ${{ github.event.repository.name }}
