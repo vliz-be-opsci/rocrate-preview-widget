@@ -31,17 +31,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
         DEFAULT_BUMP: patch
-  
-  latest-tag:
-    needs: test_build
-    name: change latest tag
-    runs-on: ubuntu-latest
-    env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-    - name: Run latest-tag
+    - name: change latest tag
       uses: EndBug/latest-tag@latest
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       token: ${{ secrets.GITHUB_TOKEN }}
       with:
         # You can change the name of the tag or branch with this input.
         # Default: 'latest'
@@ -52,9 +46,6 @@ jobs:
         # Force-update a branch instead of using a tag.
         # Default: false
         force-branch: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        token: ${{ secrets.GITHUB_TOKEN }}
           
   release-manager:
     needs: test_build 
@@ -78,8 +69,8 @@ jobs:
         with:
           text: ${{ steps.vliz-be-opsci.outputs.tag }}
           regex: 'v[0-9].0.0'
-        name: Create release
+      - name: Create release
         if: ${{ steps.regex-match.outputs.match != '' }}
-      - uses: rymndhng/release-on-push-action@master
+        uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: minor
