@@ -74,13 +74,3 @@ jobs:
         uses: rymndhng/release-on-push-action@master
         with:
           bump_version_scheme: major
-  
-  actions-tagger:
-    runs-on: windows-latest
-    steps:
-      - uses: Actions-R-Us/actions-tagger@latest
-        with:
-          publish_latest_tag: true
-          prefer_branch_releases: true
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
