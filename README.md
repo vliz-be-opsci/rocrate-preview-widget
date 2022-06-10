@@ -3,7 +3,7 @@ This takes the [files files from research object](https://www.researchobject.org
 
 [![.github/workflows/testing.yml](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml/badge.svg)](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml)
 
-## Example
+## Example ##
 
 Below is an example yaml file that once copied to "/.github/workflows/rocrate_to_pages.yml" would trigger the publishing to github pages action on push to the "main" branch.
 
