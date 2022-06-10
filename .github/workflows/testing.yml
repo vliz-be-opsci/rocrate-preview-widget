@@ -45,7 +45,7 @@ jobs:
         description: 'latest version of the rocrate-to-html.' 
         # Force-update a branch instead of using a tag.
         # Default: false
-        force-branch: false
+        force-branch: true
           
   release-manager:
     needs: test_build 
