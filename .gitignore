@@ -2,8 +2,9 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
+
+# build folder
+/build
 
 # testing
 /coverage
