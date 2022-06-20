@@ -2,6 +2,9 @@
 import React, {useEffect,useState} from 'react';
 import ReactMarkdown from 'react-markdown';
 
+//import the css
+import './markdown_readme.css';
+
 function MarkdownReadme(props) {
     //variables
     const url = props.url;

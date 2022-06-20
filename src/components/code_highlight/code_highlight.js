@@ -5,6 +5,9 @@ import FilePreview from "react-file-preview-latest";
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {Alert} from 'react-bootstrap';
 
+//import css here
+import './code_highlight.css';
+
 function CodeHightlight(props) {
     //variables
     const url = props.url;
@@ -56,24 +59,26 @@ function CodeHightlight(props) {
     //return table of the data
     try {
         return (
-            <SyntaxHighlighter language={language} style={monokai} showLineNumbers wrapLongLines height={"50vh"}>
-                {codeText}
-            </SyntaxHighlighter>
+            <div>
+                <SyntaxHighlighter className="synthax_file_preview" language={language} style={monokai} showLineNumbers wrapLongLines height={"50vh"}>
+                    {codeText}
+                </SyntaxHighlighter>
+            </div>
         )
     } catch (error) {
         setErrorHash(true);
         return (
-        <>
+        <div>
             <ErrorHash error={error}></ErrorHash>
             <FilePreview
                 className='general_file_preview'
                 type={"url"}
                 url={url}
-                height={"50vh"}
+                height={"55vh"}
                 width={"100%"}
                 onError={console.log('error has occured')}
             />
-        </>)
+        </div>)
     } 
 }
 
