@@ -26,7 +26,7 @@ jobs:
       
       # Build the preview.html file from the rocrate.json
       - name: Build Preview HTML
-        uses: vliz-be-opsci/rocrate-to-html@latest #replace vliz-be-opsci with your git username or if you are using this action in a organisation , replace this by the organisation name
+        uses: vliz-be-opsci/rocrate-to-pages@latest #replace vliz-be-opsci with your git username or if you are using this action in a organisation , replace this by the organisation name
  
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
