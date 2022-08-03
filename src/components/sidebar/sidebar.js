@@ -5,7 +5,8 @@ import {BsFillFileEarmarkBreakFill} from 'react-icons/bs';
 import {VscRootFolder} from 'react-icons/vsc';
 import {IoMdArrowDropleft} from 'react-icons/io';
 import {RiFolderReceivedFill} from 'react-icons/ri';
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 //component imports here
 import FileIconElement from '../file_icon_element/file_icon_element';
 
@@ -96,7 +97,17 @@ function Sidebar(props) {
                 }}><VscRootFolder></VscRootFolder>: /(root)</button>
                 <GoBack dir_paths = {unique_paths} currentbreadcrumb={currentbreadcrumb} setCurrentBreadcrumb={setCurrentBreadcrumb}/>
                 {unique_paths.map((unique_path) => (
-                    <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}><AiFillFolderOpen></AiFillFolderOpen>: {unique_path}</button>
+                    <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={
+                        <Tooltip id="button-tooltip" {...props}>
+                            {unique_path}
+                        </Tooltip>
+                    }
+                    >
+                        <button className="folderbutton navbarbutton" onClick={() => {setLastBreadcrumb(currentbreadcrumb);setCurrentBreadcrumb(currentbreadcrumb+unique_path);setHash(currentbreadcrumb+unique_path); setCurrentDirectory(unique_path);setSelectedFile("");}}><AiFillFolderOpen></AiFillFolderOpen>: {unique_path}</button>
+                    </OverlayTrigger>
                 ))}
                 
             </div>

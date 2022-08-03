@@ -13,6 +13,8 @@ import {
     BsFillFileEarmarkEaselFill,
     BsFillFileEarmarkPlayFill
 } from 'react-icons/bs';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 //css import here
 
@@ -33,6 +35,12 @@ function FileIconElement(props) {
   const currentbreadcrumb = props.currentbreadcrumb;
   const file_id = props.file_id;
   const toreturnfile_id = props.toreturnfile_id;
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      {file_id}
+    </Tooltip>
+  );
 
   //get the mimetype of the fileid
   try {
@@ -99,7 +107,13 @@ function FileIconElement(props) {
   
   return (
     <>
+        <OverlayTrigger
+      placement="right"
+      delay={{ show: 250, hide: 400 }}
+      overlay={renderTooltip}
+    >
         <button className="filebutton navbarbutton" onClick={() => {setSelectedFile(file_id);setHash(currentbreadcrumb+file_id);}}><IconShow file_mimetype={mimetype}></IconShow>: {toreturnfile_id}</button>
+    </OverlayTrigger>
     </>
   );
 
