@@ -1,5 +1,5 @@
 # Github Action to publish rocrate objects as Github Pages
-This takes the [files files from research object](https://www.researchobject.org/) and creates an HTML page from them. This allows the human readable preview file to be hosted as an html page, possibly on GH-Pages, and the machine readable json file to be reachable from anywhere. 
+This visualise the [content from a `research object crate`](https://www.researchobject.org/ro-crate/) through a preview-HTML page. The generated preview file (human readeable) is to be hosted as an html page, presumably using on [GH-Pages](https://pages.github.com/), together with the crate contents and jsonld metadata (machine reedable).
 
 [![.github/workflows/testing.yml](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml/badge.svg)](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml)
 
@@ -26,7 +26,7 @@ jobs:
       
       # Build the preview.html file from the rocrate.json
       - name: Build Preview HTML
-        uses: vliz-be-opsci/rocrate-to-html@latest #replace vliz-be-opsci with your git username or if you are using this action in a organisation , replace this by the organisation name
+        uses: vliz-be-opsci/rocrate-to-pages@latest #replace vliz-be-opsci with your git username or if you are using this action in a organisation , replace this by the organisation name
  
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
