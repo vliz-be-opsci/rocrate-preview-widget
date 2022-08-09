@@ -5,16 +5,27 @@
 //other util imports here
 
 //functions here
-const extract_data_files = async(metadata, setDataFiles, setLoading) => {
+const extract_data_files = async(metadata, setDataFiles, setLoading, setDataFilePaths) => {
     //create an empty array to store the data
     let data = [];
+    let dataFilePaths = [];
     //loop through the metadata object
     for (let i = 0; i < metadata["@graph"].length; i++) {
       //create an empty object to store the data
       //if the @type of the object is File then get the @id and store all the other variables of the object in metadatda {}
       if (metadata["@graph"][i]["@type"] === "File") {
         let obj = {};
-        obj["@id"] = metadata["@graph"][i]["@id"];
+        // take te @id of the object and then spit is by / and take the last part
+        obj["@id"] = metadata["@graph"][i]["@id"].split("/")[metadata["@graph"][i]["@id"].split("/").length - 1];
+        obj["real_id"] = metadata["@graph"][i]["@id"];
+
+        //split metadata["@graph"][i]["@id"] by "/" and if legth of array is bigger then 2 then split metadata["@graph"][i]["@id"] by "./" and take the last part , else leave it be
+        if (metadata["@graph"][i]["@id"].split("/").length > 2) {
+          //dataFilePaths.push({"path":metadata["@graph"][i]["@id"].split("./")[metadata["@graph"][i]["@id"].split("./").length - 1]});
+          dataFilePaths.push({"path":metadata["@graph"][i]["@id"]});
+        } else {
+          dataFilePaths.push({"path":metadata["@graph"][i]["@id"]});
+        }
         obj["metadata"] = [];
         for (let key in metadata["@graph"][i]) {
             obj["metadata"].push({metadata_key: key, metadata_value: metadata["@graph"][i][key]});
@@ -23,8 +34,12 @@ const extract_data_files = async(metadata, setDataFiles, setLoading) => {
       }
       //push the object into the data array
     }
+
     //return the data array
+    console.log(data);
+    console.log(dataFilePaths);
     setDataFiles(data);
+    setDataFilePaths(dataFilePaths);
     setLoading(false);
 }
 
@@ -97,7 +112,8 @@ const check_name_file_display = (filename) => {
 const get_data_file_paths = async(metadata,root, path) => {
     //create an empty array to store the data
     let data = [];
-    //console.log(root);
+    console.log(root);
+    console.log(path);
     //loop through the metadata object
     for (let i = 0; i < metadata["@graph"].length; i++) {
       //if the @id of the object is the same as the given path then look if it hasParts
@@ -159,7 +175,7 @@ const reciproce_path_making = async(data, setDataFilePaths) => {
         }
       }
     }
-    if(endfunction){console.log("end of reciproce");setDataFilePaths(data)}else{reciproce_path_making(data)}
+    if(endfunction){console.log("end of reciproce");console.log(data);setDataFilePaths(data)}else{reciproce_path_making(data)}
 }
 
 // function that will loop over the metadata and create paths to the data files that can be served for downloading the data 
@@ -174,8 +190,8 @@ const create_data_file_paths = async(metadata, setDataFilePaths) => {
         var root = metadata["@graph"][i]["@id"];
         //for item in hasPart get the @id and add prefix the root to it to make the path
         for (let j = 0; j < metadata["@graph"][i]["hasPart"].length; j++) {
-          //check if the hasPart has a / in its @id => if so then get_data_file_paths
-          if (metadata["@graph"][i]["hasPart"][j]["@id"].includes("/")) {
+          //check if the hasPart ends with a / in its @id => if so then get_data_file_paths
+          if (metadata["@graph"][i]["hasPart"][j]["@id"].endsWith("/")) {
             let returnarray = get_data_file_paths(root, metadata["@graph"][i]["hasPart"][j]["@id"]);
             //append each entry to the given array
             for (let k = 0; k < returnarray.length; k++) {

@@ -113,7 +113,7 @@ function HomePage() {
         }
       }
     }
-    if(endfunction){console.log("end of reciproce");setDataFilePaths(data)}else{reciproce_path_making(data)}
+    if(endfunction){console.log("end of reciproce");console.log(data);setDataFilePaths(data)}else{reciproce_path_making(data)}
   }
 
   // function that will loop over the metadata and create paths to the data files that can be served for downloading the data 

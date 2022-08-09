@@ -76,8 +76,8 @@ function HomePage() {
   useEffect(() => {
     setHash(window.location.hash.substring(1));
     define_constants_from_fragment_identifier(hash, setCurrentDirectory, setCurrentBreadcrumb, setSelectedFile, setLastDirectory, setErrorHash);
-    extract_data_files(metadata, setDataFiles, setLoading);
-    create_data_file_paths(metadata, setDataFilePaths);
+    extract_data_files(metadata, setDataFiles, setLoading, setDataFilePaths);
+    //create_data_file_paths(metadata, setDataFilePaths);
   }, []);
 
   //child function that will display an error if a wrong fragment identifier is used
