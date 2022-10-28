@@ -1,5 +1,5 @@
 //import fileicons
-import { File_Icon } from "../File_Icons/File_Icons";
+import { File_Icon } from "../file_Icons/file_Icons";
 
 const Tree = (props,currentObjectSelected,setCurrentObjectSelected,setTreeInfo,originaltree) => {
     console.log(props);

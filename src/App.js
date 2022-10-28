@@ -1,8 +1,8 @@
 import './App.css';
 import React from 'react';
-import Layout from './Layouts/normal_layout';
-import { getRocrateMetadata, parseJsonld, getDatasets } from './Services/Constants/constants';
-import SideBar from './Components/Sidebar/Sidebar';
+import Layout from './layouts/normal_layout';
+import { getRocrateMetadata, parseJsonld, getDatasets } from './services/constants/constants';
+import SideBar from './components/Sidebar/sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { push as Menu } from 'react-burger-menu';
 import {BiGitBranch} from 'react-icons/bi';

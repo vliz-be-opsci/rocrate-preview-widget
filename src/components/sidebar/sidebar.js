@@ -1,6 +1,6 @@
 import React from 'react';
 import { push as Menu } from 'react-burger-menu';
-import Tree from '../Tree/Tree';
+import Tree from '../tree/tree';
 import { useState, useEffect } from 'react';
 
 const SideBar = (props) => {
