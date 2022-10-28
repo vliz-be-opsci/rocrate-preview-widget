@@ -1,9 +1,0 @@
-.readme-content {
-    height: 55vh;
-    min-height: 55vh;
-    max-height: 55vh;
-}
-
-.readme-content > ul > li {
-    width: 100% !important;
-}
