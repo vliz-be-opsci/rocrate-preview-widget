@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 
 const SideBar = (props) => {
 	console.log(props);
-
 	//function that will be called when the user types in the search bar
 	const handleSearch = (event) => {
 		//get the value of the search bar
@@ -24,12 +23,11 @@ const SideBar = (props) => {
 		<h1>Rocrate Contents</h1>
 		<div className='flex'>
 			<input type="text" placeholder="Search" onChange={(e) => handleSearch(e)} />
-			<button onClick={() => props.setTreeInfo(props.originaltree)}>Reset</button>
-		</div>
-      {Tree(props.treeinfo,props.currentobjectselected,props.setCurrentObjectSelected,props.setTreeInfo,props.originaltree)}
+			<button onClick={() => {props.setTreeInfo(props.originaltree);props.setCurrentDirectory(".")}}>Reset</button>
+		</div>{props.currentdirectory !== "." ? <div className='folder-sidebar'>{props.currentdirectory}</div> : <></>}
+      	{Tree(props.treeinfo,props.currentobjectselected,props.setCurrentObjectSelected,props.setTreeInfo,props.originaltree,props.currentdirectory,props.setCurrentDirectory)}
     </Menu>
     </> 
-    
   );
 };
 

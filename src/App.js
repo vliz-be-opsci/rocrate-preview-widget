@@ -7,21 +7,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {BiGitBranch} from 'react-icons/bi';
 import {useState, useEffect} from 'react';
 function App() {
-  console.log(getRocrateMetadata);
-  const [currentobjectselected, setCurrentObjectSelected] = useState("");
   //call the parseJsonld function and pass the rocrate-metadata.json file as a parameter
   //the parseJsonld function will return the rdf triples
   
-  
+  /*
   parseJsonld(getRocrateMetadata).
   then((rdf_version_jsonld) => {
     console.log(rdf_version_jsonld);
   }).catch((err) => {
     console.log(err);
   });
-  
-  
-  let all_datasets = getDatasets(getRocrateMetadata);
+  */
 
   const getTreeData = (props) => {
 		//get the @graph property from the props
@@ -119,10 +115,13 @@ function App() {
 		getTreeData(getRocrateMetadata);
 	}, [getRocrateMetadata])
 
-  const [treeinfo, setTreeInfo] = useState([]);
+	const [currentobjectselected, setCurrentObjectSelected] = useState("");
+  	const [treeinfo, setTreeInfo] = useState([]);
 	const [searchterm, setSearchTerm] = useState("");
 	const [full_sorted_data, setFullSortedData] = useState([]);
 	const [originaltree, setOriginalTree] = useState([]);
+	const [currentdirectory, setCurrentDirectory] = useState(".");
+
 
 
   return (
@@ -131,14 +130,16 @@ function App() {
         <div className="App" id="outer-container">
           <SideBar 
             setCurrentObjectSelected={setCurrentObjectSelected} 
-			      currentobjectselected={currentobjectselected}
+			currentobjectselected={currentobjectselected}
             rocrateinfo={getRocrateMetadata} 
             treeinfo={treeinfo} 
             setTreeInfo={setTreeInfo} 
             searchterm={searchterm} 
             setSearchTerm={setSearchTerm} 
             full_sorted_data = {full_sorted_data}
-			      originaltree = {originaltree}
+			originaltree = {originaltree}
+			currentdirectory = {currentdirectory}
+			setCurrentDirectory = {setCurrentDirectory}
           />
           <div id="page-wrap" className='notSideBar'>
             <div className='main_window_component'>
