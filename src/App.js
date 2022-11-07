@@ -121,8 +121,7 @@ function App() {
 	const [full_sorted_data, setFullSortedData] = useState([]);
 	const [originaltree, setOriginalTree] = useState([]);
 	const [currentdirectory, setCurrentDirectory] = useState(".");
-
-
+	const [currentWindowDisplay, setCurrentWindowDisplay] = useState("overview");
 
   return (
     <div id="App">
@@ -130,16 +129,16 @@ function App() {
         <div className="App" id="outer-container">
           <SideBar 
             setCurrentObjectSelected={setCurrentObjectSelected} 
-			currentobjectselected={currentobjectselected}
+			      currentobjectselected={currentobjectselected}
             rocrateinfo={getRocrateMetadata} 
             treeinfo={treeinfo} 
             setTreeInfo={setTreeInfo} 
             searchterm={searchterm} 
             setSearchTerm={setSearchTerm} 
             full_sorted_data = {full_sorted_data}
-			originaltree = {originaltree}
-			currentdirectory = {currentdirectory}
-			setCurrentDirectory = {setCurrentDirectory}
+            originaltree = {originaltree}
+            currentdirectory = {currentdirectory}
+            setCurrentDirectory = {setCurrentDirectory}
           />
           <div id="page-wrap" className='notSideBar'>
             <div className='main_window_component'>
@@ -151,7 +150,7 @@ function App() {
             </div>
           </div>
           <div className='mini_dashboard'>
-            <div className='gitbranchicon'><BiGitBranch/></div>
+		  	    <div onClick={(e) => {setCurrentWindowDisplay("git");console.log(currentWindowDisplay)}} className='dashboardicon gitbranchicon'><BiGitBranch /></div>
           </div>
         </div>
       </Layout>
