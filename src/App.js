@@ -124,6 +124,7 @@ function App() {
 	const [originaltree, setOriginalTree] = useState([]);
 	const [currentdirectory, setCurrentDirectory] = useState(".");
 	const [currentWindowDisplay, setCurrentWindowDisplay] = useState("overview");
+	const [mdText, setMdText] = useState('');
 
   return (
     <div id="App">
@@ -131,7 +132,7 @@ function App() {
         <div className="App" id="outer-container">
           <SideBar 
             setCurrentObjectSelected={setCurrentObjectSelected} 
-			      currentobjectselected={currentobjectselected}
+			currentobjectselected={currentobjectselected}
             rocrateinfo={getRocrateMetadata} 
             treeinfo={treeinfo} 
             setTreeInfo={setTreeInfo} 
@@ -148,6 +149,8 @@ function App() {
 				<ReadmeIsland
 					getRocrateMetadata={getRocrateMetadata}
 					currentdirectory={currentdirectory}
+					mdtext = {mdText}
+					setMdText = {setMdText}
 				/>
 			  	<br></br>
                 {currentobjectselected}
