@@ -3,6 +3,7 @@ import React from 'react';
 import Layout from './layouts/normallayout';
 import { getRocrateMetadata } from './services/constants/constants';
 import { getTreeData } from './services/utils/filefunctions';
+import FileContentDisplay from './components/file_content/file_content';
 import SideBar from './components/sidebar/sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BiGitBranch} from 'react-icons/bi';
@@ -51,14 +52,13 @@ function App() {
               <div>
 				<ReadmeIsland
 					getRocrateMetadata={getRocrateMetadata}
-					currentdirectory={currentdirectory}
+					currentobjectselected={currentobjectselected}
 					mdtext = {mdText}
 					setMdText = {setMdText}
 				/>
-			  	<br></br>
-                {currentobjectselected}
-                <br></br>
-                <a href={currentobjectselected} target="_blank" download>{currentobjectselected.split("/").pop()}</a>
+				<FileContentDisplay
+					currentobjectselected={currentobjectselected}
+				/>
               </div>
             </div>
           </div>

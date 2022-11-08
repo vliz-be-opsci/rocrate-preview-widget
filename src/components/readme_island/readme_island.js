@@ -2,7 +2,9 @@
 import ReactMarkdown from "react-markdown";
 const ReadmeIsland = (props) => {
     const getRocrateMetadata = props.getRocrateMetadata;
-    const currentdirectory = props.currentdirectory;
+    const currentobjectselected = props.currentobjectselected;
+    const currentdirectory_pre = currentobjectselected.split("/");
+    const currentdirectory = currentdirectory_pre.slice(0, currentdirectory_pre.length - 1).join("/");
     console.log(props.setMdText("test"));
     //function here that will check if the readme file exists in the foldername given 
     const checkIfReadmeExists = (foldername) => {
