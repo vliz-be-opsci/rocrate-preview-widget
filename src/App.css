@@ -28,13 +28,28 @@ body {
   top: 36px;
 }
 
-.gitbranchicon > svg {
+.archiveicon > svg {
   position: fixed;
   top: 80px;
   left: 24px;
   width: 24px;
   height: 24px;
   color: #373a47;
+}
+
+.gitbranchicon > svg {
+  position: fixed;
+  top: 120px;
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  color: #373a47;
+}
+
+.archiveicon > svg:hover {
+  color: #373a47a4;
+  /*change size of the icon with animation*/
+  -webkit-transform: scale(1.5);
 }
 
 .gitbranchicon > svg:hover {
@@ -171,6 +186,7 @@ body {
   }
 }
 
+/*do all titlebars in the same style as this one*/
 .titlebar-readme {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
