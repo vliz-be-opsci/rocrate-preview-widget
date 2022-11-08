@@ -1,14 +1,18 @@
 /*put css variables here*/
 :root {
-  --primary-color-background: #404352;
-  --primary-color-background-opace: #40435225;
-  --secondary-color-background: #FFF;
+  --primary-color-background: #001D4A;
+  --primary-color-background-opace: #001D4A30;
+  --secondary-color-background: #006992;
+  --secondary-color-background-opace: #00699230;
+  --tertiary-color-background: #27476E;
+  --teriary-color-background-opace: #27476E30;
+  --primary-accent-color: #eca400;
+  --secondary-accent-color: #EAF8BF;
   --primary-color-text: #000;
   --primary-color-text-dashboard: #d1d1d1;
   --secondary-color-text: #FFF;
   --corner-edge: 5px;
 }
-
 
 html,body {
   margin: 0;
@@ -175,12 +179,12 @@ html,body {
 
 /*have an animation that will fade the content up in the course of 0.5 s*/
 .fade-in {
-  animation: fade-in 0.3s forwards;
+  animation: fade-in 0.2s forwards;
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: translateX(-100%);
+    transform: translateY(-20%);
   }
   100% {
     opacity: 1;
@@ -189,20 +193,18 @@ html,body {
 
 /*have an animation that will fade the content down in the course of 0.5 s and height of 0 keep end result animation*/
 .fade-out {
-  height: 0;
-  animation: fade-out 0.3s forwards;
+  animation: fade-out 1s forwards;
   /*display: none;*/
+  display: none;
 }
 @keyframes fade-out {
   0% {
     opacity: 1;
   }
-  99% {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
   100% {
+    transform: translateY(-10%);
     opacity: 0;
+    height: 0;
     z-index: -1;
     position: absolute;
   }
@@ -251,7 +253,7 @@ html,body {
 }
 
 .titlebar-inactive {
-  border-left: var(--primary-color-background) 2px solid;
+  border-left: var(--primary-accent-color) 2px solid;
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
@@ -259,8 +261,7 @@ html,body {
 /*All the custom css for the README.md files are here*/
 .readme-content {
   /*have the y overflow be */
-  max-height: 100vh;
-  min-height: 100vh;
+  max-height: 50vh;
   /*min-width is the idth of the screen minus 70px + the size of the scrollbar*/
   overflow-y: scroll;
   /*hide scrollbar*/
@@ -294,4 +295,76 @@ html,body {
 }
 .readme-content > h4,h5,h6 {
   font-style: italic;
+}
+
+.buttonnavbar {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-size: 1.15em;
+  font-weight: bold;
+  text-align: left;
+  padding: 0.2em;
+}
+
+/*all direct children of the buttonnavbar should be spread out evenly*/
+.buttonnavbar > * {
+  flex: 1;
+}
+
+.buttonnavbar > button {
+  background-color: var(--secondary-color-background);
+  border: var(--secondary-color-background) 2px solid;
+  border-radius: var(--corner-edge);
+  color: var(--secondary-color-text);
+  padding: 0.2em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  margin: 0.5em;
+  cursor: pointer;
+}
+
+.buttonnavbar > button:hover {
+  border: var(--primary-accent-color) 2px solid;
+}
+
+.buttonnavbar > button:active {
+  /*give push feeling*/
+  transform: translateY(2px);
+}
+
+/*all buttons with class selected have background primary-color-background*/
+button.selected {
+  background-color: var(--primary-color-background);
+  border: var(--primary-color-background) 2px solid;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
+table {
+  border-collapse: collapse;
+  border: var(--primary-color-background) 1px solid;
+  width: 90%;
+  margin: 0 auto;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: var(--primary-color-background-opace)}
+
+th {
+  background-color: var(--primary-color-background-opace);
+  color: var(--secondary-color-text);
 }

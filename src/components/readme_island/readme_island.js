@@ -73,7 +73,6 @@ const ReadmeIsland = (props) => {
                 </div> 
             : 
                 <>
-                    no README.md file in {currentdirectory} 
                 </>
             }
         </>
