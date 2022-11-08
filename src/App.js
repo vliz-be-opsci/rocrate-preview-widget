@@ -6,6 +6,8 @@ import SideBar from './components/sidebar/sidebar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BiGitBranch} from 'react-icons/bi';
 import {useState, useEffect} from 'react';
+import ReadmeIsland from './components/readme_island/readme_island';
+
 function App() {
   //call the parseJsonld function and pass the rocrate-metadata.json file as a parameter
   //the parseJsonld function will return the rdf triples
@@ -144,6 +146,11 @@ function App() {
           <div id="page-wrap" className='notSideBar'>
             <div className='main_window_component'>
               <div>
+				<ReadmeIsland
+					getRocrateMetadata={getRocrateMetadata}
+					currentdirectory={currentdirectory}
+				/>
+			  	<br></br>
                 {currentobjectselected}
                 <br></br>
                 <a href={currentobjectselected} target="_blank" download>{currentobjectselected.split("/").pop()}</a>
