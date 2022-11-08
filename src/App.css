@@ -142,3 +142,80 @@ body {
   min-width: calc(100vw - 70px - 20px);
   overflow-y: scroll;
 }
+
+/*have an animation that will fade the content up in the course of 0.5 s*/
+.fade-in {
+  animation: fade-in 0.5s forwards;
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    display: block;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*have an animation that will fade the content down in the course of 0.5 s and height of 0 keep end result animation*/
+.fade-out {
+  animation: fade-out 0.5s forwards;
+  display: none;
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.titlebar-readme {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-size: 1.15em;
+  font-weight: bold;
+  text-align: left;
+  padding: 0.5em;
+}
+
+.titlebar-active {
+  border-left: #373a47 2px solid;
+}
+
+.titlebar-inactive {
+  border-left: #bdc3c7 2px solid;
+}
+
+/*All the custom css for the README.md files are here*/
+.readme-content {
+  /*have the y overflow be */
+  max-height: 100vh;
+  min-height: 100vh;
+  /*min-width is the idth of the screen minus 70px + the size of the scrollbar*/
+  overflow-y: scroll;
+  /*hide scrollbar*/
+  scrollbar-width: none;
+  border-bottom: #373a47 2px solid;
+  margin-right: 20px;
+  max-width: calc(100vw - 70px - 20px);
+}
+
+/*all children of the readme-content class have a margin of 1em and be aligned left*/
+.readme-content > * {
+  text-align: left;
+}
+
+/*all h1 - h4 tags should be bold and h1-2 should be underlined and h4-6 should be italic => all should be child of readme-content*/
+.readme-content > h1,h2,h3{
+  font-weight: bold;
+}
+.readme-content > h1,h2 {
+  text-decoration: underline;
+}
+.readme-content > h4,h5,h6 {
+  font-style: italic;
+}

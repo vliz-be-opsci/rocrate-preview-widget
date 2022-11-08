@@ -40,12 +40,32 @@ const ReadmeIsland = (props) => {
         return check;
     }    
     console.log(currentdirectory);
+    //function here that will change the classname of the titlebar-readme to titlebar-readme titlebar-active or titlebar-readme titlebar-inactive
+    const changeClassname = () => {
+        const titlebar = document.getElementsByClassName("titlebar-readme");
+        const readmecontent = document.getElementsByClassName("readme-content");
+        console.log(titlebar);
+        //check if titlebar has the class titlebar-active if not then add it and delete the class titlebar-inactive, or vice versa
+        if (titlebar[0].classList.contains("titlebar-active")) {
+            titlebar[0].classList.remove("titlebar-active");
+            titlebar[0].classList.add("titlebar-inactive");
+            titlebar[0].innerHTML = `Show Readme of folder: ${currentdirectory}`;
+            readmecontent[0].classList.remove("fade-in");
+            readmecontent[0].classList.add("fade-out");
+        } else {
+            titlebar[0].classList.remove("titlebar-inactive");
+            titlebar[0].classList.add("titlebar-active");
+            titlebar[0].innerHTML = `Hide Readme of folder: ${currentdirectory}`;
+            readmecontent[0].classList.remove("fade-out");
+            readmecontent[0].classList.add("fade-in");
+        }
+    }
 
     return (
         <>
             {checkIfReadmeExists(currentdirectory) == true ? <div className="readme-island">
-                <h3>{currentdirectory}</h3>
-                <div className="readme-content">
+                <h3 onClick={(e)=> {changeClassname()}} className="titlebar-readme titlebar-inactive">Show Readme of folder: {currentdirectory}</h3>
+                <div className="readme-content fade-out">
                     <ReactMarkdown>{props.mdtext}</ReactMarkdown>
                 </div>
             </div> : <>no README.md file in {currentdirectory}</>}
