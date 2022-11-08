@@ -1,5 +1,16 @@
-html,
-body {
+/*put css variables here*/
+:root {
+  --primary-color-background: #404352;
+  --primary-color-background-opace: #40435225;
+  --secondary-color-background: #FFF;
+  --primary-color-text: #000;
+  --primary-color-text-dashboard: #d1d1d1;
+  --secondary-color-text: #FFF;
+  --corner-edge: 5px;
+}
+
+
+html,body {
   margin: 0;
 }
 
@@ -16,7 +27,7 @@ body {
 .bm-item {
   text-decoration: none;
   margin-bottom: 5px;
-  color: #d1d1d1;
+  color: var(--primary-color-text-dashboard);
   transition: color 0.2s;
 }
 
@@ -34,7 +45,7 @@ body {
   left: 24px;
   width: 24px;
   height: 24px;
-  color: #373a47;
+  color: var(--primary-color-background);
 }
 
 .gitbranchicon > svg {
@@ -43,48 +54,52 @@ body {
   left: 24px;
   width: 24px;
   height: 24px;
-  color: #373a47;
+  color: var(--primary-color-background);
 }
 
 .archiveicon > svg:hover {
-  color: #373a47a4;
+  color: var(--primary-color-background);
   /*change size of the icon with animation*/
   -webkit-transform: scale(1.5);
 }
 
 .gitbranchicon > svg:hover {
-  color: #373a47a4;
+  color: var(--primary-color-background);
   /*change size of the icon with animation*/
   -webkit-transform: scale(1.5);
 }
 
 .bm-burger-bars {
-  background: #373a47;
+  background: var(--primary-color-background);
 }
 
+.bm-burger-bars-hover {
+  background: var(--primary-color-background);
+}
+
+/*this variale doesn't really matter since it is hidden for now*/
 .bm-cross-button {
   height: 24px;
   width: 24px;
 }
 
 .bm-cross {
-  background: #bdc3c7;
   display: none; /*hidden for now*/
 }
 
 .bm-menu {
-  background: #373a47;
+  background: var(--primary-color-background);
   padding: 2.5em 1.5em 0;
   font-size: 1.00em;
   overflow-x: scroll;
 }
 
 .bm-morph-shape {
-  fill: #373a47;
+  fill: var(--primary-color-background);
 }
 
 .bm-item-list {
-  color: #b8b7ad;
+  color: var(--primary-color-text-dashboard);
 }
 
 .bm-overlay {
@@ -105,7 +120,7 @@ body {
 .file-sidebar:hover {
   background-color: #f5f5f550;
   border-radius: 5px;
-  border-left:#373a47 2px solid;
+  border-left:var(--primary-color-background) 2px solid;
 }
 
 .file-sidebar{
@@ -146,7 +161,7 @@ body {
 .mini_dashboard {
   max-width: 70px;
   min-height: 100vh;
-  background-color: #373a4725;
+  background-color: var(--primary-color-background-opace);
 }
 
 .main_window_component {
@@ -160,12 +175,12 @@ body {
 
 /*have an animation that will fade the content up in the course of 0.5 s*/
 .fade-in {
-  animation: fade-in 0.5s forwards;
+  animation: fade-in 0.3s forwards;
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    display: block;
+    transform: translateX(-100%);
   }
   100% {
     opacity: 1;
@@ -174,15 +189,22 @@ body {
 
 /*have an animation that will fade the content down in the course of 0.5 s and height of 0 keep end result animation*/
 .fade-out {
-  animation: fade-out 0.5s forwards;
-  display: none;
+  height: 0;
+  animation: fade-out 0.3s forwards;
+  /*display: none;*/
 }
 @keyframes fade-out {
   0% {
     opacity: 1;
   }
+  99% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
   100% {
     opacity: 0;
+    z-index: -1;
+    position: absolute;
   }
 }
 
@@ -196,14 +218,42 @@ body {
   font-weight: bold;
   text-align: left;
   padding: 0.5em;
+  background-color: var(--primary-color-background-opace);
+  border-radius: var(--corner-edge);
+}
+
+.titlebar-filecontent {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  font-size: 1.15em;
+  font-weight: bold;
+  text-align: left;
+  padding: 0.5em;
+  background-color: var(--primary-color-background-opace);
+  border-radius: var(--corner-edge);
 }
 
 .titlebar-active {
-  border-left: #373a47 2px solid;
+  animation: titlebar-active 0.5s forwards;
+}
+
+/*add animation for the titlebar-active that sldies in a background*/
+@keyframes titlebar-active {
+  0% {
+    color: var(--primary-color-text);
+  }
+  100% {
+    background-image: linear-gradient(to right, var(--primary-color-background), var(--primary-color-background-opace));
+    color: var(--secondary-color-text);
+  }
 }
 
 .titlebar-inactive {
-  border-left: #bdc3c7 2px solid;
+  border-left: var(--primary-color-background) 2px solid;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 /*All the custom css for the README.md files are here*/
@@ -215,9 +265,19 @@ body {
   overflow-y: scroll;
   /*hide scrollbar*/
   scrollbar-width: none;
-  border-bottom: #373a47 2px solid;
-  margin-right: 20px;
+  background-color: var(--primary-color-background-opace);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
   max-width: calc(100vw - 70px - 20px);
+  border-radius: var(--corner-edge);
+}
+
+.file-content {
+  background-color: var(--primary-color-background-opace);
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+  border-radius: var(--corner-edge);
 }
 
 /*all children of the readme-content class have a margin of 1em and be aligned left*/

@@ -46,7 +46,6 @@ const ReadmeIsland = (props) => {
     const changeClassname = () => {
         const titlebar = document.getElementsByClassName("titlebar-readme");
         const readmecontent = document.getElementsByClassName("readme-content");
-        console.log(titlebar);
         //check if titlebar has the class titlebar-active if not then add it and delete the class titlebar-inactive, or vice versa
         if (titlebar[0].classList.contains("titlebar-active")) {
             titlebar[0].classList.remove("titlebar-active");
@@ -65,12 +64,18 @@ const ReadmeIsland = (props) => {
 
     return (
         <>
-            {checkIfReadmeExists(currentdirectory) == true ? <div className="readme-island">
-                <h3 onClick={(e)=> {changeClassname()}} className="titlebar-readme titlebar-inactive">Show Readme of folder: {currentdirectory}</h3>
-                <div className="readme-content fade-out">
-                    <ReactMarkdown>{props.mdtext}</ReactMarkdown>
-                </div>
-            </div> : <>no README.md file in {currentdirectory}</>}
+            {checkIfReadmeExists(currentdirectory) == true ? 
+                <div className="readme-island">
+                    <h3 onClick={(e)=> {changeClassname()}} className="titlebar-readme titlebar-inactive">Show Readme of folder: {currentdirectory}</h3>
+                    <div className="readme-content fade-out">
+                        <ReactMarkdown>{props.mdtext}</ReactMarkdown>
+                    </div>
+                </div> 
+            : 
+                <>
+                    no README.md file in {currentdirectory} 
+                </>
+            }
         </>
     )
 }

@@ -1,4 +1,14 @@
 //this file will contain all functions that are used to manipulate the file system
+const mime = require('mime');
+
+const get_file_type = (file) => {
+    //get extention of the file
+    let extention = file.split(".").pop();
+    //get mimetype of the extention
+    let mimetype = mime.getType(extention);
+    return mimetype;
+}
+
 const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
     //get the @graph property from the props
     const graph = props["@graph"];
@@ -93,4 +103,4 @@ const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
 }
 
 //export all necessary functions
-export { getTreeData };
+export { getTreeData , get_file_type};

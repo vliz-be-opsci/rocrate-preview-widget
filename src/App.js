@@ -21,6 +21,20 @@ function App() {
 	const [currentWindowDisplay, setCurrentWindowDisplay] = useState("overview");
 	const [mdText, setMdText] = useState('');
 
+	//use effect that will change chcek th url if there is a fragment identifier 
+	//and if there is, then it will set the current object selected to the fragment identifier
+	useEffect(() => {
+		if (window.location.hash) {
+			console.log(window.location.hash);
+			setCurrentObjectSelected(window.location.hash.substring(1));
+		}
+	}, []);
+
+	//use effect that will change the window hash whenever the current object selected changes
+	useEffect(() => {
+		window.location.hash = currentobjectselected;
+	}, [currentobjectselected]);
+
 	useEffect(() => {
 		getTreeData(
 			getRocrateMetadata, 
@@ -58,6 +72,7 @@ function App() {
 				/>
 				<FileContentDisplay
 					currentobjectselected={currentobjectselected}
+					rocrateinfo={getRocrateMetadata}
 				/>
               </div>
             </div>
