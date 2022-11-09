@@ -86,7 +86,7 @@ const FileContentDisplay = (props) => {
                     <button className="navbarbutton-file-content selected" onClick={(e) => {handleSelectButton(e)}}>Preview</button>
                     <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton(e)}}>Download</button>
                 </div>
-                <AnnotationTable annotations={annotations[0]}/>
+                <AnnotationTable annotations={annotations[0]} rocrateinfo={rocrateinfo}/>
                 <p>File type: {file_type}</p>
                 <p>File name: {file_name}</p>
                 <a href={currentobjectselected} target="_blank" download>{currentobjectselected.split("/").pop()}</a>
