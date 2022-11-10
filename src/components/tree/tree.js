@@ -48,12 +48,9 @@ const Tree = (props,currentObjectSelected,setCurrentObjectSelected,setTreeInfo,o
 
     //function that will be called when the user clicks on a file
     const handleClickObject = (event,name) => {
-
         //TODO : find a replacement for getting the full name of the object
-
         //get the value of the file
         const file_name = name;
-
         //get all the nodes that are the parent of this event
         var nodes = []
         var element = event.target;
@@ -86,21 +83,19 @@ const Tree = (props,currentObjectSelected,setCurrentObjectSelected,setTreeInfo,o
         }
 
         console.log(full_path);
-
-        //check if current object selected has Resources/ in it, if it does then remove it from the string
-        if (full_path.includes("Resources/")) {
-            full_path = full_path.replace("Resources/","");
-        }
-
         //if filename does not include . then add / to the end of the string and if Resources/ is not in the string then add it
+        console.log(full_path);
         if (!file_name.includes(".") && !full_path.includes("Resources/")) {
             full_path = full_path + "/";    
         }
         console.log(full_path);
+        //check if current object selected has Resources/ in it, if it does then remove it from the string
+        if (full_path.includes("Resources/")) {
+            full_path = full_path.replace("Resources/","");
+        }
         //set the current object selected to the file
         setCurrentObjectSelected(full_path);
     }
-
 
     return props.map((item, index) => {
         //if the item is an object, then it is a folder

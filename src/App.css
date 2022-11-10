@@ -1,17 +1,18 @@
 /*put css variables here*/
 :root {
-  --primary-color-background: #001D4A;
-  --primary-color-background-opace: #001D4A30;
-  --secondary-color-background: #006992;
-  --secondary-color-background-opace: #00699230;
-  --tertiary-color-background: #27476E;
-  --teriary-color-background-opace: #27476E30;
-  --primary-accent-color: #eca400;
-  --secondary-accent-color: #EAF8BF;
-  --primary-color-text: #000;
-  --primary-color-text-dashboard: #d1d1d1;
-  --secondary-color-text: #FFF;
-  --corner-edge: 5px;
+  --primary-color-background: #023047; /*#001D4A;*/ 
+  --primary-color-background-opace: #02304730; /*#001D4A;*/
+  --secondary-color-background: #219EBC; /*#006992;*/
+  --secondary-color-background-opace: #219EBC30; /*#006992;*/
+  --tertiary-color-background: #8ECAE6; /*#27476E;*/
+  --teriary-color-background-opace: #8ECAE630; /*#27476E;*/
+  --primary-accent-color: #FFB703; /*#eca400;*/
+  --secondary-accent-color: #FB8500; /*#EAF8BF;*/
+  --primary-color-text: #000; /*#000;*/
+  --primary-color-text-dashboard: #d1d1d1; /*#d1d1d1;*/
+  --secondary-color-text: #FFF; /*#FFF;*/
+  --link-text-color: #6D6875; /*#eca400;*/
+  --corner-edge: 5px; /*5px;*/
 }
 
 html,body {
@@ -372,12 +373,35 @@ th {
 /*have all a with class anchortag aligned left
 and have the text-decoration be none*/
 a.anchortag {
-  color: var(--primary-accent-color);
+  color: var(--link-text-color);
   float: left ;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+a.anchortag:hover {
+  color: var(--secondary-accent-color);
+  text-decoration: none;
 }
 
 .annotationinfoicon {
-  color: var(--tertiary-color-background);
+  color: var(--primary-color-background);
   margin-left: 0.5em;
   font-size: 1.2em;
+}
+
+.annotationinfoicon:hover {
+  color: var(--secondary-accent-color);
+  /*animation that grows the icon*/
+  animation: grow 0.3s forwards;
+}
+
+/*animation that grows the icon*/
+@keyframes grow {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.2);
+  }
 }

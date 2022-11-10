@@ -1,5 +1,6 @@
 //this component will display the annotations in a table wit a link to the respective schema.org page
 import  {AiFillInfoCircle}  from  "react-icons/ai";
+import {BiAnchor}  from  "react-icons/bi";
 
 const AnnotationTable = (props) => {
     //get the annotations for the current object selected
@@ -60,7 +61,7 @@ const AnnotationTable = (props) => {
                                     return(
                                         <tr key={key}>
                                             <td><a href={getAnnotationUrl(key)} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
-                                            <td><a className="anchortag" onClick={(e)=> scrollToElement(annotation[key]["@id"])}>{annotation[key]["@id"]}</a></td>
+                                            <td><a className="anchortag" onClick={(e)=> scrollToElement(annotation[key]["@id"])}><BiAnchor/>{annotation[key]["@id"]}</a></td>
                                         </tr>
                                     )
                                 }
@@ -75,7 +76,7 @@ const AnnotationTable = (props) => {
                                         console.log(item);
                                         if(item.hasOwnProperty("@id")){
                                             //check if the item["id"] is in the all_ids list
-                                            listitems.push(<li key={item["@id"]}><a className="anchortag" onClick={(e)=> scrollToElement(item["@id"])}>{item["@id"]}</a></li>);
+                                            listitems.push(<li key={item["@id"]}><a className="anchortag" onClick={(e)=> scrollToElement(item["@id"])}><BiAnchor/>{item["@id"]}</a></li>);
                                         }
                                     }
                                     else{

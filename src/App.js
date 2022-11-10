@@ -26,7 +26,15 @@ function App() {
 	useEffect(() => {
 		if (window.location.hash) {
 			console.log(window.location.hash);
-			setCurrentObjectSelected(window.location.hash.substring(1));
+			//if the hash is empty then set the current object selected to the first object in the tree
+			if (window.location.hash === "#" || window.location.hash === "") {
+				setCurrentObjectSelected("#./");
+			} else {
+				setCurrentObjectSelected(window.location.hash.replace("#", ""));
+			}
+		}
+		else {
+			setCurrentObjectSelected("#./");
 		}
 	}, []);
 
