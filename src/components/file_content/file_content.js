@@ -8,6 +8,7 @@ const FileContentDisplay = (props) => {
     const currentobjectselected = props.currentobjectselected;
     const rocrateinfo = props.rocrateinfo;
     console.log(rocrateinfo["@graph"]);
+    console.log(currentobjectselected);
     //get the annotations for the current object selected
     const annotations = rocrateinfo["@graph"].filter((item) => item["@id"] === currentobjectselected);
     console.log(annotations[0]);

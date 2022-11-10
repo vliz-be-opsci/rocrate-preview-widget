@@ -32,7 +32,14 @@ function App() {
 
 	//use effect that will change the window hash whenever the current object selected changes
 	useEffect(() => {
+		//check if the currentobjectselected has Resources/ in it
 		window.location.hash = currentobjectselected;
+		if (currentobjectselected.includes("Resources/")) {
+			//if it does, then cut off the Resources/ part of the string
+			const new_current_object_selected = currentobjectselected.substring(10);
+			//set the window hash to the new current object selected
+			window.location.hash = new_current_object_selected;
+		}
 	}, [currentobjectselected]);
 
 	useEffect(() => {

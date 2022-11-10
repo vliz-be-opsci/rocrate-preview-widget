@@ -17,6 +17,7 @@ const AnnotationTable = (props) => {
     const secondcheck = (objectsecondcheck, annotations,toconcatdict,key) => {
         let tocheckobject = objectsecondcheck;
         console.log(tocheckobject);
+        console.log(annotations);
         if (tocheckobject.hasOwnProperty("@id")) {
             if (typeof tocheckobject["@id"] === 'string') {
                 const checkobject = rocrateinfo["@graph"].filter((item) => item["@id"] === tocheckobject["@id"]);
@@ -50,21 +51,33 @@ const AnnotationTable = (props) => {
                     toconcatdict[key] = objectsecondcheck;
                 }
             }
+            toconcatdict[key] = objectsecondcheck;
         }
     }
     const getAnnotations = (obj,annotations) => {
         let toconcatdict = {};
         console.log(obj);
         for (let key in obj) {
-            console.log(key);
+            //console.log(key);
+            //console.log(Array.isArray(obj[key]));
+            if(Array.isArray(obj[key])) {
+                console.log(obj[key]);
+                let objectsecondcheck = obj[key];
+                for (let i = 0; i < objectsecondcheck.length; i++) {
+                    secondcheck(obj[key],annotations,toconcatdict,key);
+                    toconcatdict[key] = objectsecondcheck;
+                }
+                continue;
+            }
             if (typeof obj[key] === 'object') {
                 //check first if the object has key "@id" in it , if it does then check if the value if the key is a string
                 //if it is a string then check in the rocrateinfo["@graph"] if the value of the key "@id" is equal to the value of the key "@id" in the object
                 //if it is equal then getAnnotations(obj[key]) and add the key and value to the dict
                 secondcheck(obj[key],annotations,toconcatdict,key);
-            } else {
-                toconcatdict[key] = obj[key];
+                //continue to next item in the object
+                continue;
             }
+            toconcatdict[key] = obj[key];
         }
         annotations.push(toconcatdict);
         return annotations;
@@ -148,6 +161,8 @@ const AnnotationTable = (props) => {
         let element_to_scroll = document.getElementById(tofind);
         //scroll to the element - 100px so that the element is not at the top of the page
         element_to_scroll.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        //set hash to the element id
+        window.location.hash = tofind;
     }
 
     //go over the annotations_list_checked and get all the values that have the key @id
@@ -186,7 +201,7 @@ const AnnotationTable = (props) => {
                         //get the annotation where the key is @id
                         let annotation_id = annotation["@id"];
                         return (
-                            <table id={annotation_id}>
+                            <table id={"#"+annotation_id}>
                                 <thead>
                                     <tr>
                                         <th style={{ minWidth: '25%', maxWidth: '30%' , textAlign: 'left'}}>Annotation</th>
@@ -208,7 +223,7 @@ const AnnotationTable = (props) => {
                                                                 {annotation[key].map((value) => {
                                                                     console.log(value);
                                                                     return(
-                                                                        <a onClick={(e) => scrollToElement(annotation[key])} className="anchortag"><li>{value}</li></a>
+                                                                        <a onClick={(e) => scrollToElement("#"+annotation[key])} className="anchortag"><li>{value}</li></a>
                                                                     )
                                                                 })}
                                                             </ul>
@@ -220,7 +235,7 @@ const AnnotationTable = (props) => {
                                                 return (
                                                     <tr>
                                                         <td><a href={getAnnotationUrl(key)} target="_blank"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
-                                                        <a onClick={(e) => scrollToElement(annotation[key])} className="anchortag"><td>{annotation[key]}</td></a>
+                                                        <a onClick={(e) => scrollToElement("#"+annotation[key])} className="anchortag"><td>{annotation[key]}</td></a>
                                                     </tr>
                                                 )
                                             }

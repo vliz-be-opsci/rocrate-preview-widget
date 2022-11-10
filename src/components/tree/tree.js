@@ -87,6 +87,10 @@ const Tree = (props,currentObjectSelected,setCurrentObjectSelected,setTreeInfo,o
 
         //console.log(full_path);
 
+        //check if current object selected has Resources/ in it, if it does then remove it from the string
+        if (full_path.includes("Resources/")) {
+            full_path = full_path.replace("Resources/","");
+        }
         //set the current object selected to the file
         setCurrentObjectSelected(full_path);
     }

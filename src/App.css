@@ -372,9 +372,8 @@ th {
 /*have all a with class anchortag aligned left
 and have the text-decoration be none*/
 a.anchortag {
-  text-decoration: none;
-  text-align: left;
   color: var(--primary-accent-color);
+  float: left ;
 }
 
 .annotationinfoicon {

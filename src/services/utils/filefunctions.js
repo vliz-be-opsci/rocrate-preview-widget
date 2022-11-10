@@ -92,6 +92,7 @@ const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
     //loop through all the items in the @graph property and check if the item is a File and also not an url
     let resource_data = [];
     graph.forEach((item) => {
+        resource_data.push(item["@id"]);
         if (item["@id"].indexOf("http") !== -1) {
             resource_data.push(item["@id"]);
         }
