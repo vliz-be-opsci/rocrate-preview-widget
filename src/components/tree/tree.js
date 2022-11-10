@@ -85,12 +85,18 @@ const Tree = (props,currentObjectSelected,setCurrentObjectSelected,setTreeInfo,o
             full_path = currentdirectory + "/" + full_path;
         }
 
-        //console.log(full_path);
+        console.log(full_path);
 
         //check if current object selected has Resources/ in it, if it does then remove it from the string
         if (full_path.includes("Resources/")) {
             full_path = full_path.replace("Resources/","");
         }
+
+        //if filename does not include . then add / to the end of the string and if Resources/ is not in the string then add it
+        if (!file_name.includes(".") && !full_path.includes("Resources/")) {
+            full_path = full_path + "/";    
+        }
+        console.log(full_path);
         //set the current object selected to the file
         setCurrentObjectSelected(full_path);
     }

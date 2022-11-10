@@ -92,8 +92,8 @@ const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
     //loop through all the items in the @graph property and check if the item is a File and also not an url
     let resource_data = [];
     graph.forEach((item) => {
-        resource_data.push(item["@id"]);
-        if (item["@id"].indexOf("http") !== -1) {
+        //if the item[@type] is not a Dataset or a File and also not an url, then push the item to the treedata array
+        if(item["@type"] !== "Dataset" && item["@type"] !== "File") {
             resource_data.push(item["@id"]);
         }
     })
