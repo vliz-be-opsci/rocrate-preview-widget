@@ -30,6 +30,22 @@ function App() {
 		}
 	}, []);
 
+	//have a looker function that will detect if the hash of the url has changed 
+	//and if it has then it will set the current object selected to the new hash
+	useEffect(() => {
+		const hashChangeHandler = () => {
+			if (window.location.hash) {
+				console.log(window.location.hash);
+				setCurrentObjectSelected(window.location.hash.substring(1));
+			}
+		}
+		window.addEventListener('hashchange', hashChangeHandler);
+		return () => {
+			window.removeEventListener('hashchange', hashChangeHandler);
+		}
+	}, []);
+	
+
 	//use effect that will change the window hash whenever the current object selected changes
 	useEffect(() => {
 		//check if the currentobjectselected has Resources/ in it
@@ -79,6 +95,7 @@ function App() {
 				/>
 				<FileContentDisplay
 					currentobjectselected={currentobjectselected}
+					setCurrentObjectSelected={setCurrentObjectSelected}
 					rocrateinfo={getRocrateMetadata}
 				/>
               </div>
