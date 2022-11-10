@@ -368,3 +368,17 @@ th {
   background-color: var(--primary-color-background-opace);
   color: var(--secondary-color-text);
 }
+
+/*have all a with class anchortag aligned left
+and have the text-decoration be none*/
+a.anchortag {
+  text-decoration: none;
+  text-align: left;
+  color: var(--primary-accent-color);
+}
+
+.annotationinfoicon {
+  color: var(--tertiary-color-background);
+  margin-left: 0.5em;
+  font-size: 1.2em;
+}

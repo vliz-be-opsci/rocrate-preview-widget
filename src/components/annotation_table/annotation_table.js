@@ -1,4 +1,5 @@
 //this component will display the annotations in a table wit a link to the respective schema.org page
+import  {AiFillInfoCircle}  from  "react-icons/ai";
 
 const AnnotationTable = (props) => {
     //get the annotations for the current object selected
@@ -43,11 +44,8 @@ const AnnotationTable = (props) => {
                                 let extradict  = getAnnotations(checkobject[0],annotations);
                                 annotations = annotations.concat(extradict);
                             }
-                            //toconcatdict[key] = objectsecondcheck[i]["@id"];
-                            
                         }
                     }
-                    //replace the objectsecondcheck[i] with the value of the @id key
                 } else {
                     toconcatdict[key] = objectsecondcheck;
                 }
@@ -121,8 +119,6 @@ const AnnotationTable = (props) => {
     annotations_list_checked.reverse();
     console.log(annotations_list_checked);
 
-
-
     //function here that will check if all the values in the annotation are not an array or an object, if so leave them out of the table
     const checkIfAllValuesAreNotArrayOrObject = (tocheckobject) => {
         let allValuesAreNotArrayOrObject = {}
@@ -143,6 +139,42 @@ const AnnotationTable = (props) => {
     } catch (error) {
         console.log(error);
     }
+
+    //function here that will be used to scroll to a specific element on the page
+    const scrollToElement = (element) => {
+        console.log(element);
+        let tofind = element;
+        //find the element 
+        let element_to_scroll = document.getElementById(tofind);
+        //scroll to the element - 100px so that the element is not at the top of the page
+        element_to_scroll.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    }
+
+    //go over the annotations_list_checked and get all the values that have the key @id
+    const getIds = (annotations) => {
+        let ids = [];
+        for (let i = 0; i < annotations.length; i++) {
+            let annotation = annotations[i];
+            for (let key in annotation) {
+                if (key === "@id") {
+                    ids.push(annotation[key]);
+                }
+            }
+        }
+        return ids;
+    }
+    let all_ids = getIds(annotations_list_checked);
+
+    //function that will return a url that will be used to get the annotation
+    const getAnnotationUrl = (id) => {
+        let url = "";
+        if (id.includes("http")) {
+            url = id;
+        } else {
+            url = "https://schema.org/" + id;
+        }
+        return url;
+    }
     
     try {
         return (
@@ -151,8 +183,10 @@ const AnnotationTable = (props) => {
                     //check if the annotation is not empty
                     if (Object.keys(annotation).length !== 0) {
                         //make table from annotation
+                        //get the annotation where the key is @id
+                        let annotation_id = annotation["@id"];
                         return (
-                            <table>
+                            <table id={annotation_id}>
                                 <thead>
                                     <tr>
                                         <th style={{ minWidth: '25%', maxWidth: '30%' , textAlign: 'left'}}>Annotation</th>
@@ -161,32 +195,66 @@ const AnnotationTable = (props) => {
                                 </thead>
                                 <tbody>
                                     {Object.keys(annotation).map((key) => {
-                                        //if the annotation[key] is an array return a ul with the values of the array as li
-                                        if (Array.isArray(annotation[key])) {
-                                            console.log(annotation[key]);
-                                            return (
-                                                <tr>
-                                                    <td>{key}</td>
-                                                    <td>
-                                                        <ul>
-                                                            {annotation[key].map((value) => {
-                                                                console.log(value);
-                                                                return(
-                                                                    <li>{value}</li>
-                                                                )
-                                                            })}
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        } else {
-                                            return (
-                                                <tr>
-                                                    <td>{key}</td>
-                                                    <td>{annotation[key]}</td>
-                                                </tr>
-                                            )
+                                        //check if the annotaion[key] is in the all_ids list
+                                        if (all_ids.includes(annotation[key]) && key !== "@id" && annotation_id !== annotation[key]){
+                                            //if it is then make the value a link that will scroll to the element with the id of the value
+                                            if(Array.isArray(annotation[key])) {
+                                                console.log(annotation[key]);
+                                                return (
+                                                    <tr>
+                                                        <td><a href={getAnnotationUrl(key)} target="_blank"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                                        <td>
+                                                            <ul>
+                                                                {annotation[key].map((value) => {
+                                                                    console.log(value);
+                                                                    return(
+                                                                        <a onClick={(e) => scrollToElement(annotation[key])} className="anchortag"><li>{value}</li></a>
+                                                                    )
+                                                                })}
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            } else {
+                                                //check first if the key is @id and if so add id tag to the key that iw the value of the key
+                                                return (
+                                                    <tr>
+                                                        <td><a href={getAnnotationUrl(key)} target="_blank"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                                        <a onClick={(e) => scrollToElement(annotation[key])} className="anchortag"><td>{annotation[key]}</td></a>
+                                                    </tr>
+                                                )
+                                            }
+                                        }else{
+                                            //if it is not then just display the value
+                                            if (Array.isArray(annotation[key])) {
+                                                console.log(annotation[key]);
+                                                return (
+                                                    <tr>
+                                                        <td><a href={getAnnotationUrl(key)} target="_blank"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                                        <td>
+                                                            <ul>
+                                                                {annotation[key].map((value) => {
+                                                                    console.log(value);
+                                                                    return(
+                                                                        <li>{value}</li>
+                                                                    )
+                                                                })}
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            } else {
+                                                //check first if the key is @id and if so add id tag to the key that iw the value of the key
+                                                return (
+                                                    <tr>
+                                                        <td><a href={getAnnotationUrl(key)} target="_blank"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                                        <td>{annotation[key]}</td>
+                                                    </tr>
+                                                )
+                                            }
                                         }
+
+                                        
                                     })}
                                 </tbody>
                             </table>
