@@ -18,6 +18,7 @@ function PreviewSelectorFile(props) {
     const [rows, setRows] = useState([]);
     const [file_url, setFileurl] = useState("");
 
+
     var file_mimetype = "";
     try {
         file_mimetype = props.file_mimetype;
@@ -37,7 +38,10 @@ function PreviewSelectorFile(props) {
         }
     }
 
-    //methods
+    //refresh the page whenever props.file_url changes
+    useEffect(() => {
+        Getfileurl();
+    }, [props.file_url]);
 
 
     function GetCsvdata() {
