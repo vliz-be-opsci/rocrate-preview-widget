@@ -354,7 +354,7 @@ button.selected {
 table {
   border-collapse: collapse;
   border: var(--primary-color-background) 1px solid;
-  width: 90%;
+  width: 96%;
   margin: 1em auto;
 }
 
@@ -404,4 +404,34 @@ a.anchortag:hover {
   100% {
     transform: scale(1.2);
   }
+}
+
+.basetablerow:hover {
+  background-color: var(--tertiary-color-background);
+  font-weight: bold;
+}
+
+.synthax_file_preview {
+  width: 100%;
+  height: 55vh;
+  min-height: 55vh;
+  max-height: 55vh;
+}
+
+.preview-file {
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.preview-file > div > img {
+  aspect-ratio: 1;
+}
+
+.general_file_preview {
+  width: 70vw;
+}
+
+.code-preview {
+  text-align: left;
 }

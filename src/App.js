@@ -28,13 +28,11 @@ function App() {
 			console.log(window.location.hash);
 			//if the hash is empty then set the current object selected to the first object in the tree
 			if (window.location.hash === "#" || window.location.hash === "") {
-				setCurrentObjectSelected("#./");
-			} else {
-				setCurrentObjectSelected(window.location.hash.replace("#", ""));
-			}
+				setCurrentObjectSelected("");
+			} 
 		}
 		else {
-			setCurrentObjectSelected("#./");
+			setCurrentObjectSelected("");
 		}
 	}, []);
 
@@ -46,14 +44,15 @@ function App() {
 				console.log(window.location.hash);
 				setCurrentObjectSelected(window.location.hash.substring(1));
 			}
+			else {
+				setCurrentObjectSelected("");
+			}
 		}
 		window.addEventListener('hashchange', hashChangeHandler);
 		return () => {
 			window.removeEventListener('hashchange', hashChangeHandler);
 		}
 	}, []);
-	
-
 	//use effect that will change the window hash whenever the current object selected changes
 	useEffect(() => {
 		//check if the currentobjectselected has Resources/ in it

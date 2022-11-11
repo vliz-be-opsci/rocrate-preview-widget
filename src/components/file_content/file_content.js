@@ -2,6 +2,7 @@
 import { get_file_type } from "../../services/utils/filefunctions";
 import { useEffect } from "react";
 import AnnotationTable from "../annotation_table/annotation_table";
+import PreviewFile from "../preview_file/preview_file";
 
 const FileContentDisplay = (props) => {
     //get the file content
@@ -89,9 +90,8 @@ const FileContentDisplay = (props) => {
                     <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton(e)}}>Download</button>
                 </div>
                 <AnnotationTable annotations={annotations[0]} rocrateinfo={rocrateinfo} setCurrentObjectSelected={setCurrentObjectSelected}/>
-                <p>File type: {file_type}</p>
-                <p>File name: {file_name}</p>
-                <a href={currentobjectselected} target="_blank" download>{currentobjectselected.split("/").pop()}</a>
+                <PreviewFile file_type={file_type} file_name={file_name} rocrateinfo={rocrateinfo} setCurrentObjectSelected={setCurrentObjectSelected} currentobjectselected={currentobjectselected}/>
+                <br></br>
             </div>
         </>
     )
