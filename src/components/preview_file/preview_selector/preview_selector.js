@@ -5,6 +5,7 @@ import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import Papa from 'papaparse';
 import DataGrid from 'react-data-grid';
+import 'react-data-grid/lib/styles.css';
 import {Alert} from 'react-bootstrap';
 // const imports here  
 import CodeHightlight from '../code_highlight/code_highlight';
@@ -41,8 +42,8 @@ function PreviewSelectorFile(props) {
 
     function GetCsvdata() {
         console.log(file_url);
-        //file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
-        Papa.parse(file_url, {
+        let test_file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
+        Papa.parse(test_file_url, {
             download: true,
             dynamicTyping: true,
             error: function(error) {
@@ -59,13 +60,14 @@ function PreviewSelectorFile(props) {
                                     key: results.data[i][j],
                                     name: results.data[i][j],
                                     resizable: true,
-                                    frozen: true
+                                    suppressSizeToFit: true
                                 });
                             }else{
                                 columns.push({
                                     key: results.data[i][j],
                                     name: results.data[i][j],
-                                    resizable: true
+                                    resizable: true,
+                                    suppressSizeToFit: true
                                 });
                             }
                         }
