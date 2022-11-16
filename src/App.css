@@ -426,6 +426,7 @@ a.anchortag:hover {
 
 .preview-file > div > img {
   aspect-ratio: 1;
+  min-width: 50vw;
 }
 
 .general_file_preview {

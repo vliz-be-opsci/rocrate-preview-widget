@@ -148,7 +148,6 @@ function PreviewSelectorFile(props) {
                       className='general_file_preview'
                       type={"url"}
                       url={file_url}
-                      height={"55vh"}
                       onError={console.log('error has occured')}
                     />
                 )
@@ -173,7 +172,6 @@ function PreviewSelectorFile(props) {
                 return(
                     <ReactAudioPlayer
                         src={file_url}
-                        autoPlay="false"
                         controls="true"
                     />
                 )
@@ -183,7 +181,6 @@ function PreviewSelectorFile(props) {
                     <FilePreview
                       type={"url"}
                       url={file_url}
-                      height={"55vh"}
                       width={"100%"}
                       onError={console.log('error has occured')}
                     />
@@ -201,7 +198,7 @@ function PreviewSelectorFile(props) {
                 if (file_url.includes("xlsx")) {
                     console.log("excel");
                     return (
-                        <>zip</>
+                        <>excel files have not yet been implemented to preview</>
                     )
                 } else {
                     return "other";
@@ -210,13 +207,13 @@ function PreviewSelectorFile(props) {
         } catch (error) {
             console.log(error);
             //convert error object to text
-            var error = JSON.stringify(error);
+            var error_json = JSON.stringify(error);
             return(
                 <Alert variant="danger">
                   <div className="errorhash">
                     <Alert.Heading>Preview file error</Alert.Heading>
                     <p>
-                        {error}
+                        {error_json}
                     </p>
                     <p>
                         You can still download the file from this <a href={file_url}>link</a>
@@ -245,12 +242,13 @@ function PreviewSelectorFile(props) {
             </div>
         );
     } catch (error) {
+        var error_json = JSON.stringify(error);
         return(
             <Alert variant="danger">
               <div className="errorhash">
                 <Alert.Heading>Preview file error</Alert.Heading>
                 <p>
-                    {error}
+                    {error_json}
                 </p>
                 <p>
                     You can still download the file from this <a href={file_url}>link</a>
