@@ -45,7 +45,7 @@ const PreviewFile = (props) => {
         if (file_name !== undefined && file_name !== null && file_name.length !== 0 && file_name !== "" && annotations["@type"] === "File") {
             return (
                 <div className="File-content-panel Preview display-block">
-                    <a href={currentobjectselected} target="_blank" download>{currentobjectselected.split("/").pop()}</a>
+                    
                     <PreviewSelectorFile file_mimetype={file_type} file_url={currentobjectselected} />
                 </div>
             )
