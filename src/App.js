@@ -45,6 +45,7 @@ function App() {
 				return;
 			}
 			console.log("no hash in url");
+			setCurrentObjectSelected("");
 			return;
 		}
 		window.addEventListener('hashchange', hashChangeHandler);

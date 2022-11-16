@@ -139,7 +139,7 @@ const PreviewFile = (props) => {
                     {rocrateinfo["@graph"].map((item, index) => {
                         return (
                             <tr key={index} onClick={() => setCurrentObjectSelected(item["@id"])} className="basetablerow">
-                                <td>{item["@type"]}</td>
+                                <td><a href={getAnnotationUrl(item["@type"])} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {item["@type"]}</td>
                                 <td>{item["@id"]}</td>
                             </tr>
                         )
