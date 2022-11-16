@@ -3,6 +3,11 @@ import { get_file_type } from "../../services/utils/filefunctions";
 import { useEffect } from "react";
 import AnnotationTable from "../annotation_table/annotation_table";
 import PreviewFile from "../preview_file/preview_file";
+import {SiGraphql} from "react-icons/si";
+import {BsCloudDownloadFill} from "react-icons/bs";
+import {MdOutlinePreview} from "react-icons/md";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const FileContentDisplay = (props) => {
     //get the file content
@@ -50,11 +55,23 @@ const FileContentDisplay = (props) => {
     //const here that will handlesleectbutton
     const handleSelectButton = (event) => {
         //geth the classes of the button selected
-        const buttonselected = event.target;
+        const buttonselected = event[0].target;
+        const buttonselectedvalue = event[1];
+
+        //if buttonselectedvalue is download then download the file
+        if (buttonselectedvalue === "download") {
+            //download the file
+            const downloadlink = document.createElement("a");
+            downloadlink.href = currentobjectselected;
+            downloadlink.target = "_blank";
+            downloadlink.download = file_name;
+            downloadlink.click();
+            return;
+        }
+
+        console.log(buttonselected);
         const buttonselectedclasses = buttonselected.classList;
-        //get the inner html of the button 
-        const buttonselectedvalue = buttonselected.innerHTML;
-        console.log(buttonselectedvalue);
+        console.log(buttonselectedclasses);
         //get the element in the document that has buttonselectedvalue as its class
         const elementselected = document.getElementsByClassName(buttonselectedvalue);
         console.log(elementselected);
@@ -85,9 +102,40 @@ const FileContentDisplay = (props) => {
             <h3 onClick={(e)=> {changeClassname()}} className="titlebar-filecontent titlebar-active">Hide {file_name} info</h3>
             <div className="file-content fade-in">
                 <div className="buttonnavbar flex">
-                    <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton(e)}}>Annotations</button>
-                    <button className="navbarbutton-file-content selected" onClick={(e) => {handleSelectButton(e)}}>Preview</button>
-                    <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton(e)}}>Download</button>
+                    <OverlayTrigger
+                        key={"overlay-annotations"}
+                        placement={"bottom"}
+                        overlay={
+                            <Tooltip id={`tooltip-annotations`}>
+                                <strong>Annotations</strong>
+                            </Tooltip>
+                        }
+                    >
+                        <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton([e,"Annotations"])}}><SiGraphql/></button>
+                    </OverlayTrigger>
+                    <OverlayTrigger
+                        key={"overlay-preview"}
+                        placement={"bottom"}
+                        overlay={
+                            <Tooltip id={`tooltip-preview`}>
+                                <strong>Preview</strong>
+                            </Tooltip>
+                        }
+                    >
+                        <button className="navbarbutton-file-content selected" onClick={(e) => {handleSelectButton([e,"Preview"])}}><MdOutlinePreview/></button>
+                    </OverlayTrigger>
+
+                    <OverlayTrigger
+                        key={"overlay-download"}
+                        placement={"bottom"}
+                        overlay={   
+                            <Tooltip id={`tooltip-download`}>
+                                <strong>Download</strong>
+                            </Tooltip>
+                        }
+                    >
+                    <button className="navbarbutton-file-content" onClick={(e) => {handleSelectButton([e,"download"])}}><BsCloudDownloadFill/></button>
+                    </OverlayTrigger>
                 </div>
                 <AnnotationTable annotations={annotations[0]} rocrateinfo={rocrateinfo} setCurrentObjectSelected={setCurrentObjectSelected}/>
                 <PreviewFile file_type={file_type} file_name={file_name} rocrateinfo={rocrateinfo} setCurrentObjectSelected={setCurrentObjectSelected} currentobjectselected={currentobjectselected}/>
