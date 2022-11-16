@@ -26,27 +26,26 @@ function App() {
 	useEffect(() => {
 		if (window.location.hash) {
 			console.log(window.location.hash);
-			//if the hash is empty then set the current object selected to the first object in the tree
-			if (window.location.hash === "#" || window.location.hash === "") {
-				setCurrentObjectSelected("");
-			} 
+			let object_id = window.location.hash.substring(1);
+			console.log(object_id);
+			setCurrentObjectSelected(object_id);
+			return;
 		}
-		else {
-			setCurrentObjectSelected("");
-		}
+		setCurrentObjectSelected("");
 	}, []);
 
 	//have a looker function that will detect if the hash of the url has changed 
 	//and if it has then it will set the current object selected to the new hash
 	useEffect(() => {
 		const hashChangeHandler = () => {
+			console.log(window.location.hash);
 			if (window.location.hash) {
 				console.log(window.location.hash);
 				setCurrentObjectSelected(window.location.hash.substring(1));
+				return;
 			}
-			else {
-				setCurrentObjectSelected("");
-			}
+			console.log("no hash in url");
+			return;
 		}
 		window.addEventListener('hashchange', hashChangeHandler);
 		return () => {
@@ -55,14 +54,19 @@ function App() {
 	}, []);
 	//use effect that will change the window hash whenever the current object selected changes
 	useEffect(() => {
-		//check if the currentobjectselected has Resources/ in it
-		window.location.hash = currentobjectselected;
-		if (currentobjectselected.includes("Resources/")) {
-			//if it does, then cut off the Resources/ part of the string
-			const new_current_object_selected = currentobjectselected.substring(10);
-			//set the window hash to the new current object selected
-			window.location.hash = new_current_object_selected;
+		let new_current_object_selected = currentobjectselected;
+		//check if new_current_object_selected is empty
+		if (new_current_object_selected === "") {
+			return;
 		}
+		//check if the currentobjectselected has Resources/ in it
+		if (new_current_object_selected.includes("Resources/")) {
+			//if it does, then cut off the Resources/ part of the string
+			new_current_object_selected = new_current_object_selected.substring(10);
+		}
+		const encoded_new_current_object_selected = new_current_object_selected;
+		console.log(encoded_new_current_object_selected);
+		window.location.hash = encoded_new_current_object_selected;
 	}, [currentobjectselected]);
 
 	useEffect(() => {
