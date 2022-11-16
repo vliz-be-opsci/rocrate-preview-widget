@@ -74,7 +74,8 @@ function App() {
 			getRocrateMetadata, 
 			setTreeInfo, 
 			setOriginalTree, 
-			setFullSortedData
+			setFullSortedData,
+			searchterm
 			);
 	}, [getRocrateMetadata])
 
@@ -90,10 +91,12 @@ function App() {
             setTreeInfo={setTreeInfo} 
             searchterm={searchterm} 
             setSearchTerm={setSearchTerm} 
-            full_sorted_data = {full_sorted_data}
-            originaltree = {originaltree}
-            currentdirectory = {currentdirectory}
-            setCurrentDirectory = {setCurrentDirectory}
+            full_sorted_data={full_sorted_data}
+            originaltree={originaltree}
+            currentdirectory={currentdirectory}
+            setCurrentDirectory={setCurrentDirectory}
+			setOriginalTree={setOriginalTree}
+			setFullSortedData={setFullSortedData}
           />
           <div id="page-wrap" className='notSideBar'>
             <div className='main_window_component'>
@@ -101,8 +104,8 @@ function App() {
 				<ReadmeIsland
 					getRocrateMetadata={getRocrateMetadata}
 					currentobjectselected={currentobjectselected}
-					mdtext = {mdText}
-					setMdText = {setMdText}
+					mdtext={mdText}
+					setMdText={setMdText}
 				/>
 				<FileContentDisplay
 					currentobjectselected={currentobjectselected}

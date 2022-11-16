@@ -9,16 +9,25 @@ const get_file_type = (file) => {
     return mimetype;
 }
 
-const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
+const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData,search_term) => {
     //get the @graph property from the props
-    const graph = props["@graph"];
+    let graph = props["@graph"];
     console.log(props);
+    console.log("search term is: " + search_term);
+
+    // filter the graph to only include the objects that have the search term in their @id
+    let filtered_graph = graph.filter((object) => {
+        return object["@id"].includes(search_term);
+    });
+    //print length of filted graph
+    console.log("length of filtered graph is: " + filtered_graph.length);
+
     //console.log(graph);
     //create an empty array to store the datasets
     let treedata = [];
     //loop through all the items in the @graph property and check if the item is a File and also not an url
     let intermediate_data = [];
-    graph.forEach((item) => {
+    filtered_graph.forEach((item) => {
         if (item["@type"] === "File" && item["@id"].indexOf("http") === -1) {
             //if the item is a File and not an url, then push the item to the treedata array
             //split the item by the / and get the last item in the array
@@ -86,18 +95,23 @@ const getTreeData = (props,setTreeInfo,setOriginalTree,setFullSortedData) => {
         }
     });
     console.log(reverse_construct);
-    treedata.push({"name":".","content":reverse_construct[0].content});
-
+    //if reverse contruct is empty then don't do anything
+    if (reverse_construct.length > 0) {
+        treedata.push({"name":".","content":reverse_construct[0].content});
+    }
     //now we get all the items from the graph that are urls
     //loop through all the items in the @graph property and check if the item is a File and also not an url
     let resource_data = [];
-    graph.forEach((item) => {
+    filtered_graph.forEach((item) => {
         //if the item[@type] is not a Dataset or a File and also not an url, then push the item to the treedata array
         if(item["@type"] !== "Dataset" && item["@type"] !== "File") {
             resource_data.push(item["@id"]);
         }
     })
-    treedata.push({"name":"Resources","content":resource_data});
+    //if resource_data is not empty, then add the resource_data to the treedata
+    if (resource_data.length > 0) {
+        treedata.push({"name":"Resources","content":resource_data});
+    }
     setTreeInfo(treedata);
     setOriginalTree(treedata);
     setFullSortedData(sorted_data);
