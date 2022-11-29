@@ -39,6 +39,21 @@ const PreviewFile = (props) => {
     let annotations = rocrateinfo["@graph"].filter((item) => item["@id"] === currentobjectselected)[0];
     console.log(annotations);
 
+    //if annotations is undefined then return a statement telling hte user to select another resource since the current one does not exist
+    if (annotations === undefined && currentobjectselected !== "") {
+        return (
+            <div className="preview-file">
+                <div className="preview-file-titlebar">
+                    <h3>Error</h3>
+                </div>
+                <div className="preview-file-content">
+                    <p>The following resource does not exist in this crate: <b>{currentobjectselected}</b></p>
+                    <p>Please select another resource or go back to  <a href="./">the root of the crate</a></p>
+                </div>
+            </div>
+        )
+    }
+
     //check if the current object selected is not undefined or the currentobect length is not 0 or the currentobject is not an empty string
     if (currentobjectselected !== undefined && currentobjectselected !== null && currentobjectselected.length !== 0 && currentobjectselected !== "") {
         //check if the file_name is not undefined or the file_name length is not 0 or the file_name is not an empty string
