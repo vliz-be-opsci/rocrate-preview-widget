@@ -43,6 +43,21 @@ function PreviewSelectorFile(props) {
         Getfileurl();
     }, [props.file_url]);
 
+    //function here that wil return a message that displays that the file couldn't be previewed but that it still is downloadbale
+    function Nopreview(props) {
+        console.log(props);
+        return (
+            <Alert variant="warning">
+                <div className="errorhash">
+                    <Alert.Heading>File preview failed</Alert.Heading>
+                    <p>
+                        File: <b>{props.file_url}</b> couldn't be previewed but it is still downloadable.
+                    </p>
+                </div>
+            </Alert>
+        );
+    }
+
 
     function GetCsvdata() {
         console.log(file_url);
@@ -186,22 +201,20 @@ function PreviewSelectorFile(props) {
                     />
                 )
             } else if (file_mimetype.includes("word")) {
-                return "word";
+                return(<Nopreview file_url={file_url}/>);
             } else if (file_mimetype.includes("excel")) {
-                return "excel";
+                return(<Nopreview file_url={file_url}/>);
             } else if (file_mimetype.includes("ppt")) {
-                return "ppt";
+                return(<Nopreview file_url={file_url}/>);
             } else if (file_mimetype.includes("zip")) {
-                return "zip";
+                return(<Nopreview file_url={file_url}/>);
             } else {
                 //check i file name includes xlsx
                 if (file_url.includes("xlsx")) {
                     console.log("excel");
-                    return (
-                        <>excel files have not yet been implemented to preview</>
-                    )
+                    return(<Nopreview file_url={file_url}/>);
                 } else {
-                    return "other";
+                    return(<Nopreview file_url={file_url}/>);
                 }
             }
         } catch (error) {
