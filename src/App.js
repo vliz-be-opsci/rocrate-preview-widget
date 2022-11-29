@@ -76,27 +76,6 @@ function App() {
 		window.location.hash = encoded_new_current_object_selected;
 	}, [currentobjectselected]);
 
-	//useffect that gets triggred by a change in the currentobjectselected that will look into the getrocrametadata to see if the currentobject is part of the @grpah , if not then it will return a render that says you should choose another resource 
-	useEffect(() => {
-		console.log("currentobjectselected changed");
-		//first check if the getRocrateMetadata is not empty
-		if (getRocrateMetadata != "" ) {
-			console.log(currentobjectselected);
-			console.log(getRocrateMetadata);
-			for (let i = 0; i < getRocrateMetadata["@graph"].length; i++) {
-				if (getRocrateMetadata["@graph"][i]["@id"] === currentobjectselected) {
-					return;
-				}
-			}
-			return(
-				<div>
-					<h1>Choose another resource</h1>
-				</div>
-			)
-		}
-		return;
-	}, [currentobjectselected]);
-
 	useEffect(() => {
 		if (!Loading) {
 			getTreeData(
