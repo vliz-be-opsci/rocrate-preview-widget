@@ -1,14 +1,16 @@
 #!/bin/sh -l
-
-echo "Hello $1"
-time=$(date)
-echo "::set-output name=time::$time"
 pwd
 ls -a
 echo "listing all the files that are in the ../.. directory"
 cd ../..
 pwd
 ls -a
+#echo the env variable inputs.crate_path from the actions.yml file
+echo "crate_path is" $1
+#make a .env file with the crate_path variable
+echo "REACT_APP_CRATE=$1" > .env
+#echo cat of the .env file
+cat .env
 echo "making tocopy dir in src"
 mkdir ./src/topcopy
 if [ -d "/src/topcopy" ] 

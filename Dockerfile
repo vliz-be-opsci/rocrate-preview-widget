@@ -10,5 +10,8 @@ COPY src /src
 COPY package-lock.json /package-lock.json
 COPY package.json /package.json
 COPY entrypoint.sh /entrypoint.sh
-
+#print(the env variable  inputs.crate_path passed from the actins.yml file)
+RUN echo $crate_path
+#chmod the entrypoint.sh file to make it executable
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

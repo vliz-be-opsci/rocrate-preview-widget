@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import Layout from './layouts/normallayout';
-import { getRocrateMetadata } from './services/constants/constants';
+import { path_url_string, getJSONLD } from './services/constants/constants';
 import { getTreeData } from './services/utils/filefunctions';
 import FileContentDisplay from './components/file_content/file_content';
 import SideBar from './components/sidebar/sidebar';
@@ -19,10 +19,16 @@ function App() {
 	const [originaltree, setOriginalTree] = useState([]);
 	const [currentdirectory, setCurrentDirectory] = useState(".");
 	const [currentWindowDisplay, setCurrentWindowDisplay] = useState("overview");
+	const [getRocrateMetadata, setGetRocrateMetadata] = useState("");
 	const [mdText, setMdText] = useState('');
+	const [Loading, setLoading] = useState(true);
 
 	//use effect that will change chcek th url if there is a fragment identifier 
 	//and if there is, then it will set the current object selected to the fragment identifier
+	useEffect(() => {
+		getJSONLD(path_url_string, setLoading,setGetRocrateMetadata);
+	}, []);
+
 	useEffect(() => {
 		if (window.location.hash) {
 			console.log(window.location.hash);
@@ -71,59 +77,72 @@ function App() {
 	}, [currentobjectselected]);
 
 	useEffect(() => {
-		getTreeData(
-			getRocrateMetadata, 
-			setTreeInfo, 
-			setOriginalTree, 
-			setFullSortedData,
-			searchterm
-			);
-	}, [getRocrateMetadata])
+		if (!Loading) {
+			getTreeData(
+				getRocrateMetadata, 
+				setTreeInfo, 
+				setOriginalTree, 
+				setFullSortedData,
+				searchterm
+				);
+		}
+	}, [getRocrateMetadata,Loading])
 
-  return (
-    <div id="App">
-      <Layout>
-        <div className="App" id="outer-container">
-          <SideBar 
-            setCurrentObjectSelected={setCurrentObjectSelected} 
-			currentobjectselected={currentobjectselected}
-            rocrateinfo={getRocrateMetadata} 
-            treeinfo={treeinfo} 
-            setTreeInfo={setTreeInfo} 
-            searchterm={searchterm} 
-            setSearchTerm={setSearchTerm} 
-            full_sorted_data={full_sorted_data}
-            originaltree={originaltree}
-            currentdirectory={currentdirectory}
-            setCurrentDirectory={setCurrentDirectory}
-			setOriginalTree={setOriginalTree}
-			setFullSortedData={setFullSortedData}
-          />
-          <div id="page-wrap" className='notSideBar'>
-            <div className='main_window_component'>
-              <div>
-				<ReadmeIsland
-					getRocrateMetadata={getRocrateMetadata}
+ //if loading then return loading
+	
+	if (Loading) {
+		return (
+			<div>
+				<h1>Loading</h1>
+			</div>
+		)
+	}
+	else{
+		return (
+			<div id="App">
+			  <Layout>
+				<div className="App" id="outer-container">
+				  <SideBar 
+					setCurrentObjectSelected={setCurrentObjectSelected} 
 					currentobjectselected={currentobjectselected}
-					mdtext={mdText}
-					setMdText={setMdText}
-				/>
-				<FileContentDisplay
-					currentobjectselected={currentobjectselected}
-					setCurrentObjectSelected={setCurrentObjectSelected}
-					rocrateinfo={getRocrateMetadata}
-				/>
-              </div>
-            </div>
-          </div>
-          <div className='mini_dashboard'>
-		  		<div onClick={(e) => {setCurrentWindowDisplay("archive");console.log(currentWindowDisplay)}} className='dashboardicon archiveicon'><FaArchive /></div>
-		  	    <div onClick={(e) => {setCurrentWindowDisplay("git");console.log(currentWindowDisplay)}} className='dashboardicon gitbranchicon'><BiGitBranch /></div>
-          </div>
-        </div>
-      </Layout>
-    </div>
-  );
+					rocrateinfo={getRocrateMetadata} 
+					treeinfo={treeinfo} 
+					setTreeInfo={setTreeInfo} 
+					searchterm={searchterm} 
+					setSearchTerm={setSearchTerm} 
+					full_sorted_data={full_sorted_data}
+					originaltree={originaltree}
+					currentdirectory={currentdirectory}
+					setCurrentDirectory={setCurrentDirectory}
+					setOriginalTree={setOriginalTree}
+					setFullSortedData={setFullSortedData}
+				  />
+				  <div id="page-wrap" className='notSideBar'>
+					<div className='main_window_component'>
+					  <div>
+						<ReadmeIsland
+							getRocrateMetadata={getRocrateMetadata}
+							currentobjectselected={currentobjectselected}
+							mdtext={mdText}
+							setMdText={setMdText}
+						/>
+						<FileContentDisplay
+							currentobjectselected={currentobjectselected}
+							setCurrentObjectSelected={setCurrentObjectSelected}
+							rocrateinfo={getRocrateMetadata}
+						/>
+					  </div>
+					</div>
+				  </div>
+				  <div className='mini_dashboard'>
+						  <div onClick={(e) => {setCurrentWindowDisplay("archive");console.log(currentWindowDisplay)}} className='dashboardicon archiveicon'><FaArchive /></div>
+						  <div onClick={(e) => {setCurrentWindowDisplay("git");console.log(currentWindowDisplay)}} className='dashboardicon gitbranchicon'><BiGitBranch /></div>
+				  </div>
+				</div>
+			  </Layout>
+			</div>
+		  );
+	}
 }
 
 export default App;
