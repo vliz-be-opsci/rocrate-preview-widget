@@ -1,11 +1,11 @@
 //this component will render a readme file when the given folders direct child contains a readme file , else it will just render the folder name
 import ReactMarkdown from "react-markdown";
 const ReadmeIsland = (props) => {
+    console.log(props);
     const getRocrateMetadata = props.getRocrateMetadata;
     const currentobjectselected = props.currentobjectselected;
     const currentdirectory_pre = currentobjectselected.split("/");
     const currentdirectory = currentdirectory_pre.slice(0, currentdirectory_pre.length - 1).join("/");
-    console.log(props.setMdText("test"));
     //function here that will check if the readme file exists in the foldername given 
     const checkIfReadmeExists = (foldername) => {
         //go over each item in the rocrate metadata
@@ -62,7 +62,8 @@ const ReadmeIsland = (props) => {
         }
     }
 
-    return (
+    if(props.ShowMd){
+        return(
         <>
             {checkIfReadmeExists(currentdirectory) == true ? 
                 <div className="readme-island">
@@ -76,6 +77,11 @@ const ReadmeIsland = (props) => {
                 </>
             }
         </>
+        )
+    }
+
+    return (
+        <></>
     )
 }
 

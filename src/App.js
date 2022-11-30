@@ -21,6 +21,7 @@ function App() {
 	const [currentWindowDisplay, setCurrentWindowDisplay] = useState("overview");
 	const [getRocrateMetadata, setGetRocrateMetadata] = useState("");
 	const [mdText, setMdText] = useState('');
+	const [ShowMd, setShowMd] = useState(false);
 	const [Loading, setLoading] = useState(true);
 
 	//use effect that will change chcek th url if there is a fragment identifier 
@@ -96,6 +97,7 @@ function App() {
 	}, [currentobjectselected]);
 
 	useEffect(() => {
+		setShowMd(false);
 		if (!Loading) {
 			getTreeData(
 				getRocrateMetadata, 
@@ -105,6 +107,7 @@ function App() {
 				searchterm
 				);
 		}
+		setShowMd(true);
 	}, [getRocrateMetadata,Loading])
 
  //if loading then return loading
@@ -144,6 +147,8 @@ function App() {
 							currentobjectselected={currentobjectselected}
 							mdtext={mdText}
 							setMdText={setMdText}
+							setShowMd={setShowMd}
+							ShowMd={ShowMd}
 						/>
 						<FileContentDisplay
 							currentobjectselected={currentobjectselected}
