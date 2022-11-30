@@ -14,6 +14,8 @@ export const path_url_string = path_url;
 //make function here that will get the JSON-LD from the ro-crate-metadata.json file that is located at path_url+/ro-crate-metadata.json
 //and return the JSON object
 export async function getJSONLD(path_url,setLoading,setGetRocrateMetadata){
+    console.log("getJSONLD function called");
+    console.log(path_url);
     //go from the path_url to the ro-crate-metadata.json file
     //go from https://github.com/vliz-be-opsci/test-rocrate-media => https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/ro-crate-metadata.json
     let path_url_jsonld = path_url.replace("github.com", "raw.githubusercontent.com");

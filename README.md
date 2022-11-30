@@ -3,6 +3,23 @@ This visualise the [content from a `research object crate`](https://www.research
 
 [![.github/workflows/testing.yml](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml/badge.svg)](https://github.com/vliz-be-opsci/rocrate-to-html/actions/workflows/testing.yml)
 
+## For Developers ##
+
+First change the .env.example file to .env and fill in the variables. Then run the following commands:
+
+to install and run the application:
+
+```bash
+npm install && npm start
+```
+
+to build the application:
+
+```bash
+npm run build
+```
+
+
 ## Example ##
 
 Below is an example yaml file that once copied to "/.github/workflows/rocrate_to_pages.yml" would trigger the publishing to github pages action on push to the "main" branch.

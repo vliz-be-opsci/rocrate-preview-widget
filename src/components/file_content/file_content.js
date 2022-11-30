@@ -130,7 +130,7 @@ const FileContentDisplay = (props) => {
                         placement={"bottom"}
                         overlay={   
                             <Tooltip id={`tooltip-download`}>
-                                <strong>Download</strong>
+                                <strong>Download {file_name}</strong>
                             </Tooltip>
                         }
                     >

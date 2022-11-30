@@ -58,11 +58,10 @@ function PreviewSelectorFile(props) {
         );
     }
 
-
     function GetCsvdata() {
         console.log(file_url);
         let test_file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
-        Papa.parse(file_url, {
+        Papa.parse(file_url, { // test_file_url, file_url
             download: true,
             dynamicTyping: true,
             error: function(error) {
@@ -168,7 +167,6 @@ function PreviewSelectorFile(props) {
                 )
             } else if (file_mimetype.includes("image")) {
                 console.log("image");
-                var h = window.innerHeight*0.7 + "px";
                 return (
                     <FilePreview
                       className='general_file_preview'
