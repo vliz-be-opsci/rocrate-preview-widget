@@ -71,8 +71,12 @@ function App() {
 
 		//if first 2 char of new_current_object_selected is not  ./ then add them
 		if (new_current_object_selected.substring(0, 2) !== "./") {
-			new_current_object_selected = "./" + new_current_object_selected;
+			//check if http is in the string or if the string starts with _:
+			if (!new_current_object_selected.includes("http") && !new_current_object_selected.substring(0, 2) === "_:") {
+				new_current_object_selected = "./" + new_current_object_selected;
+			}
 			setCurrentObjectSelected(new_current_object_selected);
+			return;
 		}
 		//check if the new_current_object_selected contains a ./ at the start
 		if (new_current_object_selected.substring(0, 2) === "./") {
@@ -91,6 +95,7 @@ function App() {
 		if (new_current_object_selected.includes("Resources/")) {
 			//if it does, then cut off the Resources/ part of the string
 			new_current_object_selected = new_current_object_selected.substring(10);
+			setCurrentObjectSelected(new_current_object_selected);
 		}
 		const encoded_new_current_object_selected = new_current_object_selected;
 		console.log(encoded_new_current_object_selected);
