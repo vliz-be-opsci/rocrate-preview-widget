@@ -436,3 +436,10 @@ a.anchortag:hover {
 .code-preview {
   text-align: left;
 }
+
+/*all direct children of class preview-file should have min width of 60% and margin left and right of 10px and should be centered and min height that fills screen */
+.preview-file > * {
+  min-width: 90%;
+  margin: auto;
+  text-align: center;
+}
