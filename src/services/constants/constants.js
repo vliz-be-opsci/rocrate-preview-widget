@@ -13,19 +13,27 @@ export const path_url_string = path_url;
 
 //make function here that will get the JSON-LD from the ro-crate-metadata.json file that is located at path_url+/ro-crate-metadata.json
 //and return the JSON object
-export async function getJSONLD(path_url,setLoading,setGetRocrateMetadata){
+export async function getJSONLD(path_url,setLoading,setGetRocrateMetadata, setError){
     //go from the path_url to the ro-crate-metadata.json file
     //go from https://github.com/vliz-be-opsci/test-rocrate-media => https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/ro-crate-metadata.json
-    let path_url_jsonld = path_url.replace("github.com", "raw.githubusercontent.com");
-    path_url_jsonld = path_url_jsonld + "/main/ro-crate-metadata.json";
+    let base_url = path_url;
+    let url_completion = "/ro-crate-metadata.json";
+    if (base_url.includes("github.com") ) {
+        base_url = path_url.replace("github.com", "raw.githubusercontent.com");
+        url_completion = "/main" + url_completion;
+    }
+    let complete_url = base_url + url_completion;
+    console.log(complete_url);
     //get the JSON-LD from the ro-crate-metadata.json file
-    axios.get(path_url_jsonld).then(response => {
+    axios.get(complete_url).then(response => {
         console.log(response.data);
         const jsonld = response.data;
         console.log(jsonld);
         setGetRocrateMetadata(jsonld);
         setLoading(false);
         return 
+    }).catch(error => {
+        setError(true);
     });
 }
 

@@ -22,11 +22,12 @@ function App() {
 	const [getRocrateMetadata, setGetRocrateMetadata] = useState("");
 	const [mdText, setMdText] = useState('');
 	const [Loading, setLoading] = useState(true);
+	const [Error, setError] = useState(false);
 
 	//use effect that will change chcek th url if there is a fragment identifier 
 	//and if there is, then it will set the current object selected to the fragment identifier
 	useEffect(() => {
-		getJSONLD(path_url_string, setLoading,setGetRocrateMetadata);
+		getJSONLD(path_url_string, setLoading,setGetRocrateMetadata, setError);
 	}, []);
 
 	useEffect(() => {
@@ -86,14 +87,24 @@ function App() {
 				searchterm
 				);
 		}
+		if (!Loading && getRocrateMetadata == "") {
+			setError(true);
+		}
 	}, [getRocrateMetadata,Loading])
 
  //if loading then return loading
-	
+	if (Error) {
+		return(
+			<div>
+				<h1>Error</h1>
+				<h3>Something went wrong when loading in rocrate-metadata.json</h3>
+			</div>
+		)
+	}
 	if (Loading) {
 		return (
 			<div>
-				<h1>Loading</h1>
+				<h1>Loading ro-crate-metadata.json info</h1>
 			</div>
 		)
 	}
@@ -107,7 +118,7 @@ function App() {
 					currentobjectselected={currentobjectselected}
 					rocrateinfo={getRocrateMetadata} 
 					treeinfo={treeinfo} 
-					setTreeInfo={setTreeInfo} 
+					setTreeInfo={setTreeInfo}
 					searchterm={searchterm} 
 					setSearchTerm={setSearchTerm} 
 					full_sorted_data={full_sorted_data}
@@ -135,8 +146,8 @@ function App() {
 					</div>
 				  </div>
 				  <div className='mini_dashboard'>
-						  <div onClick={(e) => {setCurrentWindowDisplay("archive");console.log(currentWindowDisplay)}} className='dashboardicon archiveicon'><FaArchive /></div>
-						  <div onClick={(e) => {setCurrentWindowDisplay("git");console.log(currentWindowDisplay)}} className='dashboardicon gitbranchicon'><BiGitBranch /></div>
+						<div onClick={(e) => {setCurrentWindowDisplay("archive");console.log(currentWindowDisplay)}} className='dashboardicon archiveicon'><FaArchive /></div>
+						<div onClick={(e) => {setCurrentWindowDisplay("git");console.log(currentWindowDisplay)}} className='dashboardicon gitbranchicon'><BiGitBranch /></div>
 				  </div>
 				</div>
 			  </Layout>
