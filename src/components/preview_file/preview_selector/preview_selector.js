@@ -162,28 +162,18 @@ function PreviewSelectorFile(props) {
             if (file_mimetype.includes("text")) {
                 console.log(file_url.split(".").pop());
                 if(file_url.split(".").pop().includes("csv")){
-                    console.log(columns);
-                    console.log(rows);
                     if(csvdone){
+                        console.log(columns);
+                        console.log(rows);
                         return <FilePreview
                         className='general_file_preview'
                         type={"url"}
                         url={file_url}
-                        onError={console.log('error has occured')}
-                      />
+                        onError={Nopreview(file_url)}
+                        />
                         return <DataGrid columns={columns} rows={rows} />;
                     }else{
-                        return <Alert variant="danger">
-                        <div className="errorhash">
-                          <Alert.Heading>Preview file error</Alert.Heading>
-                          <p>
-                              {error_json}
-                          </p>
-                          <p>
-                              You can still download the file from this <a href={file_url}>link</a>
-                          </p>
-                        </div>
-                      </Alert>;
+                        return (<Nopreview url={file_url}></Nopreview>);
                     }
                 }
                 return (
