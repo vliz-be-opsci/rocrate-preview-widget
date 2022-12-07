@@ -165,6 +165,12 @@ function PreviewSelectorFile(props) {
                     console.log(columns);
                     console.log(rows);
                     if(csvdone){
+                        return <FilePreview
+                        className='general_file_preview'
+                        type={"url"}
+                        url={file_url}
+                        onError={console.log('error has occured')}
+                      />
                         return <DataGrid columns={columns} rows={rows} />;
                     }else{
                         return <Alert variant="danger">
