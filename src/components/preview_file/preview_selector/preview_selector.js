@@ -165,12 +165,28 @@ function PreviewSelectorFile(props) {
                     if(csvdone){
                         console.log(columns);
                         console.log(rows);
-                        return <FilePreview
-                        className='general_file_preview'
-                        type={"url"}
-                        url={file_url}
-                        onError={Nopreview(file_url)}
-                        />
+                        return (
+                            <div className="csv-preview">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            {columns.map((column) => (
+                                                <th key={column.key}>{column.name}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rows.map((row) => (
+                                            <tr key={row.id}>
+                                                {columns.map((column) => (
+                                                    <td key={column.key}>{row[column.key]}</td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )
                         return <DataGrid columns={columns} rows={rows} />;
                     }else{
                         return (<Nopreview url={file_url}></Nopreview>);
