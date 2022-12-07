@@ -17,6 +17,7 @@ function PreviewSelectorFile(props) {
     const [columns, setColumns] = useState([]);
     const [rows, setRows] = useState([]);
     const [file_url, setFileurl] = useState("");
+    const [csvdone, setCsvdone] = useState(false);
 
 
     var file_mimetype = "";
@@ -31,8 +32,8 @@ function PreviewSelectorFile(props) {
         var file_urle = "";
         try {
             file_urle = props.file_url;
-            setFileurl(file_urle);
             GetCsvdata(file_urle);
+            setFileurl(file_urle);
         } catch (error) {
             console.log(error);
         }
@@ -61,6 +62,7 @@ function PreviewSelectorFile(props) {
     function GetCsvdata() {
         console.log(file_url);
         let test_file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
+        setCsvdone(false);
         try{
             Papa.parse(file_url, { // test_file_url, file_url
                 download: true,
@@ -113,10 +115,12 @@ function PreviewSelectorFile(props) {
                     setColumns(columns);
                     setRows(rows);
                     setDataset(results.data);
+                    setCsvdone(true);
                 }
             });
         }catch(error){
             console.log(error);
+            setCsvdone(false);
         }
     }
     //function to get the file type, text, image, video, audio, pdf, word, excel, ppt, zip, etc
@@ -160,7 +164,21 @@ function PreviewSelectorFile(props) {
                 if(file_url.split(".").pop().includes("csv")){
                     console.log(columns);
                     console.log(rows);
-                    return <DataGrid columns={columns} rows={rows} />;
+                    if(csvdone){
+                        return <DataGrid columns={columns} rows={rows} />;
+                    }else{
+                        return <Alert variant="danger">
+                        <div className="errorhash">
+                          <Alert.Heading>Preview file error</Alert.Heading>
+                          <p>
+                              {error_json}
+                          </p>
+                          <p>
+                              You can still download the file from this <a href={file_url}>link</a>
+                          </p>
+                        </div>
+                      </Alert>;
+                    }
                 }
                 return (
                     <FilePreview
