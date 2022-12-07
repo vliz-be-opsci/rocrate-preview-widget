@@ -61,58 +61,63 @@ function PreviewSelectorFile(props) {
     function GetCsvdata() {
         console.log(file_url);
         let test_file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
-        Papa.parse(file_url, { // test_file_url, file_url
-            download: true,
-            dynamicTyping: true,
-            error: function(error) {
-                console.log(error);
-            },
-            complete: function(results) {
-                var columns  = [];
-                var rows = [];
-                for (let i = 0; i < results.data.length; i++) {
-                    if(i==0){
-                        for (let j = 0; j < results.data[i].length; j++) {
-                            if(j==0){
-                                columns.push({
-                                    key: results.data[i][j],
-                                    name: results.data[i][j],
-                                    resizable: true,
-                                    suppressSizeToFit: true
-                                });
-                            }else{
-                                columns.push({
-                                    key: results.data[i][j],
-                                    name: results.data[i][j],
-                                    resizable: true,
-                                    suppressSizeToFit: true
-                                });
-                            }
-                        }
-                    }
-                    else{
-                        var currrow = {};
-                        for (let j = 0; j < results.data[i].length; j++) {
-                            //if results.data[i][j] is null then set it to empty string
-                            if(results.data[i][j] == null){
-                                currrow[columns[j].key] = "null";
-                            }else{
-                                //if the results.data[i][j] is an object then convert it to string
-                                if(typeof results.data[i][j] === "object"){
-                                    currrow[columns[j].key] = JSON.stringify(results.data[i][j]);
+        try{
+            Papa.parse(file_url, { // test_file_url, file_url
+                download: true,
+                dynamicTyping: true,
+                error: function(error) {
+                    console.log(error);
+                },
+                complete: function(results) {
+                    console.log(results);
+                    var columns  = [];
+                    var rows = [];
+                    for (let i = 0; i < results.data.length; i++) {
+                        if(i==0){
+                            for (let j = 0; j < results.data[i].length; j++) {
+                                if(j==0){
+                                    columns.push({
+                                        key: results.data[i][j],
+                                        name: results.data[i][j],
+                                        resizable: true,
+                                        suppressSizeToFit: true
+                                    });
                                 }else{
-                                    currrow[columns[j].key] = results.data[i][j];
+                                    columns.push({
+                                        key: results.data[i][j],
+                                        name: results.data[i][j],
+                                        resizable: true,
+                                        suppressSizeToFit: true
+                                    });
                                 }
                             }
                         }
-                        rows.push(currrow);
+                        else{
+                            var currrow = {};
+                            for (let j = 0; j < results.data[i].length; j++) {
+                                //if results.data[i][j] is null then set it to empty string
+                                if(results.data[i][j] == null){
+                                    currrow[columns[j].key] = "null";
+                                }else{
+                                    //if the results.data[i][j] is an object then convert it to string
+                                    if(typeof results.data[i][j] === "object"){
+                                        currrow[columns[j].key] = JSON.stringify(results.data[i][j]);
+                                    }else{
+                                        currrow[columns[j].key] = results.data[i][j];
+                                    }
+                                }
+                            }
+                            rows.push(currrow);
+                        }
                     }
+                    setColumns(columns);
+                    setRows(rows);
+                    setDataset(results.data);
                 }
-                setColumns(columns);
-                setRows(rows);
-                setDataset(results.data);
-            }
-        });
+            });
+        }catch(error){
+            console.log(error);
+        }
     }
     //function to get the file type, text, image, video, audio, pdf, word, excel, ppt, zip, etc
     function getFileType(file_mimetype) {

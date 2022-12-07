@@ -75,7 +75,7 @@ function CodeHightlight(props) {
                 url={url}
                 height={"55vh"}
                 width={"100%"}
-                onError={console.log('error has occured')}
+                onError={setErrorHash(true)}
             />
         </div>)
     } 
