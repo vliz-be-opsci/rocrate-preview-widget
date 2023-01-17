@@ -86,12 +86,40 @@ const PreviewFile = (props) => {
                                     console.log(annotation[key]);
                                     //check if the annotation[key]["id"] is a key in rocrateinfo
                                     //if it is in the all_ids list then replace the annotation[key] with the annotation[key]["id"]
-                                    return(
-                                        <tr key={key}>
-                                            <td><a href={getAnnotationUrl(key)} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
-                                            <td><a className="anchortag" onClick={(e)=> scrollToElement(annotation[key]["@id"])}><BiAnchor/>{annotation[key]["@id"]}</a></td>
-                                        </tr>
-                                    )
+                                    if(key.startsWith("@")){
+                                        if(key === "@id"){
+                                            return (
+                                                <tr key={key}>
+                                                    <td>{key}</td>
+                                                    <td>{annotation[key]}</td>
+                                                </tr>
+                                            )
+                                        }
+                                        else if(key === "@type"){
+                                            return (
+                                                <tr key={key}>
+                                                    <td>{key}</td>
+                                                    <td><a href={getAnnotationUrl(annotation[key])} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {annotation[key]}</td>
+                                                </tr>
+                                            )
+                                        }
+                                        else{
+                                            return (
+                                                <tr key={key}>
+                                                    <td>{key}</td>
+                                                    <td><a className="anchortag" onClick={(e)=> scrollToElement(annotation[key]["@id"])}><BiAnchor/>{annotation[key]["@id"]}</a></td>
+                                                </tr>
+                                            )
+                                        }
+                                    }
+                                    else {
+                                        return (
+                                            <tr key={key}>
+                                                <td><a href={getAnnotationUrl(key)} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                                <td><a className="anchortag" onClick={(e)=> scrollToElement(annotation[key]["@id"])}><BiAnchor/>{annotation[key]["@id"]}</a></td>
+                                            </tr>
+                                        )
+                                    }
                                 }
                             }
                             if(Array.isArray(annotation[key])){
@@ -123,12 +151,41 @@ const PreviewFile = (props) => {
                                 )
                             }
                             if(typeof annotation[key] === "string"){
-                            return (
-                                <tr key={key}>
-                                    <td><a href={getAnnotationUrl(key)} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
-                                    <td>{annotation[key]}</td>
-                                </tr>
-                            )
+                                //check if the key starts with @ and if its @id then don't add the annotationicon , if its @type then add an anchor and a liink to schema.org
+                                if(key.startsWith("@")){
+                                    if(key === "@id"){
+                                        return (
+                                            <tr key={key}>
+                                                <td>{key}</td>
+                                                <td>{annotation[key]}</td>
+                                            </tr>
+                                        )
+                                    }
+                                    else if(key === "@type"){
+                                        return (
+                                            <tr key={key}>
+                                                <td>{key}</td>
+                                                <td><a href={getAnnotationUrl(annotation[key])} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {annotation[key]}</td>
+                                            </tr>
+                                        )
+                                    }
+                                    else{
+                                        return (
+                                            <tr key={key}>
+                                                <td>{key}</td>
+                                                <td>{annotation[key]}</td>
+                                            </tr>
+                                        )
+                                    }
+                                }
+                                else{
+                                    return (
+                                        <tr key={key}>
+                                            <td><a href={getAnnotationUrl(key)} target="_blank" rel="noreferrer"><AiFillInfoCircle className="annotationinfoicon"/></a> {key}</td>
+                                            <td>{annotation[key]}</td>
+                                        </tr>
+                                    )
+                                }
                             }
                         })}
                     </tbody>
