@@ -76,7 +76,6 @@ const PreviewFile = (props) => {
                     <tbody>
                         {Object.keys(annotations).map((key) => {
                             let annotation = annotations;
-                            
                             //check if the annotaion[key] is in the all_ids list
                             //check if the annotation[key] is an object
                             if (typeof annotation[key] === "object") {
