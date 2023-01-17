@@ -443,3 +443,9 @@ a.anchortag:hover {
   margin: auto;
   text-align: center;
 }
+
+.csv-preview {
+  width: 500px;
+  height: 80vh;
+  overflow: auto;
+}

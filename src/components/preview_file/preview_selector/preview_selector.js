@@ -7,6 +7,7 @@ import Papa from 'papaparse';
 import DataGrid from 'react-data-grid';
 import 'react-data-grid/lib/styles.css';
 import {Alert} from 'react-bootstrap';
+import CsvFileViewer from '../csv_file_viewer/csv_file_viewer';
 // const imports here  
 import CodeHightlight from '../code_highlight/code_highlight';
 
@@ -166,26 +167,7 @@ function PreviewSelectorFile(props) {
                         console.log(columns);
                         console.log(rows);
                         return (
-                            <div className="csv-preview">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            {columns.map((column) => (
-                                                <th key={column.key}>{column.name}</th>
-                                            ))}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {rows.map((row) => (
-                                            <tr key={row.id}>
-                                                {columns.map((column) => (
-                                                    <td key={column.key}>{row[column.key]}</td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                            <CsvFileViewer columns={columns} rows={rows}></CsvFileViewer>
                         )
                         return <DataGrid columns={columns} rows={rows} />;
                     }else{
