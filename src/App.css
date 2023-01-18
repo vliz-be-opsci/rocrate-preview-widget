@@ -445,7 +445,41 @@ a.anchortag:hover {
 }
 
 .csv-preview {
-  width: 500px;
+  width: 80vw;
   height: 80vh;
   overflow: auto;
 }
+
+.csv-preview > table > thead > tr > th {
+  background-color: var(--primary-accent-color);
+  color: var(--secondary-color-text);
+}
+
+.inline {
+  display: inline;
+}
+
+.searchbar-csv {
+  min-width: 400px;
+  width: 450px;
+  margin-bottom: 0.5em;
+  border: var(--primary-color-background) 1px solid;
+  border-radius: var(--corner-edge);
+  background-color: var(--secondary-color-background);
+}
+
+.searchbar-input {
+  padding: 0.2em;
+  font-size: 1em;
+  margin: 0.5em;
+  background-color: var(--secondary-color-background);
+  text-align: left;
+  justify-content: left;
+}
+.left {
+  justify-content: center;
+  text-align: center;
+}
+
+input {border:0;outline:0;}
+input:focus {outline:none!important;}

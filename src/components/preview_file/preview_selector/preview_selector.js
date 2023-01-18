@@ -65,7 +65,7 @@ function PreviewSelectorFile(props) {
         let test_file_url = "https://raw.githubusercontent.com/vliz-be-opsci/test-rocrate-media/main/data/count_thes_terms.csv";
         setCsvdone(false);
         try{
-            Papa.parse(file_url, { // test_file_url, file_url
+            Papa.parse(test_file_url, { // test_file_url, file_url
                 download: true,
                 dynamicTyping: true,
                 error: function(error) {
@@ -285,10 +285,6 @@ function PreviewSelectorFile(props) {
             </Alert>
           );
     } 
-
-    
-
-
 }
 
 export default PreviewSelectorFile;

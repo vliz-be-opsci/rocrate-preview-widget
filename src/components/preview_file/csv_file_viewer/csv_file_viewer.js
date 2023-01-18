@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-
+import {BsSearch} from 'react-icons/bs';
 const CsvFileViewer = (props) => {
     //return a simple table
     let columns = props.columns;
@@ -24,15 +24,42 @@ const CsvFileViewer = (props) => {
         setFilteredRows(newFilteredRows);
     }, [search, rows]);
 
+    //function that will search if a given string contains a given search term 
+    //if it does then it should return <span>sentence here of <div classname="searchedterm">search term</div></span>
+    //if it does not then it should return <span>sentence here</span>
+    const searchSentence = (sentence, searchTerm) => {
+        try {
+            let sentenceLower = sentence.toString().toLowerCase();
+            let searchTermLower = searchTerm.toString().toLowerCase();
+            //regex to find all occurences of the search term and replace it with <div classname="searchedterm">search term</div>
+            let regex = new RegExp(searchTermLower, "g");
+            let newSentence = sentenceLower.replace(regex, `<div style="background-color:yellow;display:inline">${searchTerm}</div>`);
+            if(searchTerm === "") {
+                return(<span>{sentence}</span>)
+            }
+
+            return(<span dangerouslySetInnerHTML={{__html: newSentence}}></span>)
+        }catch(e) {
+            console.log(e);
+            return(<>{sentence}</>)
+        }
+    }
+
 
     return (
-        <div className="csv-preview">
+        <>
+        <div className='searchbar-csv'>
+            <div className='inline left'><BsSearch></BsSearch> | </div>
             <input
                 type="text"
+                className='searchbar-input'
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
+            <div className='inline'>| Showing {filteredRows.length} of {rows.length} rows</div>
+        </div>
+        <div className="csv-preview">
             <table>
                 <thead>
                     <tr>
@@ -50,7 +77,7 @@ const CsvFileViewer = (props) => {
                             return (
                                 <tr key={row.id}>
                                     {columns.map((column) => (
-                                        <td key={column.key}>{row[column.key]}</td>
+                                        <td key={column.key}>{searchSentence(row[column.key], search)}</td>
                                     ))}
                                 </tr>
                             )
@@ -59,6 +86,8 @@ const CsvFileViewer = (props) => {
                 </tbody>
             </table>
         </div>
+        </>
+        
     )
 }
 export default CsvFileViewer;
