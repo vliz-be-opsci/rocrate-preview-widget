@@ -42,8 +42,10 @@ jobs:
       - uses: actions/checkout@v3 
       
       # Build the preview.html file from the rocrate.json
-      - name: Build Preview HTML
-        uses: vliz-be-opsci/rocrate-to-pages@latest #replace vliz-be-opsci with your git username or if you are using this action in a organisation , replace this by the organisation name
+      - name: Rocrate-to-pages build
+        uses: vliz-be-opsci/rocrate-to-pages@latest
+        with:
+          crate_path: https://github.com/{org}/{repo} #replace {org} by organisation and {repo} by the current repo
  
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
