@@ -27,6 +27,11 @@ echo "npm run build"
 npm run build
 echo "copying over scr files to build folder"
 cp ./src/tocopy/* ./build/ -r
+
+#add in the html file addd a script tag to the head of the html file that will load the ro-crate-metadata.json file 
+echo "adding script tag to head of index.html"
+sed -i "s|</head>|<link href="./ro-crate-metadata.json" rel="describedby" type="application/ld+json"></head>|g" ./build/index.html
+
 echo "renaming index.html in the build folder to ro-crate-preview.html"
 cp ./build/index.html ./build/ro-crate-preview.html
 rsync --recursive --progress ./build/* ./github/workspace/unicornpages
