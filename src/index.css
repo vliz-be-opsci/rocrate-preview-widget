@@ -1,3 +1,41 @@
+/*set of predefined colors for styling*/
+
+:root {
+  --text-color: #FFFFFF; 
+  --primary-color: #FFFFFF; /* White */
+  --background-color: #DDDDDD70;
+  /*
+  --secondary-color: #8E6F6F; 
+
+  --secondary-color-shade-1: #8B5D5F; 
+  --secondary-color-shade-2: #954F4F; 
+  --secondary-color-shade-3: #A23B3B; 
+  */
+  --secondary-color: #38979E; /* dark cyan */
+
+  --secondary-color-shade-1: #308A86; /* Shade 1 */
+  --secondary-color-shade-2: #409D92; /* Shade 2 */
+  --secondary-color-shade-3: #4CAF9C; /* Shade 3 */
+
+  --accent-color: #8E6F6F; /* dark cyan */
+
+  --accent-color-shade-1: #8B5D5F; /* Shade 1 */
+  --accent-color-shade-2: #954F4F; /* Shade 2 */
+  --accent-color-shade-3: #A23B3B; /* Shade 3 */
+
+  --danger-color: #FFB181; 
+  --danger-color-dark: #FFB18180;
+
+  --warning-color: #ffbb33; /* Orange */
+  --warning-color-dark: #FF8800;
+
+  --success-color: #00C851; /* Green */
+  --success-color-dark: #007E33;
+
+  --info-color: #33b5e5; /* Blue */
+  --info-color-dark: #0099CC;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +43,262 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: black
+}
+
+.rootcontainer {
+  /*make border going from --accent-color-shade-1 > --accent-color-shade-3 left and right*/
+  border-image: linear-gradient(
+      to bottom,
+      var(--accent-color-shade-1),
+      var(--accent-color-shade-3)
+    )
+    1 100%;
+  border-style: solid;
+  border-width: 1px;
+  padding: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  min-height: calc(100vh - 30px);
+}
+
+/*make sure the window size can't be smaller then 300px*/
+:root {
+  min-width: 400px;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.secondary-underline {
+  border-image: linear-gradient(
+      to right,
+      var(--secondary-color-shade-1),
+      var(--secondary-color-shade-3)
+    )
+    100% 1 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-top-width: 0px;
+  width: fit-content;
+}
+
+.accent-underline {
+  border-image: linear-gradient(
+      to right,
+      var(--accent-color-shade-1),
+      var(--accent-color-shade-3)
+    )
+    100% 1 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-top-width: 0px;
+  width: fit-content;
+}
+
+/*class that will put a thin line to the left of the element in the accent color*/
+.accent-left-border {
+  border-left: 2px solid var(--accent-color);
+  padding-left: 5px;
+}
+
+.accent-left-border-light {
+  border-left: 1px solid var(--accent-color);
+  padding-left: 5px;
+}
+
+.accent-left-border-s1 {
+  border-left: 2px solid var(--accent-color-shade-1);
+  padding-left: 5px;
+}
+
+.accent-left-border-s2 {
+  border-left: 2px solid var(--accent-color-shade-2);
+  padding-left: 5px;
+}
+
+.accent-left-border-s3 {
+  border-left: 2px solid var(--accent-color-shade-3);
+  padding-left: 5px;
+}
+
+.accent-left-border-light-s1 {
+  border-left: 1px solid var(--accent-color-shade-1);
+  padding-left: 5px;
+}
+
+.accent-left-border-light-s2 {
+  border-left: 1px solid var(--accent-color-shade-2);
+  padding-left: 5px;
+}
+
+.accent-left-border-light-s3 {
+  border-left: 1px solid var(--accent-color-shade-3);
+  padding-left: 5px;
+}
+/*class that will put a thin line to the left of the element in the secondary color*/
+
+
+/*styling for the table*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: 1px solid var(--secondary-color-shade-3);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+td > a {
+  text-align: center;
+}
+
+tr:nth-child(odd) {
+  background-color: var(--secondary-color-shade-3);
+  color: var(--primary-color);
+}
+
+tr:nth-child(odd).error_row{
+  background-color: var(--danger-color);
+}
+
+tr:nth-child(even) {
+  background-color: var(--background-color);
+  color: var(--secondary-color);
+}
+
+tr:nth-child(even) > td > ul >li >.clickable {
+  color: var(--secondary-color)
+}
+
+tr:nth-child(even) > td > ul >li >.clickable:hover {
+  color: var(--accent-color)
+}
+
+/*last row has border bottom 1px var(--secondary-color-shade-3)*/
+
+th {
+  background-color: var(--secondary-color-shade-3);
+  color: var(--primary-color);
+}
+
+.hover:hover {
+  background-color: var(--secondary-color-shade-3);
+  color: var(--text-color);
+}
+
+tr.error_row {
+  background-color: var(--danger-color-dark);
+  color: var(--text-color);
+}
+
+.accent-color {
+  color: var(--accent-color);
+}
+
+.secondary-color {
+  color: var(--secondary-color);
+}
+
+.accent-color-shade-1 {
+  color: var(--accent-color-shade-1);
+}
+
+.accent-color-shade-2 {
+  color: var(--accent-color-shade-2);
+}
+
+.accent-color-shade-3 {
+  color: var(--accent-color-shade-3);
+}
+
+.clickable {
+  color: var(--text-color);
+}
+
+.clickable-secondary {
+  color: var(--secondary-color);
+}
+
+.clickable:hover {
+  cursor: pointer;
+  color: var(--accent-color-shade-3);
+}
+
+.primary-color {
+  color: var(--primary-color);
+}
+
+.file_menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+}
+
+.file_menu_button_active{
+  background-color: var(--accent-color-shade-2);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  min-width: 40px;
+}
+
+.file_menu_button{
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  min-width: 40px;
+}
+
+.file_menu_button:hover{
+  background-color: var(--accent-color);
+}
+
+.file_menu_button:disabled{
+  background-color: var(--secondary-color-shade-1);
+  color: var(--primary-color);
+  cursor: not-allowed;
+}
+
+.file_menu_button:active{
+  background-color: var(--accent-color-shade-1);
+  /*small press down animation*/
+  transform: translateY(2px);
+}
+
+.breadcrumb-item > a {
+  color: var(--accent-color);
+}
+
+.breadcrumb-item > a:hover {
+  color: var(--secondary-color-shade-1);
+}
+
+.footer {
+  /*put content in the middle of the line*/
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }

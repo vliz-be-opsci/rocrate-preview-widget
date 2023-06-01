@@ -1,0 +1,58 @@
+name: RoCrate to GitHub Pages
+on:
+  push:
+    branches:
+      - main  # Set a branch name to trigger deployment
+  pull_request:
+jobs:
+  build-html:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      # Checkout this repo
+      - uses: actions/checkout@v3 
+      
+      # Get a shared theme from a repo and put it
+      # into /pages-theme/ folder
+      - name: Get Shared Theme
+        uses: actions/checkout@v3
+        with:
+          repository: ocean-sampling-day/pages-theme 
+          path: ./unicornpages
+      
+      # Build the preview.html file from the rocrate.json
+      - name: Build Preview HTML
+        uses: vliz-be-opsci/rocrate-to-html@2dbc46baf683a21f3a92acc6adf46156ad4d9cbb
+ 
+      # Create config overrride file for
+      # this repo's name
+      - name: Create config
+        run: |
+          echo 'baseurl: test-rocrate-media' > ./unicornpages/repo.yml 
+        shell: bash
+ 
+      # Create config overrride file for
+      # this repo's name
+      - name: Create config ver2
+        run: |
+          echo 'baseurl: test-rocrate-media' > repo.yml 
+        shell: bash
+        
+      # Cache jekyll install to speed up builds
+      - name: Cache Action
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      
+      # Build and deploy to GH-pages
+      - name: Jekyll Build  
+        uses: helaili/jekyll-action@2.3.1     
+        with:                                 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          jekyll_src: ./unicornpages
+          jekyll_build_options: "--config _config.yml,repo.yml"
+ 
