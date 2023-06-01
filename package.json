@@ -1,42 +1,33 @@
 {
-  "name": "new_rocrate_to_pages",
+  "name": "webcomponent-rocrate-test",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/styled-engine-sc": "^5.10.6",
+    "@cyntler/react-doc-viewer": "^1.13.0",
+    "@r2wc/react-to-web-component": "^2.0.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.2.0",
-    "bootstrap": "^5.2.2",
-    "jsonld": "^8.1.0",
-    "mime": "^3.0.0",
-    "papaparse": "^5.3.2",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.32",
+    "@types/react": "^18.2.7",
+    "@types/react-dom": "^18.2.4",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
     "react": "^18.2.0",
-    "react-audio-player": "^0.17.0",
-    "react-bootstrap": "^2.5.0",
-    "react-burger-menu": "^3.0.8",
-    "react-data-grid": "^7.0.0-beta.13",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
-    "react-file-preview-latest": "^1.0.3",
-    "react-icons": "^4.6.0",
-    "react-markdown": "^8.0.3",
-    "react-player": "^2.10.1",
+    "react-icons": "^4.8.0",
     "react-scripts": "5.0.1",
-    "react-syntax-highlighter": "^15.5.0",
-    "styled-components": "^5.3.6",
+    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "serve": "npm run predeploy && serve ./build/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build && cp ./src/tocopy/* ./build/ -r",
+    "predeploy": "npm run build && sh predeploy.sh",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
@@ -58,7 +49,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
-  },
-  "homepage": "./"
+    "gh-pages": "^5.0.0"
+  }
 }
