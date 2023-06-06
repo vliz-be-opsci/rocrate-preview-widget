@@ -1,6 +1,7 @@
 //this component will contain the file menu 
 import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
-import { AiFillFolderOpen, AiFillFileUnknown , AiOutlineDownload } from "react-icons/ai";
+import { AiFillEye , AiOutlineDownload } from "react-icons/ai";
+import {SiGraphql} from "react-icons/si";
 
 export default function FileMenu(props: any) {
     const rocrate = props.rocrate;
@@ -36,15 +37,15 @@ export default function FileMenu(props: any) {
                         <div className="file_menu">
                             {
                             tryExtractWindowQueryParam(window.location.search) == "metadata" ?
-                                <button className="file_menu_button_active" disabled><AiFillFolderOpen/></button>
+                                <button className="file_menu_button_active" disabled><SiGraphql/></button>
                                 :
-                                <button className="file_menu_button" onClick={() => insertUrlParam("window","metadata")}><AiFillFolderOpen/></button>
+                                <button className="file_menu_button" onClick={() => insertUrlParam("window","metadata")}><SiGraphql/></button>
                             }
                             {
                             tryExtractWindowQueryParam(window.location.search) == "content" ?
-                                <button className="file_menu_button_active" disabled><AiFillFileUnknown/></button>
+                                <button className="file_menu_button_active" disabled><AiFillEye/></button>
                                 :
-                                <button className="file_menu_button" onClick={() => insertUrlParam("window","content")}><AiFillFileUnknown/></button>
+                                <button className="file_menu_button" onClick={() => insertUrlParam("window","content")}><AiFillEye/></button>
                             }
                             <button className="file_menu_button" onClick={() => downloadFile(item["@id"])}><AiOutlineDownload/></button>
                         </div>

@@ -1,8 +1,18 @@
 //this file will contain the component that will be used to display the root content table
+import { AiFillFolder } from "react-icons/ai";
+import { FaGlobe } from "react-icons/fa";
 export default function RootContentTable(props: any) {
     const rocrate = props.rocrate;
     const loading = props.loading;
     const hash = props.hash;
+
+    //reorde rocrate so that the ./ is the first element
+    if (rocrate["@graph"]) {
+        let index = rocrate["@graph"].findIndex((item: any) => item["@id"] == "./");
+        let item = rocrate["@graph"][index];
+        rocrate["@graph"].splice(index, 1);
+        rocrate["@graph"].unshift(item);
+    }
     
     //function that will set the hash state
     function setHashState(hash: string) {
@@ -25,10 +35,18 @@ export default function RootContentTable(props: any) {
                 {
                     rocrate["@graph"].map((item: any) => {
                         //only show item["@id"] = ./ or if the @id is a url that has @type File
-                        if (item["@id"] == "./" || (item["@id"].includes("http") && item["@type"] == "File")) {
+                        if (item["@id"] == "./") {
                             return (
                                 <tr>
-                                    <td className="clickable-secondary" onClick={() => setHashState(item["@id"])}>{item["@id"]}</td>
+                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiFillFolder/> {item["@id"]}</td>
+                                    <td>{item["@type"]}</td>
+                                </tr>
+                            )
+                        }
+                        if  (item["@id"].includes("http")) {
+                            return(
+                                <tr>
+                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><FaGlobe/> {item["@id"]}</td>
                                     <td>{item["@type"]}</td>
                                 </tr>
                             )

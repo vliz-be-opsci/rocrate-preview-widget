@@ -1,6 +1,6 @@
 //this component will give back breadcrumb navigation of rocrate
 import { Breadcrumb } from "react-bootstrap";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiFillFolder, AiFillFileText } from "react-icons/ai";
 
 export default function ContentNavigation(props: any) {
     const loading = props.loading;
@@ -10,21 +10,26 @@ export default function ContentNavigation(props: any) {
     hash_array[0] = hash_array[0].replace("#", "");
     const hash_array_length = hash_array.length;
 
+    //function here that will set the uri hash to #
+    const setHash = (hash: string) => {
+        window.location.hash = hash;
+    }
+
     return (
         loading ? 
         <></> 
         :
         hash ? 
         <Breadcrumb>
-            {hash_array_length == 2 ?
-                <Breadcrumb.Item active href=""><AiFillHome className="accent-color"/></Breadcrumb.Item>
-                :
+            <Breadcrumb.Item onClick={()=> setHash("#")}><AiFillHome className="accent-color"/></Breadcrumb.Item>
+                {
                 hash_array.map((item: any, index: number) => {
                     if (index == 0) {
                         return (
-                            <Breadcrumb.Item href={"#./"}><AiFillHome className="accent-color"/></Breadcrumb.Item>
+                            <Breadcrumb.Item className="accent-color" onClick={() => setHash("#./")}><AiFillFolder/></Breadcrumb.Item>
                         )
                     }
+
                     if (index == hash_array_length -1 || item.length == 0) {
                         return (
                             <Breadcrumb.Item active className="accent-color">{item}</Breadcrumb.Item>
@@ -36,7 +41,7 @@ export default function ContentNavigation(props: any) {
                         )
                     }
                 })
-            }
+                }
         </Breadcrumb>
         : 
         <></>

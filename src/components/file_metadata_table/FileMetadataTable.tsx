@@ -1,5 +1,4 @@
 // this file will contain the component that will be used to display the file content
-
 import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
 
 export default function FileMetadataTable(props: any) {
