@@ -50,8 +50,11 @@ function extractData(rocrate: any) {
 }
 
 export default function MainContainer(props: any) {
+    console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
+    const [reponame, setRepoName] = useState(props.container.attributes.rocrate_name.value ||"");
+    const [version, setVersion] = useState(props.container.attributes.version.value ||"");
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [hash, setHash] = useState("");
@@ -80,7 +83,7 @@ export default function MainContainer(props: any) {
             setHash(window.location.hash);
         });
         let searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("window","metadata");
+        searchParams.set("mode","metadata");
         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + "#" + hash.replace("#", "");
         window.history.pushState({path:newurl},'',newurl);
         window.location.hash = hash;
@@ -140,7 +143,7 @@ export default function MainContainer(props: any) {
     return (
         <div className="container rootcontainer">
             <div className="flex_row">
-                <h1 className="secondary-underline">RO-Crate to HTML Preview Widget</h1>
+                <h1 className="secondary-underline">{reponame} version {version} rocrate preview</h1>
                 <button className="file_menu_button" id="eyebutton" onClick={() => showHideMetadata()}>
                     {
                         showmeta ?
@@ -188,7 +191,7 @@ export default function MainContainer(props: any) {
             <FileMetadataTable 
                 rocrate={rocrate} 
                 hash={hash} 
-                loading={loading} 
+                loading={loading}
             />
             <FileViewerComponent 
                 rocrate={rocrate} 

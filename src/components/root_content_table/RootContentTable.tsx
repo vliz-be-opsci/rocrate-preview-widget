@@ -1,6 +1,6 @@
 //this file will contain the component that will be used to display the root content table
-import { AiFillFolder } from "react-icons/ai";
-import { FaGlobe } from "react-icons/fa";
+import { AiFillFolder, AiOutlineNodeIndex } from "react-icons/ai";
+import { FaGlobe} from "react-icons/fa";
 export default function RootContentTable(props: any) {
     const rocrate = props.rocrate;
     const loading = props.loading;
@@ -47,6 +47,14 @@ export default function RootContentTable(props: any) {
                             return(
                                 <tr>
                                     <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><FaGlobe/> {item["@id"]}</td>
+                                    <td>{item["@type"]}</td>
+                                </tr>
+                            )
+                        }
+                        if (item["@id"].includes("_:")) {
+                            return (
+                                <tr>
+                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {item["@id"]}</td>
                                     <td>{item["@type"]}</td>
                                 </tr>
                             )

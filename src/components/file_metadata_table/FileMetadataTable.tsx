@@ -59,6 +59,70 @@ export default function FileMetadataTable(props: any) {
                         </table>
                     )
                 }
+                if (item["@id"].includes("http") || item["@id"].includes("_:")) {
+                    return (
+                        <table>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                            {
+                            Object.keys(item).map((key: any) => {
+                                //if the value is an object then reutrn the type of the object
+                                if (typeof item[key] == "object") {
+                                    //if the object is an array then console log the array
+                                    if (Array.isArray(item[key])) {
+                                        console.log(item[key]);
+                                        //check if item[key] is an array of objects
+                                        //loop over the array and give back the @ids as a list of hrefs #+hash+/+@id
+                                        return (
+                                            <tr>
+                                                <td>{key}</td>
+                                                <td>
+                                                    <ul>
+                                                        {item[key].map((value: any) => {
+                                                            if (typeof value == "object") {
+                                                                return (
+                                                                    <li className="secondary-color">
+                                                                        <a className="clickable" href={"#"+value["@id"]}>{value["@id"]}</a>
+                                                                    </li>
+                                                                )
+                                                            }else{
+                                                                return (
+                                                                    <li className="secondary-color">
+                                                                        <a className="clickable" href={"#"+value}>{value}</a>
+                                                                    </li>
+                                                                )
+                                                            }
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        )
+                                    }else {
+                                        //get the @id of the object and return it as a href
+                                        return (
+                                            <tr>
+                                                <td>{key}</td>
+                                                <td>
+                                                    <a className="clickable" href={"#"+item[key]["@id"]}>{item[key]["@id"]}</a>
+                                                </td>
+                                            </tr>
+                                        )
+                                    }
+                                }else{
+                                    return (
+                                        <tr>
+                                            <td>{key}</td>
+                                            <td>{item[key]}</td>
+                                        </tr>
+                                    )
+                                }
+                            })
+                            }
+                        </table>
+                    )
+                }
             }
         })
         :

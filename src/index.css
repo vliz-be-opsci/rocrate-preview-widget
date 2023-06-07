@@ -78,7 +78,7 @@ code {
   border-image: linear-gradient(
       to right,
       var(--secondary-color-shade-1),
-      var(--secondary-color-shade-3)
+      var(--secondary-color)
     )
     100% 1 100%;
   border-style: solid;
@@ -149,7 +149,7 @@ table {
   width: 100%;
   margin-top: 15px;
   margin-bottom: 15px;
-  border: 1px solid var(--secondary-color-shade-3);
+  border: 1px solid var(--secondary-color);
 }
 
 th,
@@ -159,7 +159,7 @@ td {
 }
 
 tr > th {
-  background-color: var(--secondary-color-shade-3);
+  background-color: var(--secondary-color);
   color: var(--primary-color);
 }
 
@@ -195,15 +195,15 @@ tr.error_row {
   color: var(--danger-color);
 }
 
-/*last row has border bottom 1px var(--secondary-color-shade-3)*/
+/*last row has border bottom 1px var(--secondary-color)*/
 
 th {
-  background-color: var(--secondary-color-shade-3);
+  background-color: var(--secondary-color);
   color: var(--primary-color);
 }
 
 .hover:hover {
-  background-color: var(--secondary-color-shade-3);
+  background-color: var(--secondary-color);
   color: var(--text-color);
 }
 
