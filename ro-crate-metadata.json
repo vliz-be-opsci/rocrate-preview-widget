@@ -208,10 +208,6 @@
             ]
         },
         {
-            "@id": "https://orcid.org/0000-0002-9648-6484",
-            "name": "Marc Portier"
-        },
-        {
             "@id": "./",
             "@type": "Dataset",
             "label": "./",
