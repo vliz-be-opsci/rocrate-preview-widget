@@ -1,5 +1,5 @@
 //this file will return the folder contents of the folder that is currently selected
-
+import {  AiFillFolder, AiFillFileText } from "react-icons/ai";
 export default function FolderView(props: any) {
     const loading = props.loading;
     const rocrate = props.rocrate;
@@ -33,11 +33,20 @@ export default function FolderView(props: any) {
                                                 <td>
                                                     <ul>
                                                         {item[key].map((value: any) => {
-                                                            return (
-                                                                <li className="asecondary-color">
-                                                                    <a className="clickable" href={"#"+value["@id"]}>{value["@id"]}</a>
-                                                                </li>
-                                                            )
+                                                            if (value["@id"].slice(-1) == "/" && value["@id"].slice(0, 1) == ".") {
+                                                                return (
+                                                                    <li className="secondary-color">
+                                                                        <a className="clickable" href={"#"+value["@id"]}><AiFillFolder/> {value["@id"]}</a>
+                                                                    </li>
+                                                                )
+                                                            }else{
+                                                                
+                                                                return (
+                                                                    <li className="secondary-color">
+                                                                        <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {value["@id"]}</a>
+                                                                    </li>
+                                                                )
+                                                            }
                                                         })}
                                                     </ul>
                                                 </td>

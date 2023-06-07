@@ -1,15 +1,18 @@
 //this file will contain the component that will be used to display the root content table metadata
+
 export default function RocrateMetadataTable(props: any) {
     const loading = props.loading;
     const data = props.data;
+
+    
+
 
     return (
         //if the data is empty show a message
         loading ? <></> :
         //else loop over the data and show it
         <>
-        <h4>Core RO-Crate Metadata</h4>
-        <table>
+        <table id="rocrate_metadata_table">
             <tr>
                 <th>Attribute</th>
                 <th>Value</th>

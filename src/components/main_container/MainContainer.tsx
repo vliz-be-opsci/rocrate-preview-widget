@@ -9,6 +9,8 @@ import FileMetadataTable from "../file_metadata_table/FileMetadataTable";
 import FileMenu from "../file_menu/FileMenu";
 import Footer from "../footer/Footer";
 import axios from "axios";
+import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai";
+import $ from 'jquery';
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -48,14 +50,18 @@ function extractData(rocrate: any) {
 }
 
 export default function MainContainer(props: any) {
+    console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
+    const [reponame, setRepoName] = useState(props.container.attributes.rocrate_name.value ||"");
+    const [version, setVersion] = useState(props.container.attributes.version.value ||"");
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [hash, setHash] = useState("");
     const [query_params, setQueryParams] = useState("");
     const [no_q_check, setNoQCheck] = useState(0); 
     const [contents_file, setContentsFile] = useState("");
+    const [showmeta, setShowMeta] = useState(false);
 
     //console.log(props.container.attributes.rocrate.value);
     //console.log(rocrate);
@@ -76,6 +82,11 @@ export default function MainContainer(props: any) {
         window.addEventListener("hashchange", () => {
             setHash(window.location.hash);
         });
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("mode","metadata");
+        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + "#" + hash.replace("#", "");
+        window.history.pushState({path:newurl},'',newurl);
+        window.location.hash = hash;
     }, []);
     //perform the get request to get the rocrate.json file
     useEffect(() => {
@@ -120,15 +131,43 @@ export default function MainContainer(props: any) {
         }
     }, [hash]);
 
+    //function that will show or hide the metadata table and change the icon id for table is rocrate_metadata_table , id for button is eyebutton
+    const showHideMetadata = () => {
+        if (showmeta) {
+            setShowMeta(false);
+        } else {
+            setShowMeta(true);
+        }
+    }
+
     return (
         <div className="container rootcontainer">
-            <h1 className="secondary-underline">RO-Crate to HTML Preview Widget</h1>
-            <RocrateMetadataTable 
-                data={data} 
-                Loading={loading} 
-            />
             <div className="flex_row">
-                <h4>RO-Crate Content</h4>
+                <h1 className="secondary-underline">{reponame} version {version} rocrate preview</h1>
+                <button className="file_menu_button" id="eyebutton" onClick={() => showHideMetadata()}>
+                    {
+                        showmeta ?
+                        <AiFillEyeInvisible />
+                        : <AiFillEye />
+                    }
+                </button>
+            </div>
+            <br />
+            {
+                showmeta ?
+                <RocrateMetadataTable 
+                    data={data} 
+                    Loading={loading} 
+                />
+                : null
+            }
+            <div className="flex_row">
+                <ContentNavigation 
+                    rocrate={rocrate} 
+                    hash={hash} 
+                    loading={loading} 
+                    query_params={query_params} 
+                />
                 <FileMenu 
                     rocrate={rocrate} 
                     hash={hash} 
@@ -143,12 +182,6 @@ export default function MainContainer(props: any) {
                 hash={hash} 
                 loading={loading} 
             />
-            <ContentNavigation 
-                rocrate={rocrate} 
-                hash={hash} 
-                loading={loading} 
-                query_params={query_params} 
-            />
             <FolderView 
                 rocrate={rocrate} 
                 hash={hash} 
@@ -158,7 +191,7 @@ export default function MainContainer(props: any) {
             <FileMetadataTable 
                 rocrate={rocrate} 
                 hash={hash} 
-                loading={loading} 
+                loading={loading}
             />
             <FileViewerComponent 
                 rocrate={rocrate} 

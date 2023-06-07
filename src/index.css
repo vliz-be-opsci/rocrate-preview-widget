@@ -4,6 +4,7 @@
   --text-color: #FFFFFF; 
   --primary-color: #FFFFFF; /* White */
   --background-color: #DDDDDD70;
+  --dark-background-color: #DDDDDD; /* Light Grey */
   /*
   --secondary-color: #8E6F6F; 
 
@@ -23,8 +24,8 @@
   --accent-color-shade-2: #954F4F; /* Shade 2 */
   --accent-color-shade-3: #A23B3B; /* Shade 3 */
 
-  --danger-color: #FFB181; 
-  --danger-color-dark: #FFB18180;
+  --danger-color: #d9534f; 
+  --danger-color-dark: #FFB181BB;
 
   --warning-color: #ffbb33; /* Orange */
   --warning-color-dark: #FF8800;
@@ -77,7 +78,7 @@ code {
   border-image: linear-gradient(
       to right,
       var(--secondary-color-shade-1),
-      var(--secondary-color-shade-3)
+      var(--secondary-color)
     )
     100% 1 100%;
   border-style: solid;
@@ -148,7 +149,7 @@ table {
   width: 100%;
   margin-top: 15px;
   margin-bottom: 15px;
-  border: 1px solid var(--secondary-color-shade-3);
+  border: 1px solid var(--secondary-color);
 }
 
 th,
@@ -157,17 +158,23 @@ td {
   padding: 8px;
 }
 
+tr > th {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
 td > a {
   text-align: center;
 }
 
 tr:nth-child(odd) {
-  background-color: var(--secondary-color-shade-3);
-  color: var(--primary-color);
+  background-color: var(--dark-background-color);
+  color: var(--secondary-color);
 }
 
 tr:nth-child(odd).error_row{
-  background-color: var(--danger-color);
+  background-color: var(--dark-background-color);
+  color: var(--danger-color);
 }
 
 tr:nth-child(even) {
@@ -183,20 +190,20 @@ tr:nth-child(even) > td > ul >li >.clickable:hover {
   color: var(--accent-color)
 }
 
-/*last row has border bottom 1px var(--secondary-color-shade-3)*/
+tr.error_row {
+  background-color: var(--background-color);
+  color: var(--danger-color);
+}
+
+/*last row has border bottom 1px var(--secondary-color)*/
 
 th {
-  background-color: var(--secondary-color-shade-3);
+  background-color: var(--secondary-color);
   color: var(--primary-color);
 }
 
 .hover:hover {
-  background-color: var(--secondary-color-shade-3);
-  color: var(--text-color);
-}
-
-tr.error_row {
-  background-color: var(--danger-color-dark);
+  background-color: var(--secondary-color);
   color: var(--text-color);
 }
 
@@ -221,7 +228,7 @@ tr.error_row {
 }
 
 .clickable {
-  color: var(--text-color);
+  color: var(--secondary-color);
 }
 
 .clickable-secondary {
@@ -247,7 +254,7 @@ tr.error_row {
 .flex_row {
   display: flex;
   flex-direction: row;
-  justify-content: left;
+  justify-content: space-between;
   align-items: left;
 }
 
