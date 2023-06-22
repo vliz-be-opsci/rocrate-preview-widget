@@ -33,7 +33,6 @@ export default function FileViewerComponent(props: any) {
 
                     return (
                         <div className="file-viewer">
-                            <p>{previewer_class}</p>
                             {
                                 previewer_class == "audio" ?
                                 <ReactAudioPlayer

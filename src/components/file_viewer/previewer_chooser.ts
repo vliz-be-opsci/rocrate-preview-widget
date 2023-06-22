@@ -35,9 +35,9 @@ export function getPreviewerClass(fileName: string): any {
         case 'ogg':
             return 'audio'
         case 'txt':
-        case 'md':
             return 'text'
-        case 'js':
+        case 'js':  
+        case 'md':
         case 'ts':
         case 'py':
         case 'c':
