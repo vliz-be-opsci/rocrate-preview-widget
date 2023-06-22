@@ -1,7 +1,7 @@
 //this component will be used to display the content of the file
 
 import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
-import DocViewer from "@cyntler/react-doc-viewer";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import ReactAudioPlayer from 'react-audio-player';
 import { getPreviewerClass } from "./previewer_chooser";
 //import FileViewer from "react-file-viewer";
@@ -48,7 +48,7 @@ export default function FileViewerComponent(props: any) {
                                 ></iframe>
                                 </>
                                 :
-                                <DocViewer documents={docs} />
+                                <DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
                             }
                         </div>
                     )
