@@ -309,3 +309,10 @@ th {
   flex-direction: row;
   justify-content: center;
 }
+
+.image_preview {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+}
