@@ -28,6 +28,7 @@ export function getPreviewerClass(fileName: string): any {
             return 'image'
         case 'mp4':
         case 'webm':
+        case 'mov':
             return 'video'
         case 'mp3':
         case 'wav':
@@ -92,6 +93,7 @@ export function getPreviewerClass(fileName: string): any {
         case 'inx':
         case 'idml':
         case 'pmd':
+        case 'r':
             return 'code'
         case 'ppt':
         case 'pptx':

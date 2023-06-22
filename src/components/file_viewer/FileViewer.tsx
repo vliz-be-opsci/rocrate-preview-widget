@@ -3,6 +3,9 @@
 import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import ReactAudioPlayer from 'react-audio-player';
+import ReactPlayer from 'react-player';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { getPreviewerClass } from "./previewer_chooser";
 //import FileViewer from "react-file-viewer";
 //import FileViewError from "./FileViewError";
@@ -12,6 +15,8 @@ export default function FileViewerComponent(props: any) {
     const hash = props.hash;
     const loading = props.loading;
     const contents_file = props.contents_file;
+
+    console.log(contents_file)
 
     return (
         loading ?
@@ -47,6 +52,14 @@ export default function FileViewerComponent(props: any) {
                                     height="600px"
                                 ></iframe>
                                 </>
+                                :
+                                previewer_class == "video" ?
+                                <ReactPlayer url={item["@id"]} />
+                                :
+                                previewer_class == "code" ?
+                                <SyntaxHighlighter language="javascript" style={monokai}>
+                                    {contents_file}
+                                </SyntaxHighlighter>
                                 :
                                 <DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
                             }

@@ -70,11 +70,59 @@ export default function MainContainer(props: any) {
         if (window.location.hash) {
             setHash(window.location.hash);
         }
+        if (hash.includes("#")) {
+            let hash_split = hash.split("#");
+            //search in the @graph array for the file with the @id equal to the hash
+            for (let i in rocrate["@graph"]) {
+                let item = rocrate["@graph"][i];
+                if (item["@id"] == hash_split[1]) {
+                    //check if the file is a folder or a file
+                    if (item["@type"] == "File") {
+                        //perform a axios request to get the file contents
+                        axios.get(item["@id"]).then(response => {
+                            //console.log the type of data recieved
+                            console.log(typeof response.data);
+                            console.log(response.data);
+                            //console.log(response.data);
+                            setContentsFile(response.data);
+                        }
+                        ).catch(error => {
+                            console.log(error);
+                        }
+                        );
+                    }
+                }
+            }
+        }
     }, []);
     //on load check if the url has query params and if so set the query_params state to it
     useEffect(() => {
         if (window.location.search) {
             setQueryParams(window.location.search);
+        }
+        if (hash.includes("#")) {
+            let hash_split = hash.split("#");
+            //search in the @graph array for the file with the @id equal to the hash
+            for (let i in rocrate["@graph"]) {
+                let item = rocrate["@graph"][i];
+                if (item["@id"] == hash_split[1]) {
+                    //check if the file is a folder or a file
+                    if (item["@type"] == "File") {
+                        //perform a axios request to get the file contents
+                        axios.get(item["@id"]).then(response => {
+                            //console.log the type of data recieved
+                            console.log(typeof response.data);
+                            console.log(response.data);
+                            //console.log(response.data);
+                            setContentsFile(response.data);
+                        }
+                        ).catch(error => {
+                            console.log(error);
+                        }
+                        );
+                    }
+                }
+            }
         }
     }, [no_q_check]);
     //on hash change set the hash state to the new hash
@@ -115,9 +163,10 @@ export default function MainContainer(props: any) {
                     //check if the file is a folder or a file
                     if (item["@type"] == "File") {
                         //perform a axios request to get the file contents
-                        axios.get(item["contentUrl"]).then(response => {
+                        axios.get(item["@id"]).then(response => {
                             //console.log the type of data recieved
                             console.log(typeof response.data);
+                            console.log(response.data);
                             //console.log(response.data);
                             setContentsFile(response.data);
                         }
