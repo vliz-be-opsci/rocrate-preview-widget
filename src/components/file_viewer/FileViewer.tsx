@@ -2,6 +2,7 @@
 
 import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import Otherview from "./Otherview";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -15,6 +16,7 @@ export default function FileViewerComponent(props: any) {
     const hash = props.hash;
     const loading = props.loading;
     const contents_file = props.contents_file;
+    const mode = props.mode;
 
     console.log(contents_file)
 
@@ -23,7 +25,7 @@ export default function FileViewerComponent(props: any) {
         <></>
         :
         hash ?
-        tryExtractWindowQueryParam(window.location.search) == "content" ?
+        mode == "content" ?
         rocrate["@graph"].map((item: any) => {
             if (item["@id"] == hash.replace("#", "")) {
                 if (item["@type"] == "File") {
@@ -60,7 +62,8 @@ export default function FileViewerComponent(props: any) {
                                     {contents_file}
                                 </SyntaxHighlighter>
                                 :
-                                <DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
+                                <Otherview/>
+                                //<DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
                             }
                         </div>
                     )

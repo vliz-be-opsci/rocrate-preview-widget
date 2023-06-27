@@ -1,25 +1,15 @@
 //this component will contain the file menu 
-import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
 import { AiFillEye , AiOutlineDownload } from "react-icons/ai";
-import {SiGraphql} from "react-icons/si";
 import {HiExternalLink} from "react-icons/hi";
+import {TbTable} from "react-icons/tb";
 
 export default function FileMenu(props: any) {
     const rocrate = props.rocrate;
     const hash = props.hash;
     const loading = props.loading;
-    const setNoQCheck = props.setNoQCheck;
-    const no_q_check = props.no_q_check;
+    const setmode = props.setmode;
+    const mode = props.mode;
 
-    //function insertUrlParam that will insert a new query param to the url
-    const insertUrlParam = (key: any, value: any) => {
-        let searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(key, value);
-        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + "#" + hash.replace("#", "");
-        window.history.pushState({path:newurl},'',newurl);
-        window.location.hash = hash;
-        setNoQCheck(no_q_check + 1);
-    }
 
     //function to check if hash is url
     const isUrl = (str: any) => {
@@ -47,22 +37,22 @@ export default function FileMenu(props: any) {
                     return (
                         <div className="file_menu">
                             {
-                            tryExtractWindowQueryParam(window.location.search) == "metadata" ?
-                                <button className="file_menu_button_active" disabled><SiGraphql/></button>
+                                mode == "metadata" ?
+                                <button className="file_menu_button_active" disabled><TbTable/></button>
                                 :
-                                <button className="file_menu_button" onClick={() => insertUrlParam("mode","metadata")}><SiGraphql/></button>
+                                <button className="file_menu_button" onClick={() => setmode("metadata")}><TbTable/></button>
                             }
                             {
-                            tryExtractWindowQueryParam(window.location.search) == "content" ?
+                                mode == "content" ?
                                 isUrl(hash.replace("#", "")) ?
                                 <button className="file_menu_button_active" disabled><HiExternalLink/></button>
                                 :
                                 <button className="file_menu_button_active" disabled><AiFillEye/></button>
                                 :
                                 isUrl(hash.replace("#", "")) ?
-                                <button className="file_menu_button" onClick={()=> downloadFile(hash.replace("#", ""))}><HiExternalLink/></button>
+                                <button className="file_menu_button" onClick={() => setmode("content")}><HiExternalLink/></button>
                                 :
-                                <button className="file_menu_button" onClick={() => insertUrlParam("mode","content")}><AiFillEye/></button>
+                                <button className="file_menu_button" onClick={() => setmode("content")}><AiFillEye/></button>
                             }
                             {
                             isUrl(hash.replace("#", "")) ?

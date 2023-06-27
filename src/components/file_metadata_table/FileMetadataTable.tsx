@@ -5,13 +5,14 @@ export default function FileMetadataTable(props: any) {
     const rocrate = props.rocrate;
     const hash = props.hash;
     const loading = props.loading;
+    const mode = props.mode;
 
     return (
         loading ?
         <></>
         :
         hash ?
-        tryExtractWindowQueryParam(window.location.search) == "metadata" ?
+        mode == "metadata" ?
         rocrate["@graph"].map((item: any) => {
             if (item["@id"] == hash.replace("#", "")) {
                 if (item["@type"] == "File") {

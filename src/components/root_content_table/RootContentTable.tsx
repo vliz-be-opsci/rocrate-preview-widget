@@ -32,35 +32,18 @@ export default function RootContentTable(props: any) {
                     <th>Id</th>
                     <th>Type</th>
                 </tr>
-                {
-                    rocrate["@graph"].map((item: any) => {
-                        //only show item["@id"] = ./ or if the @id is a url that has @type File
-                        if (item["@id"] == "./") {
-                            return (
-                                <tr>
-                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiFillFolder/> {item["@id"]}</td>
-                                    <td>{item["@type"]}</td>
-                                </tr>
-                            )
-                        }
-                        if  (item["@id"].includes("http")) {
-                            return(
-                                <tr>
-                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><FaGlobe/> {item["@id"]}</td>
-                                    <td>{item["@type"]}</td>
-                                </tr>
-                            )
-                        }
-                        if (item["@id"].includes("_:")) {
-                            return (
-                                <tr>
-                                    <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {item["@id"]}</td>
-                                    <td>{item["@type"]}</td>
-                                </tr>
-                            )
-                        }
-                    })
-                }
+                <tr>
+                    <td className="clickable-secondary clickable" onClick={() => setHashState("./")}><AiFillFolder/> ./</td>
+                    <td>Dataset</td>
+                </tr>
+                <tr>
+                    <td className="clickable-secondary clickable" onClick={() => setHashState("resource_uris")}><FaGlobe/> URI resources</td>
+                    <td>External file URI resources</td>
+                </tr>
+                <tr>
+                    <td className="clickable-secondary clickable" onClick={() => setHashState("metadata_nodes")}><AiOutlineNodeIndex/> Nodes</td>
+                    <td>Metadata resources</td>
+                </tr>
             </table>
         }
         </div>

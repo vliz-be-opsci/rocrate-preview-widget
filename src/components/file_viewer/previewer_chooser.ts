@@ -71,7 +71,6 @@ export function getPreviewerClass(fileName: string): any {
         case 'wsf':
         case 'config':
         case 'reg':
-        case 'csv':
         case 'log':
         case 'ini':
         case 'inf':

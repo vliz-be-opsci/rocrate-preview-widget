@@ -4,13 +4,14 @@ import RootContentTable from "../root_content_table/RootContentTable";
 import RocrateMetadataTable from "../rocrate_metadata_table/RocrateMetadataTable";
 import ContentNavigation from "../content_navigation/ContentNavigation";
 import FolderView from "../folder_view/FolderView";
+import ExternalFileLinksTable from "../external_file_links_table/externalFileLinksTable";
+import NodesTable from "../nodes_table/nodesTable";
 import FileViewerComponent from "../file_viewer/FileViewer";
 import FileMetadataTable from "../file_metadata_table/FileMetadataTable";
 import FileMenu from "../file_menu/FileMenu";
 import Footer from "../footer/Footer";
 import axios from "axios";
-import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai";
-import $ from 'jquery';
+import {TbTableOff, TbTable} from "react-icons/tb";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -62,6 +63,7 @@ export default function MainContainer(props: any) {
     const [no_q_check, setNoQCheck] = useState(0); 
     const [contents_file, setContentsFile] = useState("");
     const [showmeta, setShowMeta] = useState(false);
+    const [mode, setMode] = useState("metadata");
 
     //console.log(props.container.attributes.rocrate.value);
     //console.log(rocrate);
@@ -70,69 +72,13 @@ export default function MainContainer(props: any) {
         if (window.location.hash) {
             setHash(window.location.hash);
         }
-        if (hash.includes("#")) {
-            let hash_split = hash.split("#");
-            //search in the @graph array for the file with the @id equal to the hash
-            for (let i in rocrate["@graph"]) {
-                let item = rocrate["@graph"][i];
-                if (item["@id"] == hash_split[1]) {
-                    //check if the file is a folder or a file
-                    if (item["@type"] == "File") {
-                        //perform a axios request to get the file contents
-                        axios.get(item["@id"]).then(response => {
-                            //console.log the type of data recieved
-                            console.log(typeof response.data);
-                            console.log(response.data);
-                            //console.log(response.data);
-                            setContentsFile(response.data);
-                        }
-                        ).catch(error => {
-                            console.log(error);
-                        }
-                        );
-                    }
-                }
-            }
-        }
     }, []);
-    //on load check if the url has query params and if so set the query_params state to it
-    useEffect(() => {
-        if (window.location.search) {
-            setQueryParams(window.location.search);
-        }
-        if (hash.includes("#")) {
-            let hash_split = hash.split("#");
-            //search in the @graph array for the file with the @id equal to the hash
-            for (let i in rocrate["@graph"]) {
-                let item = rocrate["@graph"][i];
-                if (item["@id"] == hash_split[1]) {
-                    //check if the file is a folder or a file
-                    if (item["@type"] == "File") {
-                        //perform a axios request to get the file contents
-                        axios.get(item["@id"]).then(response => {
-                            //console.log the type of data recieved
-                            console.log(typeof response.data);
-                            console.log(response.data);
-                            //console.log(response.data);
-                            setContentsFile(response.data);
-                        }
-                        ).catch(error => {
-                            console.log(error);
-                        }
-                        );
-                    }
-                }
-            }
-        }
-    }, [no_q_check]);
     //on hash change set the hash state to the new hash
     useEffect(() => {
         window.addEventListener("hashchange", () => {
             setHash(window.location.hash);
         });
-        let searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("mode","metadata");
-        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + searchParams.toString() + "#" + hash.replace("#", "");
+        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + "#" + hash.replace("#", "");
         window.history.pushState({path:newurl},'',newurl);
         window.location.hash = hash;
     }, []);
@@ -162,6 +108,7 @@ export default function MainContainer(props: any) {
                 if (item["@id"] == hash_split[1]) {
                     //check if the file is a folder or a file
                     if (item["@type"] == "File") {
+                        setMode("content")
                         //perform a axios request to get the file contents
                         axios.get(item["@id"]).then(response => {
                             //console.log the type of data recieved
@@ -174,6 +121,9 @@ export default function MainContainer(props: any) {
                             console.log(error);
                         }
                         );
+                    }
+                    if (item["@type"] != "File" && item["@type"] != "Dataset") {
+                        setMode("metadata");
                     }
                 }
             }
@@ -196,8 +146,8 @@ export default function MainContainer(props: any) {
                 <button className="file_menu_button" id="eyebutton" onClick={() => showHideMetadata()}>
                     {
                         showmeta ?
-                        <AiFillEyeInvisible />
-                        : <AiFillEye />
+                        <TbTableOff />
+                        : <TbTable />
                     }
                 </button>
             </div>
@@ -221,9 +171,9 @@ export default function MainContainer(props: any) {
                     rocrate={rocrate} 
                     hash={hash} 
                     loading={loading} 
-                    setNoQCheck={setNoQCheck} 
-                    no_q_check={no_q_check} 
                     query_params={query_params}
+                    setmode={setMode}
+                    mode={mode}
                 />
             </div>
             <RootContentTable 
@@ -231,23 +181,44 @@ export default function MainContainer(props: any) {
                 hash={hash} 
                 loading={loading} 
             />
-            <FolderView 
-                rocrate={rocrate} 
-                hash={hash} 
-                loading={loading} 
-                query_params={query_params} 
-            />
-            <FileMetadataTable 
-                rocrate={rocrate} 
-                hash={hash} 
-                loading={loading}
-            />
-            <FileViewerComponent 
-                rocrate={rocrate} 
-                hash={hash} 
-                loading={loading} 
-                contents_file={contents_file}
-            />
+            {
+                hash.includes("metadata_nodes") ?
+                <NodesTable
+                    rocrate={rocrate}
+                    hash={hash}
+                    loading={loading}
+                />
+                : 
+                hash.includes("resource_uris") ?
+                <ExternalFileLinksTable
+                    rocrate={rocrate}
+                    hash={hash}
+                    loading={loading}
+                />
+                :
+                <>
+                    <FolderView 
+                        rocrate={rocrate} 
+                        hash={hash} 
+                        loading={loading} 
+                        query_params={query_params} 
+                    />
+                    <FileMetadataTable 
+                        rocrate={rocrate} 
+                        hash={hash} 
+                        loading={loading}
+                        mode={mode}
+                    />
+                    <FileViewerComponent 
+                        rocrate={rocrate} 
+                        hash={hash} 
+                        loading={loading} 
+                        contents_file={contents_file}
+                        mode={mode}
+                    />
+                </>
+            }
+            
             <Footer />
         </div>
     )
