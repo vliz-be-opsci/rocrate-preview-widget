@@ -5,6 +5,7 @@ import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import Otherview from "./Otherview";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
+import MarkdownViewer from "./MarkdownViewer";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { getPreviewerClass } from "./previewer_chooser";
@@ -67,6 +68,9 @@ export default function FileViewerComponent(props: any) {
                                 :
                                 previewer_class == "csv" ?
                                 <CsvViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
+                                :
+                                previewer_class == "markdown" ?
+                                <MarkdownViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
                                 :
                                 <Otherview/>
                                 //<DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>

@@ -1,23 +1,19 @@
-//this component will be used to display the csv file
-// it will have a radio button that will allow the user to view the raw csv file or the csv file as a table
-import Papa from 'papaparse';
+// component to display a raw or formatted markdown file
+
 import { useState } from 'react';
-import CsvTable from './CsvTable';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-export default function CsvViewer(props: any) {
-    const content  = props.content;
-    console.log(content);
-    let csv = Papa.parse(content);
-    console.log(csv);
-
+export default function MarkdownViewer(props: any) {
+    const content = props.content;
     const extrafileviewmode = props.extrafileviewmode;
     const setExtraFileViewMode = props.setExtraFileViewMode;
 
     const radios = [
         { name: 'Raw', value: '1' },
-        { name: 'Table', value: '2' }
+        { name: 'Formatted', value: '2' }
     ];
 
     //function that will change the view mode and will change the state if the button clicked to active
@@ -41,11 +37,11 @@ export default function CsvViewer(props: any) {
             <p>Something went wrong</p>
         )
     }
-    else{
+    else {
         return (
-            <div id="csv_viewer">
-                <div id="csv_viewer_radio_buttons">
-                {
+            <div id="markdown_viewer">
+                <div id="markdown_viewer_radio_buttons">
+                    {
                         extrafileviewmode == "1" ?
                         <>
                         <button value="1" onClick={(e) => changeButtonClass(e)} className="file_menu_button_active">
@@ -65,19 +61,18 @@ export default function CsvViewer(props: any) {
                         </button>
                         </>
                     }
+                    
                 </div>
-                <div id="csv_viewer_content">
+                <div id="markdown_viewer_content">
                     {
-                        extrafileviewmode== "1" ?
-                        //check if the csv is empty
-                        <CsvTable csv={csv}/>
-                        :
-                        <SyntaxHighlighter style={monokai}>{content}</SyntaxHighlighter>
+                        extrafileviewmode == "1" ?
+                            //check if the csv is empty
+                            <ReactMarkdown children={content} remarkPlugins={[remarkGfm]} />
+                            :
+                            <SyntaxHighlighter style={monokai}>{content}</SyntaxHighlighter>
                     }
                 </div>
             </div>
         )
     }
-
-    
 }

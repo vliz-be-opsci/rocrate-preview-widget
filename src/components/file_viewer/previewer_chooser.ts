@@ -37,7 +37,6 @@ export function getPreviewerClass(fileName: string): any {
         case 'txt':
             return 'text'
         case 'js':  
-        case 'md':
         case 'ts':
         case 'py':
         case 'c':
@@ -109,6 +108,8 @@ export function getPreviewerClass(fileName: string): any {
         case 'csv':
         case 'tsv':
             return 'csv'
+        case 'md':
+            return 'markdown'
         default:
             return 'other'
     }
