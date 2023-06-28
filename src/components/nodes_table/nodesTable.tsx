@@ -36,14 +36,20 @@ export default function NodesTable(props: any) {
                 hash ?
                 <div className="rocrate_metadata_table">
                 <table>
+                <thead>
+                    <tr>
+                        <th>URI</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
                 <tbody>
                 {
                 rocrate["@graph"].map((item: any) => {
                     if (item["@type"] != "File" && item["@type"] != "Dataset" && item["@id"] != "./ro-crate-metadata.json") {
                         return (
                             <tr>
-                                <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {item["@id"]}
-                                </td>
+                                <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {item["@id"]}</td>
+                                <td>{item["@type"]}</td>
                             </tr>
                         ) 
                     }
