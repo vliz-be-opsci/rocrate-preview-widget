@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { getPreviewerClass } from "./previewer_chooser";
+import CsvViewer from "./CsvViewer";
 //import FileViewer from "react-file-viewer";
 //import FileViewError from "./FileViewError";
 
@@ -17,6 +18,8 @@ export default function FileViewerComponent(props: any) {
     const loading = props.loading;
     const contents_file = props.contents_file;
     const mode = props.mode;
+    const extrafileviewmode = props.extrafileviewmode;
+    const setExtraFileViewMode = props.setExtraFileViewMode;
 
     console.log(contents_file)
 
@@ -61,6 +64,9 @@ export default function FileViewerComponent(props: any) {
                                 <SyntaxHighlighter language="javascript" style={monokai}>
                                     {contents_file}
                                 </SyntaxHighlighter>
+                                :
+                                previewer_class == "csv" ?
+                                <CsvViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
                                 :
                                 <Otherview/>
                                 //<DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>

@@ -64,6 +64,7 @@ export default function MainContainer(props: any) {
     const [contents_file, setContentsFile] = useState("");
     const [showmeta, setShowMeta] = useState(false);
     const [mode, setMode] = useState("metadata");
+    const [extrafileviewmode, setExtraFileViewMode] = useState("1");
 
     //console.log(props.container.attributes.rocrate.value);
     //console.log(rocrate);
@@ -215,6 +216,8 @@ export default function MainContainer(props: any) {
                         loading={loading} 
                         contents_file={contents_file}
                         mode={mode}
+                        extrafileviewmode={extrafileviewmode}
+                        setExtraFileViewMode={setExtraFileViewMode}
                     />
                 </>
             }

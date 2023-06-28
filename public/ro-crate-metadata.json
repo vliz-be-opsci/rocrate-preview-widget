@@ -1,5 +1,10 @@
 {
-    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@context": ["https://w3id.org/ro/crate/1.1/context",
+                {
+                    "gsp":  "http://www.opengis.net/ont/geosparql#", 
+                    "spatial": { "@type": "gsp:wktLIteral"}
+                }
+                ],
     "@graph": [
         {
             "@id": "./ro-crate-metadata.json",
@@ -211,11 +216,7 @@
             "@id": "./",
             "@type": "Dataset",
             "label": "./",
-            "author": "mpo",
-            "author2b": {
-
-                "@id": "https://orcid.org/0000-0002-9648-6484"
-            },
+            "spatial":"<http://www.opengis.net/def/crs/OGC/1.3/CRS84> POLYGON ((40.2197 52.3797,22.1374 52.3797,22.1374 44.3877,40.2197 44.3877,40.2197 52.3797))",
             "hasPart": [
                 {
                     "@id": "./audio/"

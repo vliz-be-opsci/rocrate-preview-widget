@@ -316,3 +316,7 @@ th {
   max-height: 500px;
   object-fit: contain;
 }
+
+.highlight {
+  background-color: var(--warning-color);
+}

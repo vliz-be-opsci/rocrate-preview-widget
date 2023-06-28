@@ -106,6 +106,9 @@ export function getPreviewerClass(fileName: string): any {
         case 'ppa':
         case 'ppam':
             return 'powerpoint'
+        case 'csv':
+        case 'tsv':
+            return 'csv'
         default:
             return 'other'
     }
