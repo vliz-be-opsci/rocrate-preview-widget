@@ -1,6 +1,6 @@
 //this file will contain the externalfiletable component
 import { AiOutlineNodeIndex } from "react-icons/ai";
-import { checkIfValueIsEqual } from "../../utils/graph_utils";
+import { checkIfValueIsEqual, getLabelValue } from "../../utils/graph_utils";
 
 export default function NodesTable(props: any) {
     const rocrate = props.rocrate;
@@ -49,7 +49,7 @@ export default function NodesTable(props: any) {
                     if (checkIfValueIsEqual(item["@type"], "File") == false && checkIfValueIsEqual(item["@type"],"Dataset") == false) {
                         return (
                             <tr>
-                                <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {item["@id"]}</td>
+                                <td className="clickable-secondary clickable" onClick={() => setHashState(item["@id"])}><AiOutlineNodeIndex/> {getLabelValue(item)}</td>
                                 <td>{item["@type"]}</td>
                             </tr>
                         ) 
