@@ -1,8 +1,9 @@
 //this file will return the folder contents of the folder that is currently selected
 import {  AiFillFolder, AiFillFileText } from "react-icons/ai";
+import { checkIfValueIsEqual, getLabelValue, getItemFromGraph } from "../../utils/graph_utils";
 
 //make function here that takes in item and returns the table
-function Table(item: any) {
+function Table(item: any, rocrate: any) {
     return (
         <table>
             <tr>
@@ -29,13 +30,13 @@ function Table(item: any) {
                                                 if (value["@id"].slice(-1) == "/" && value["@id"].slice(0, 1) == ".") {
                                                     return (
                                                         <li className="secondary-color">
-                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFolder/> {value["@id"]}</a>
+                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFolder/> { getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
                                                         </li>
                                                     )
                                                 }else{
                                                     return (
                                                         <li className="secondary-color">
-                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {value["@id"]}</a>
+                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
                                                         </li>
                                                     )
                                                 }
@@ -84,12 +85,12 @@ export default function FolderView(props: any) {
                     for (let i = 0; i < item["@type"].length; i++) {
                         console.log(item["@type"][i]);
                         if (item["@type"][i] == "Dataset") {
-                            return Table(item);
+                            return Table(item, rocrate["@graph"]);
                         }
                     }
                 }
                 if (item["@type"] == "Dataset") {
-                    return Table(item);
+                    return Table(item, rocrate["@graph"]);
                 }
             }
         })
