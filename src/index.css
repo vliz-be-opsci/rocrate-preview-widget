@@ -307,7 +307,7 @@ th {
   /*put content in the middle of the line*/
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .image_preview {
@@ -319,4 +319,27 @@ th {
 
 .highlight {
   background-color: var(--warning-color);
+}
+
+.otherview {
+  border: 2px solid var(--accent-color-shade-3);
+  border-radius: 5px;
+  color: var(--accent-color-shade-3);
+  font-weight: bold;
+  padding: 10px;
+}
+
+.formatbuttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+}
+
+.footer_logo {
+  height: auto;
+  max-height: 20px;
+  object-fit: contain;
+  margin-left: 5px;
+  margin-right: 5px;
 }

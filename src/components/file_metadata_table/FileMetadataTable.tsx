@@ -15,7 +15,8 @@ export default function FileMetadataTable(props: any) {
         mode == "metadata" ?
         rocrate["@graph"].map((item: any) => {
             if (item["@id"] == hash.replace("#", "")) {
-                if (item["@type"] == "File") {
+                if (item["@type"] == "File" || item["@type"] == "CreativeWork") {
+                    console.log(item);
                     return (
                         <table>
                             <tr>

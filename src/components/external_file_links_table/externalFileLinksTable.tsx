@@ -1,5 +1,6 @@
 //this file will contain the externalfiletable component
 import { FaGlobe} from "react-icons/fa";
+import { checkIfValueIsEqual } from "../../utils/graph_utils";
 
 export default function ExternalFileLinksTable(props: any) {
     const rocrate = props.rocrate;
@@ -29,10 +30,15 @@ export default function ExternalFileLinksTable(props: any) {
                 hash ?
                 <div className="rocrate_metadata_table">
                     <table>
+                    <thead>
+                        <tr>
+                            <th>URI</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     {
                         rocrate["@graph"].map((item: any) => {
-                            if (item["@type"] == "File" || item["@type"] == "Dataset" ) {
+                            if (checkIfValueIsEqual(item["@type"],"File") || checkIfValueIsEqual(item["@type"],"Dataset")) {
                             if (isUrl(item["@id"])) {
                                 return (
                                     <tr>

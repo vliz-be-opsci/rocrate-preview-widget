@@ -1,7 +1,6 @@
 //this component will be used to display the content of the file
 
-import { tryExtractWindowQueryParam } from "../../utils/hash_handler";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import ErrorBoundary from "../error_boundary/ErrorBoundary";
 import Otherview from "./Otherview";
 import ReactAudioPlayer from 'react-audio-player';
 import ReactPlayer from 'react-player';
@@ -38,44 +37,46 @@ export default function FileViewerComponent(props: any) {
                     const previewer_class = getPreviewerClass(item["@id"]);
 
                     return (
-                        <div className="file-viewer">
-                            {
-                                previewer_class == "audio" ?
-                                <ReactAudioPlayer
-                                    src={item["@id"]}
-                                    controls
-                                />
-                                :
-                                previewer_class == "image" ?
-                                <img src={item["@id"]} className="image_preview"/>
-                                :
-                                previewer_class == "powerpoint" ?
-                                <>
-                                <iframe
-                                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${item["@id"]}`}
-                                    width="100%"
-                                    height="600px"
-                                ></iframe>
-                                </>
-                                :
-                                previewer_class == "video" ?
-                                <ReactPlayer url={item["@id"]} />
-                                :
-                                previewer_class == "code" ?
-                                <SyntaxHighlighter language="javascript" style={monokai}>
-                                    {contents_file}
-                                </SyntaxHighlighter>
-                                :
-                                previewer_class == "csv" ?
-                                <CsvViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
-                                :
-                                previewer_class == "markdown" ?
-                                <MarkdownViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
-                                :
-                                <Otherview/>
-                                //<DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
-                            }
-                        </div>
+                        <ErrorBoundary>
+                            <div className="file-viewer">
+                                {
+                                    previewer_class == "audio" ?
+                                    <ReactAudioPlayer
+                                        src={item["@id"]}
+                                        controls
+                                    />
+                                    :
+                                    previewer_class == "image" ?
+                                    <img src={item["@id"]} className="image_preview"/>
+                                    :
+                                    previewer_class == "powerpoint" ?
+                                    <>
+                                    <iframe
+                                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${item["@id"]}`}
+                                        width="100%"
+                                        height="600px"
+                                    ></iframe>
+                                    </>
+                                    :
+                                    previewer_class == "video" ?
+                                    <ReactPlayer url={item["@id"]} controls />
+                                    :
+                                    previewer_class == "code" ?
+                                    <SyntaxHighlighter language="javascript" style={monokai}>
+                                        {contents_file}
+                                    </SyntaxHighlighter>
+                                    :
+                                    previewer_class == "csv" ?
+                                    <CsvViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
+                                    :
+                                    previewer_class == "markdown" ?
+                                    <MarkdownViewer content={contents_file} extrafileviewmode={extrafileviewmode} setExtraFileViewMode={setExtraFileViewMode}/>
+                                    :
+                                    <Otherview/>
+                                    //<DocViewer documents={docs} pluginRenderers={DocViewerRenderers}/>
+                                }
+                            </div>
+                        </ErrorBoundary>
                     )
                 }
             }

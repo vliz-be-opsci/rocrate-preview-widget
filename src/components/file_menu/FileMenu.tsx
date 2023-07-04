@@ -45,7 +45,7 @@ export default function FileMenu(props: any) {
                             {
                                 mode == "content" ?
                                 isUrl(hash.replace("#", "")) ?
-                                <button className="file_menu_button_active" disabled><HiExternalLink/></button>
+                                <button className="file_menu_button" onClick={() => downloadFile(item["@id"])}><HiExternalLink/></button>
                                 :
                                 <button className="file_menu_button_active" disabled><AiFillEye/></button>
                                 :

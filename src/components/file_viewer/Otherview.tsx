@@ -6,7 +6,7 @@ export default function Otherview() {
     return (
         <div className="otherview">
             <p>Sorry, we can't render a preview for this file.</p>
-            <p>Download file to preview</p>
+            <p>Download file to preview or follow external preview link to view.</p>
         </div>
     )
 }

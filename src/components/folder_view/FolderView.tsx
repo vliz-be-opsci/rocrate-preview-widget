@@ -26,8 +26,6 @@ function Table(item: any) {
                                         {item[key].map((value: any) => {
                                             //first check if the value is an object
                                             if (typeof value == "object") {
-
-                                            
                                                 if (value["@id"].slice(-1) == "/" && value["@id"].slice(0, 1) == ".") {
                                                     return (
                                                         <li className="secondary-color">

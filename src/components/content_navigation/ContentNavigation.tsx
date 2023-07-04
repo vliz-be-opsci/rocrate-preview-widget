@@ -2,6 +2,7 @@
 import { Breadcrumb } from "react-bootstrap";
 import { AiFillHome, AiFillFolder, AiOutlineNodeIndex} from "react-icons/ai";
 import {FaGlobe} from "react-icons/fa";
+import { checkIfValueIsEqual } from "../../utils/graph_utils";
 
 export default function ContentNavigation(props: any) {
     const loading = props.loading;
@@ -77,7 +78,7 @@ export default function ContentNavigation(props: any) {
                     isUrl(hash) ?
                     rocrate["@graph"].map((item: any, index: number) => {
                         if (item["@id"] == hash.replace("#", "")) {
-                            if(item["@type"] != "Dataset" && item["@type"] != "File") {
+                            if(checkIfValueIsEqual(item["@type"], "Dataset") == false && checkIfValueIsEqual(item["@type"], "File") == false) {
                                 return (
                                     <>
                                     <Breadcrumb.Item className="accent-color" onClick={() => setHash("#metadata_nodes")}><AiOutlineNodeIndex/></Breadcrumb.Item>
@@ -86,29 +87,39 @@ export default function ContentNavigation(props: any) {
                                 )
                             }
                             else {
-                                hash_array.map((item: any, index: number) => {
-                                    let url = split_hash+hash_url_array[1];
-                                    if (item =="#"){
-                                        return (
-                                            <Breadcrumb.Item active className="accent-color"><FaGlobe/> {url} </Breadcrumb.Item>
-                                        )
-                                    }
-                                    if (index == 0) {
-                                        return (
-                                            <Breadcrumb.Item className="accent-color" onClick={() => setHash("#./")}><AiFillFolder/></Breadcrumb.Item>
-                                        )
-                                    }
-                                    if (index == hash_array_length -1 || item.length == 0) {
-                                        return (
-                                            <Breadcrumb.Item active className="accent-color">{item}</Breadcrumb.Item>
-                                        )
-                                    }
-                                    else {
-                                        return (
-                                            <Breadcrumb.Item href={"#" + hash_array.slice(0, index + 1).join("/") + "/"} className="accent-color">{item}</Breadcrumb.Item>
-                                        )
-                                    }
-                                })
+                                if (isUrl(hash.replace("#", ""))) {
+                                    return (
+                                        <>
+                                        <Breadcrumb.Item className="accent-color" onClick={() => setHash("#resource_uris")}><FaGlobe/></Breadcrumb.Item>
+                                        <Breadcrumb.Item active className="accent-color" onClick={() => redirect(hash.replace("#", ""))}> {hash.replace("#", "")} </Breadcrumb.Item>
+                                        </>
+                                    )
+                                } else {
+                                    hash_array.map((item: any, index: number) => {
+                                        let url = split_hash+hash_url_array[1];
+                                        if (item =="#"){
+                                            return (
+                                                <Breadcrumb.Item active className="accent-color"><FaGlobe/> {url} </Breadcrumb.Item>
+                                            )
+                                        }
+                                        if (index == 0) {
+                                            return (
+                                                <Breadcrumb.Item className="accent-color" onClick={() => setHash("#./")}><AiFillFolder/></Breadcrumb.Item>
+                                            )
+                                        }
+                                        if (index == hash_array_length -1 || item.length == 0) {
+                                            return (
+                                                <Breadcrumb.Item active className="accent-color">{item}</Breadcrumb.Item>
+                                            )
+                                        }
+                                        else {
+                                            return (
+                                                <Breadcrumb.Item href={"#" + hash_array.slice(0, index + 1).join("/") + "/"} className="accent-color">{item}</Breadcrumb.Item>
+                                            )
+                                        }
+                                    })
+                                }
+                                
                             }
                         }
                     })

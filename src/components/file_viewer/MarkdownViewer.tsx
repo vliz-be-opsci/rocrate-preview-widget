@@ -1,6 +1,5 @@
 // component to display a raw or formatted markdown file
 
-import { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
@@ -10,11 +9,6 @@ export default function MarkdownViewer(props: any) {
     const content = props.content;
     const extrafileviewmode = props.extrafileviewmode;
     const setExtraFileViewMode = props.setExtraFileViewMode;
-
-    const radios = [
-        { name: 'Raw', value: '1' },
-        { name: 'Formatted', value: '2' }
-    ];
 
     //function that will change the view mode and will change the state if the button clicked to active
     const changeButtonClass = (e: any) => {
@@ -40,7 +34,7 @@ export default function MarkdownViewer(props: any) {
     else {
         return (
             <div id="markdown_viewer">
-                <div id="markdown_viewer_radio_buttons">
+                <div id="markdown_viewer_radio_buttons" className='formatbuttons'>
                     {
                         extrafileviewmode == "1" ?
                         <>

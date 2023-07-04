@@ -1,7 +1,6 @@
 //this component will be used to display the csv file
 // it will have a radio button that will allow the user to view the raw csv file or the csv file as a table
 import Papa from 'papaparse';
-import { useState } from 'react';
 import CsvTable from './CsvTable';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -14,11 +13,6 @@ export default function CsvViewer(props: any) {
 
     const extrafileviewmode = props.extrafileviewmode;
     const setExtraFileViewMode = props.setExtraFileViewMode;
-
-    const radios = [
-        { name: 'Raw', value: '1' },
-        { name: 'Table', value: '2' }
-    ];
 
     //function that will change the view mode and will change the state if the button clicked to active
     const changeButtonClass = (e: any) => {
@@ -44,7 +38,7 @@ export default function CsvViewer(props: any) {
     else{
         return (
             <div id="csv_viewer">
-                <div id="csv_viewer_radio_buttons">
+                <div id="csv_viewer_radio_buttons" className='formatbuttons'>
                 {
                         extrafileviewmode == "1" ?
                         <>
