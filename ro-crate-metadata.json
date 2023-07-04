@@ -22,7 +22,8 @@
             "label": "./audio/",
             "hasPart": [
                 {
-                    "@id": "./audio/README.md"
+                    "@id": "./audio/README.md",
+                    "prefLabel": "README.md"
                 },
                 {
                     "@id": "./audio/test_MP3.mp3"
@@ -252,6 +253,7 @@
             "@context": "http://schema.org",
             "@type": "Person",
             "mainEntityOfPage": "https://orcid.org/0000-0002-9648-6484",
+            "comment": "Marc Portier",
             "givenName": "Marc",
             "familyName": "Portier",
             "alternateName": "mpo",
