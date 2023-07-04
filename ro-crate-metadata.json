@@ -268,8 +268,7 @@
                 "https://www.linkedin.com/in/marcportier/",
                 "https://twitter.com/mportier",
                 "http://purl.org/np/RAUPyY2DISDVAcR2SVZBUz6_RFUqaCphxWmy1REVFeoWo"
-            ],
-            "label": "https://orcid.org/0000-0002-9648-6484"
+            ]
         },
         {
             "@id": "_:39dbf476ac284f9797d71a0a0c83fc22",
@@ -351,7 +350,7 @@
         {
             "@id": "./compressed_files/README.md",
             "@type": "File",
-            "label": "./compressed_files/README.md"
+            "prefLabel": "README.md"
         },
         {
             "@id": "./compressed_files/test_zip.zip",
