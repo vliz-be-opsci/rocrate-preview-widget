@@ -221,8 +221,7 @@ export default function MainContainer(props: any) {
                     />
                 </>
             }
-            
-            <Footer />
+            <Footer reponame={reponame}/>
         </div>
     )
 }
