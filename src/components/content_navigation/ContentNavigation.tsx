@@ -1,6 +1,6 @@
 //this component will give back breadcrumb navigation of rocrate
 import { Breadcrumb } from "react-bootstrap";
-import { AiFillHome, AiFillFolder, AiOutlineNodeIndex} from "react-icons/ai";
+import { AiFillHome, AiFillFolder, AiOutlineNodeIndex, AiFillFile} from "react-icons/ai";
 import {FaGlobe} from "react-icons/fa";
 import { checkIfValueIsEqual } from "../../utils/graph_utils";
 
@@ -27,6 +27,8 @@ export default function ContentNavigation(props: any) {
             return false;
         }
     }
+    console.log(hash);
+    console.log(isUrl(hash));
 
     //function to check if hash is a blank node _:
     const isBlankNode = (hash: string) => {
@@ -46,14 +48,26 @@ export default function ContentNavigation(props: any) {
         if (hash.includes("http://")) {
             split_hash = "http://";
             hash_url_array = hash.split("http://");
+            let uri_hash_part = hash_url_array[1];
             hash_array = hash_url_array[0].split("/");
+            hash_array.pop();
+            let topush_uri = "http://" + uri_hash_part
+            hash_array.push(topush_uri);
+            hash_array[0] = hash_array[0].replace("#", "");
         }
         else if (hash.includes("https://")) {
             split_hash = "https://";
             hash_url_array = hash.split("https://");
             hash_array = hash_url_array[0].split("/");
+            let uri_hash_part = hash_url_array[1];
+            hash_array = hash_url_array[0].split("/");
+            hash_array.pop();
+            let topush_uri = "https://" + uri_hash_part
+            hash_array.push(topush_uri);
+            hash_array[0] = hash_array[0].replace("#", "");
         }
     }
+    console.log(hash_array);
 
     //function to redirect to url in new tab
     const redirect = (url: string) => {
@@ -74,55 +88,7 @@ export default function ContentNavigation(props: any) {
                     :
                     hash.includes("metadata_nodes") ?
                     <Breadcrumb.Item active className="accent-color"><AiOutlineNodeIndex/></Breadcrumb.Item>
-                    :
-                    isUrl(hash) ?
-                    rocrate["@graph"].map((item: any, index: number) => {
-                        if (item["@id"] == hash.replace("#", "")) {
-                            if(checkIfValueIsEqual(item["@type"], "Dataset") == false && checkIfValueIsEqual(item["@type"], "File") == false) {
-                                return (
-                                    <>
-                                    <Breadcrumb.Item className="accent-color" onClick={() => setHash("#metadata_nodes")}><AiOutlineNodeIndex/></Breadcrumb.Item>
-                                    <Breadcrumb.Item active className="accent-color"> {item["@id"]} </Breadcrumb.Item>
-                                    </>
-                                )
-                            }
-                            else {
-                                if (isUrl(hash.replace("#", ""))) {
-                                    return (
-                                        <>
-                                        <Breadcrumb.Item className="accent-color" onClick={() => setHash("#resource_uris")}><FaGlobe/></Breadcrumb.Item>
-                                        <Breadcrumb.Item active className="accent-color" onClick={() => redirect(hash.replace("#", ""))}> {hash.replace("#", "")} </Breadcrumb.Item>
-                                        </>
-                                    )
-                                } else {
-                                    hash_array.map((item: any, index: number) => {
-                                        let url = split_hash+hash_url_array[1];
-                                        if (item =="#"){
-                                            return (
-                                                <Breadcrumb.Item active className="accent-color"><FaGlobe/> {url} </Breadcrumb.Item>
-                                            )
-                                        }
-                                        if (index == 0) {
-                                            return (
-                                                <Breadcrumb.Item className="accent-color" onClick={() => setHash("#./")}><AiFillFolder/></Breadcrumb.Item>
-                                            )
-                                        }
-                                        if (index == hash_array_length -1 || item.length == 0) {
-                                            return (
-                                                <Breadcrumb.Item active className="accent-color">{item}</Breadcrumb.Item>
-                                            )
-                                        }
-                                        else {
-                                            return (
-                                                <Breadcrumb.Item href={"#" + hash_array.slice(0, index + 1).join("/") + "/"} className="accent-color">{item}</Breadcrumb.Item>
-                                            )
-                                        }
-                                    })
-                                }
-                                
-                            }
-                        }
-                    })
+                    
                     :
                     isBlankNode(hash) ?
                     <>
@@ -131,13 +97,31 @@ export default function ContentNavigation(props: any) {
                     </>
                     :
                     hash_array.map((item: any, index: number) => {
+                        console.log(item);
                         if (index == 0) {
                             return (
                                 <Breadcrumb.Item className="accent-color" onClick={() => setHash("#./")}><AiFillFolder/></Breadcrumb.Item>
                             )
                         }
     
-                        if (index == hash_array_length -1 || item.length == 0) {
+                        if (index == hash_array.length -1 || item.length == 0) {
+                            /*more logic here to determine of the last part if a fodler, file or external uri*/ 
+                            //check if the last part of the hash is a file or a folder
+                            let last_part = hash_array[hash_array.length -1];
+                            if(isUrl(last_part)){
+                                return (
+                                    <Breadcrumb.Item active className="accent-color"><FaGlobe/> {last_part}</Breadcrumb.Item>
+                                )
+                            }
+                            /*check if hte type of the hash is a file*/
+                            let tosearch = hash.replace("#", "")
+                            let index = rocrate["@graph"].findIndex((item: any) => item["@id"] == tosearch);
+                            let item_rocrate = rocrate["@graph"][index];
+                            if (item_rocrate["@type"] == "File") {
+                                return (
+                                    <Breadcrumb.Item active className="accent-color"><AiFillFile/>{last_part}</Breadcrumb.Item>
+                                )
+                            }
                             return (
                                 <Breadcrumb.Item active className="accent-color">{item}</Breadcrumb.Item>
                             )

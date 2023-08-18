@@ -9,7 +9,7 @@ import NodesTable from "../nodes_table/nodesTable";
 import FileViewerComponent from "../file_viewer/FileViewer";
 import FileMetadataTable from "../file_metadata_table/FileMetadataTable";
 import FileMenu from "../file_menu/FileMenu";
-import Footer from "../footer/Footer";
+//import Footer from "../footer/Footer";
 import axios from "axios";
 import {TbTableOff, TbTable} from "react-icons/tb";
 
@@ -221,7 +221,9 @@ export default function MainContainer(props: any) {
                     />
                 </>
             }
-            <Footer reponame={reponame}/>
+            
         </div>
     )
 }
+
+//<Footer reponame={reponame}/>

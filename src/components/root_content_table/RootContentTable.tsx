@@ -41,7 +41,7 @@ export default function RootContentTable(props: any) {
                     <td>External file URI resources</td>
                 </tr>
                 <tr>
-                    <td className="clickable-secondary clickable" onClick={() => setHashState("metadata_nodes")}><AiOutlineNodeIndex/> Associated Entities</td>
+                    <td className="clickable-secondary clickable" onClick={() => setHashState("metadata_nodes")}><AiOutlineNodeIndex/> Contextual Entities</td>
                     <td>Metadata resources</td>
                 </tr>
             </table>

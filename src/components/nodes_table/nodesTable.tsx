@@ -12,22 +12,6 @@ export default function NodesTable(props: any) {
         window.location.hash = hash;
     }
 
-    const isBlankNode = (str: any) => {
-        if (str.includes("_:")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    const isUrl = (str: any) => {
-        if (str.includes("http://") || str.includes("https://")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     return (
         <div className="rocrate_content">
             {
