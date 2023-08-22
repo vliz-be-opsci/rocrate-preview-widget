@@ -14,6 +14,9 @@
             },
             "conformsTo": {
                 "@id": "https://w3id.org/ro/crate/1.1"
+            },
+            "author": {
+                "@id": "https://orcid.org/0000-0002-9648-6484"
             }
         },
         {
@@ -210,6 +213,14 @@
                 },
                 {
                     "@id": "./video/test_WMV.wmv"
+                },
+                {
+                    "@id": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                }
+            ],
+            "mentions": [
+                {
+                    "@id": "_:0463d574529b43169c97acb6507e74c4"
                 }
             ]
         },
@@ -245,6 +256,11 @@
                 },
                 {
                     "@id": "./README.md"
+                }
+            ],
+            "mentions": [
+                {
+                    "@id": "_:aa121296a172495dbeb123e17ef99985"
                 }
             ]
         },
@@ -336,6 +352,12 @@
             "@id": "./code/person_id_tracker.py",
             "@type": "File",
             "label": "./code/person_id_tracker.py"
+            ,
+            "mentions": [
+                {
+                    "@id": "_:0463d574529b43169c97acb6507e74c4"
+                }
+            ]
         },
         {
             "@id": "./code/plugins.js",
