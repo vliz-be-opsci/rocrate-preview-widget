@@ -141,7 +141,7 @@ export default function MainContainer(props: any) {
     }
 
     return (
-        <div className="container rootcontainer">
+        <>
             <div className="flex_row">
                 <h1 className="secondary-underline">{reponame} version {version} rocrate preview</h1>
                 <button className="file_menu_button" id="eyebutton" onClick={() => showHideMetadata()}>
@@ -222,7 +222,7 @@ export default function MainContainer(props: any) {
                 </>
             }
             
-        </div>
+        </>
     )
 }
 
