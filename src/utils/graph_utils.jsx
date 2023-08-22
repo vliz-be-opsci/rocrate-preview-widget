@@ -47,6 +47,16 @@ export const getLabelValue = (node) => {
 export const getItemFromGraph = (graph, id) => {
     let item = null;
     console.log(graph);
+
+    //check first if graph is an array
+    const isGraphArray = Array.isArray(graph);
+    //if not array check if graph['@graph'] is an array
+    if (!isGraphArray) {
+    const isGraphArray2 = Array.isArray(graph['@graph']);
+    if (isGraphArray2) {
+        graph = graph['@graph'];
+    }
+    }
     graph.forEach((node) => {
         if (node['@id'] === id) {
             item = node;

@@ -8,9 +8,17 @@ import MarkdownViewer from "./MarkdownViewer";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { getPreviewerClass } from "./previewer_chooser";
+import {  AiFillFolder, AiFillFileText } from "react-icons/ai";
+import {FaGlobe} from "react-icons/fa";
+import { getLabelValue, getItemFromGraph } from "../../utils/graph_utils";
 import CsvViewer from "./CsvViewer";
 //import FileViewer from "react-file-viewer";
 //import FileViewError from "./FileViewError";
+
+//function that will check if a given string is a uri or not
+function isUri(str: string) {
+    return str.includes("http://") || str.includes("https://");
+}
 
 export default function FileViewerComponent(props: any) {
     const rocrate = props.rocrate;
@@ -73,8 +81,83 @@ export default function FileViewerComponent(props: any) {
                     </div>
                     <div>
                         <h1>Metadata</h1>
-                        <pre>{JSON.stringify(item, null, 2)}</pre>
+                        <table>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                            {
+                            Object.keys(item).map((key: any) => {
+                                //if the value is an object then reutrn the type of the object
+                                if (typeof item[key] == "object") {
+                                    //if the object is an array then console log the array
+                                    if (Array.isArray(item[key])) {
+                                        console.log(item[key]);
+                                        //check if item[key] is an array of objects
+                                        //loop over the array and give back the @ids as a list of hrefs #+hash+/+@id
+                                        return (
+                                            <tr>
+                                                <td>{key}</td>
+                                                <td>
+                                                    <ul>
+                                                        {item[key].map((value: any) => {
+                                                            if (typeof value == "object") {
 
+                                                                if (value["@id"].slice(-1) == "/" && value["@id"].slice(0, 1) == ".") {
+                                                                    return (
+                                                                        <li className="secondary-color">
+                                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFolder/> { getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
+                                                                        </li>
+                                                                    )
+                                                                }else{
+                                                                    if (isUri(value["@id"])) {
+                                                                        return (
+                                                                            <li className="secondary-color">
+                                                                                <a className="clickable" href={"#"+value["@id"]}><FaGlobe/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
+                                                                            </li>
+                                                                        )
+                                                                    }else{
+                                                                        return (
+                                                                            <li className="secondary-color">
+                                                                                <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
+                                                                            </li>
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }else{
+                                                                return (
+                                                                    <li className="secondary-color">
+                                                                        <a className="clickable" href={"#"+value}>{value}</a>
+                                                                    </li>
+                                                                )
+                                                            }
+                                                        })}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        )
+                                    }else {
+                                        //get the @id of the object and return it as a href
+                                        return (
+                                            <tr>
+                                                <td>{key}</td>
+                                                <td>
+                                                    <a className="clickable" href={"#"+item[key]["@id"]}>{item[key]["@id"]}</a>
+                                                </td>
+                                            </tr>
+                                        )
+                                    }
+                                }else{
+                                    return (
+                                        <tr>
+                                            <td>{key}</td>
+                                            <td>{item[key]}</td>
+                                        </tr>
+                                    )
+                                }
+                            })
+                            }
+                        </table>
                     </div>
                 </>)
             }
