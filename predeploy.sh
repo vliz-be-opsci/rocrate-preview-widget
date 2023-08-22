@@ -16,3 +16,15 @@ rm -rf "./build/images"
 rm -rf "./build/microsoft"
 rm -rf "./build/pdf"
 rm -rf "./build/video"
+
+# log into the venv 
+source venv/Scripts/activate
+# install the requirements
+pip install -r requirements.txt
+# run the python script
+python ./get_all_versions_build.py
+
+#remove the temp folder recursively
+rm -rf "./temp"
+#remove the temp.tar.gz file
+rm -rf "./temp.tar.gz"
