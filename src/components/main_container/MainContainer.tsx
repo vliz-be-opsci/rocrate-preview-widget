@@ -183,7 +183,7 @@ export default function MainContainer(props: any) {
                 loading={loading} 
             />
             {
-                hash.includes("metadata_nodes") ?
+                hash.includes("Contextual_Entities") ?
                 <NodesTable
                     rocrate={rocrate}
                     hash={hash}

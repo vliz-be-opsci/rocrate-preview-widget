@@ -82,17 +82,17 @@ export default function ContentNavigation(props: any) {
         <Breadcrumb>
             <Breadcrumb.Item onClick={()=> setHash("#")}><AiFillHome className="accent-color"/></Breadcrumb.Item>
                 {
-                    //first check if hash is resource_uris or metadata_nodes
+                    //first check if hash is resource_uris or Contextual_Entities
                     hash.includes("resource_uris") ?
                     <Breadcrumb.Item active className="accent-color"><FaGlobe/></Breadcrumb.Item>
                     :
-                    hash.includes("metadata_nodes") ?
+                    hash.includes("Contextual_Entities") ?
                     <Breadcrumb.Item active className="accent-color"><AiOutlineNodeIndex/></Breadcrumb.Item>
                     
                     :
                     isBlankNode(hash) ?
                     <>
-                    <Breadcrumb.Item className="accent-color" onClick={() => setHash("#metadata_nodes")}><AiOutlineNodeIndex/> </Breadcrumb.Item> 
+                    <Breadcrumb.Item className="accent-color" onClick={() => setHash("#Contextual_Entities")}><AiOutlineNodeIndex/> </Breadcrumb.Item> 
                     <Breadcrumb.Item active className="accent-color"> {hash.split("#")[1]}</Breadcrumb.Item> 
                     </>
                     :

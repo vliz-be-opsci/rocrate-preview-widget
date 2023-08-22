@@ -37,11 +37,7 @@ export default function RootContentTable(props: any) {
                     <td>Dataset</td>
                 </tr>
                 <tr>
-                    <td className="clickable-secondary clickable" onClick={() => setHashState("resource_uris")}><FaGlobe/> Linked Resources</td>
-                    <td>External file URI resources</td>
-                </tr>
-                <tr>
-                    <td className="clickable-secondary clickable" onClick={() => setHashState("metadata_nodes")}><AiOutlineNodeIndex/> Contextual Entities</td>
+                    <td className="clickable-secondary clickable" onClick={() => setHashState("Contextual_Entities")}><AiOutlineNodeIndex/> Contextual Entities</td>
                     <td>Metadata resources</td>
                 </tr>
             </table>

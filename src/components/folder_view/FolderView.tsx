@@ -1,6 +1,13 @@
 //this file will return the folder contents of the folder that is currently selected
 import {  AiFillFolder, AiFillFileText } from "react-icons/ai";
 import { checkIfValueIsEqual, getLabelValue, getItemFromGraph } from "../../utils/graph_utils";
+import {FaGlobe} from "react-icons/fa";
+
+//function that will check if a given string is a uri or not
+function isUri(str: string) {
+    return str.includes("http://") || str.includes("https://");
+}
+
 
 //make function here that takes in item and returns the table
 function Table(item: any, rocrate: any) {
@@ -12,6 +19,10 @@ function Table(item: any, rocrate: any) {
             </tr>
             {
             Object.keys(item).map((key: any) => {
+
+                //if key == @id then return const @id = item[key]
+                const id = item["@id"];
+
                 //if the value is an object then reutrn the type of the object
                 if (typeof item[key] == "object") {
                     //if the object is an array then console log the array
@@ -34,11 +45,19 @@ function Table(item: any, rocrate: any) {
                                                         </li>
                                                     )
                                                 }else{
-                                                    return (
-                                                        <li className="secondary-color">
-                                                            <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
-                                                        </li>
-                                                    )
+                                                    if (isUri(value["@id"])) {
+                                                        return (
+                                                            <li className="secondary-color">
+                                                                <a className="clickable" href={"#"+id+value["@id"]}><FaGlobe/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
+                                                            </li>
+                                                        )
+                                                    }else{
+                                                        return (
+                                                            <li className="secondary-color">
+                                                                <a className="clickable" href={"#"+value["@id"]}><AiFillFileText/> {getLabelValue(getItemFromGraph(rocrate, value["@id"]))}</a>
+                                                            </li>
+                                                        )
+                                                    }
                                                 }
                                             }else{
                                                 return (
