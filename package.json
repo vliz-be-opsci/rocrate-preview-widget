@@ -20,6 +20,7 @@
     "react-audio-player": "^0.17.0",
     "react-bootstrap": "^2.7.4",
     "react-dom": "^18.2.0",
+    "react-graph-vis": "^1.0.7",
     "react-icons": "^4.8.0",
     "react-markdown": "^8.0.7",
     "react-player": "^2.12.0",

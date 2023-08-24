@@ -9,6 +9,7 @@ import NodesTable from "../nodes_table/nodesTable";
 import FileViewerComponent from "../file_viewer/FileViewer";
 import FileMetadataTable from "../file_metadata_table/FileMetadataTable";
 import FileMenu from "../file_menu/FileMenu";
+import GraphComponent from "../graph/Graph";
 //import Footer from "../footer/Footer";
 import axios from "axios";
 import {TbTableOff, TbTable} from "react-icons/tb";
@@ -140,6 +141,8 @@ export default function MainContainer(props: any) {
         }
     }
 
+    console.log(hash);
+
     return (
         <>
             <div className="flex_row">
@@ -182,6 +185,13 @@ export default function MainContainer(props: any) {
                 hash={hash} 
                 loading={loading} 
             />
+            {
+                hash == "" ?
+                <GraphComponent
+                rocrate={rocrate} 
+            />
+            : null
+            }
             {
                 hash.includes("Contextual_Entities") ?
                 <NodesTable
