@@ -16,9 +16,9 @@ export const getLabelValue = (node) => {
     //skos:prefLabel | http://www.w3.org/2004/02/skos/core#prefLabel | prefLabel
     //rdfs:label | http://www.w3.org/2000/01/rdf-schema#label | label
     //rdfs:comment | http://www.w3.org/2000/01/rdf-schema#comment | comment
-
-    let labelValue = node['@id'];
     console.log(node);
+    let labelValue = node['@id'];
+    
     //first check if keys exist
     if (node['dct:title'] || node['http://purl.org/dc/terms/title'] || node["title"]) {
         labelValue = node['dct:title'] || node['http://purl.org/dc/terms/title'] || node["title"];

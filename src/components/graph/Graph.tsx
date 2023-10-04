@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Graph from "react-graph-vis";
 
 export default function GraphComponent(props: any) {
@@ -33,12 +33,15 @@ export default function GraphComponent(props: any) {
             //other => blue
             if (item["@type"] == "Dataset") {
                 node["color"] = "red";
+                node["datatype"] = "Dataset";
             }
             if (item["@type"] == "File") {
                 node["color"] = "green";
+                node["datatype"] = "File";
             }
             if (item["@type"] != "Dataset" && item["@type"] != "File") {
                 node["color"] = "blue";
+                node["datatype"] = "Other";
             }
             nodes.push(node);
             i = i + 1;
@@ -264,7 +267,7 @@ export default function GraphComponent(props: any) {
                 avoidOverlap: 0
               },
         },
-        height: "400px"
+        height: "600px"
       };
     
       const events = {
@@ -273,6 +276,38 @@ export default function GraphComponent(props: any) {
           if (nodes.length > 0) {
             const clickedNode = nodes[0];
             //alert(clickedNode);
+            //decluster the node if it is in a cluster
+            if (networkInstance.isCluster(clickedNode) == true) {
+                networkInstance.openCluster(clickedNode);
+            }
+            //if the node is not in a cluster then cluster it
+            else {
+              //get label of the node
+              let labelc = "";
+              for (let i in graphe["nodes"]) {
+                  if (graphe["nodes"][i]["id"] == clickedNode) {
+                      labelc = graphe["nodes"][i]["title"];
+                  }
+              }
+
+              //search for all the edges that have a from or to equal to the clicked node then get the nodes that are connected to the clicked node
+              let connected_nodes = [];
+              for (let i in graphe["edges"]) {
+                  if (graphe["edges"][i]["from"] == clickedNode) {
+                      connected_nodes.push(graphe["edges"][i]["to"]);
+                  }
+              }
+              connected_nodes.push(clickedNode);
+
+              let options = {
+                joinCondition:function(nodeOptions) {
+                    return connected_nodes.includes(nodeOptions.id);
+                },
+                clusterNodeProperties: {id: labelc, borderWidth: 3, shape: "diamond", color: "yellow", label: labelc}
+              }
+              networkInstance.cluster(options);
+
+            }
           }
         },
         doubleClick: function(event) {
@@ -306,6 +341,26 @@ export default function GraphComponent(props: any) {
     }
   };
 
+  // use the state variable to call clusterByConnection
+  const clusterByConnection = () => {
+      if (networkInstance) {
+          networkInstance.clusterByConnection();
+      }
+  };
+
+  //useeffect here that waits for networkInstance to be set and then clusters the graph
+  useEffect(() => {
+    if (networkInstance != null) {
+      //find node where title is ./ and cluster it => label the cluster with the title of the node and give the cluster a diamond shape
+      for (let i in graphe["nodes"]) {
+          if (graphe["nodes"][i]["title"] == "./") {
+            console.log(graphe["nodes"][i]["id"]);
+            networkInstance.clusterByConnection(graphe["nodes"][i]["id"], {clusterNodeProperties: {label: graphe["nodes"][i]["label"], shape: "square", color: "yellow"}});
+            break;
+          }
+      }
+    }
+  }, [networkInstance]);
 
       return (
         <>
@@ -315,7 +370,6 @@ export default function GraphComponent(props: any) {
           events={events}
           getNetwork={getNetwork}
         />
-        <button onClick={clusterByHubsize}>Cluster</button>
         </>
       );
 }
