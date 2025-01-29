@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; /* Ensure all children are on the same line */
+}
+
+.footer_logo {
+    width: 20px;
+    height: 20px;
+}

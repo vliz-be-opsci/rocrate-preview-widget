@@ -99,6 +99,7 @@ export default function MainContainer(props: any) {
                         </div>
                     </div>
                 </div>
+                
             ) : (
                 <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
