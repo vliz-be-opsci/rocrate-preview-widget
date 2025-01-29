@@ -1,23 +1,15 @@
 //this file will contain all other components that wil lbe used in this project
-import React, { useState, useEffect } from "react";
-import RootContentTable from "../root_content_table/RootContentTable";
-import RocrateMetadataTable from "../rocrate_metadata_table/RocrateMetadataTable";
-import ContentNavigation from "../content_navigation/ContentNavigation";
-import FolderView from "../folder_view/FolderView";
-import ExternalFileLinksTable from "../external_file_links_table/externalFileLinksTable";
-import NodesTable from "../nodes_table/nodesTable";
-import FileViewerComponent from "../file_viewer/FileViewer";
-import FileMetadataTable from "../file_metadata_table/FileMetadataTable";
-import FileMenu from "../file_menu/FileMenu";
-//import GraphComponent from "../graph/Graph";
-//import Footer from "../footer/Footer";
-import axios from "axios";
-import {TbTableOff, TbTable} from "react-icons/tb";
-
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { FaFolder } from "react-icons/fa";
+import { PiGraphFill } from "react-icons/pi";
+import SearchComponent from "./SearchComponent";
+import Breadcrumb from "./Breadcrumb";
+import RocrateIDViewer from "./RocrateIDViewer";
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
     //console.log(rocrate);
-    let data = {};
+    let data: { [key: string]: any } = {};
     data["rocrate_context"] = rocrate["@context"];
 
     //loop over the @graph array and check if the @id is "./" or "ro-crate-metadata.json"
@@ -56,34 +48,14 @@ export default function MainContainer(props: any) {
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
     const [reponame, setRepoName] = useState(props.container.attributes.rocrate_name.value ||"");
-    const [version, setVersion] = useState(props.container.attributes.version.value ||"");
     const [data, setData] = useState({});
+    const [rocrateID, setRocrateID] = useState("");
     const [loading, setLoading] = useState(true);
-    const [hash, setHash] = useState("");
-    const [query_params, setQueryParams] = useState("");
-    const [no_q_check, setNoQCheck] = useState(0); 
-    const [contents_file, setContentsFile] = useState("");
-    const [showmeta, setShowMeta] = useState(false);
-    const [mode, setMode] = useState("metadata");
-    const [extrafileviewmode, setExtraFileViewMode] = useState("1");
 
-    //console.log(props.container.attributes.rocrate.value);
-    //console.log(rocrate);
-    //on load check if the url has a hash and if so set the hash state to it
-    useEffect(() => {
-        if (window.location.hash) {
-            setHash(window.location.hash);
-        }
-    }, []);
-    //on hash change set the hash state to the new hash
-    useEffect(() => {
-        window.addEventListener("hashchange", () => {
-            setHash(window.location.hash);
-        });
-        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + "#" + hash.replace("#", "");
-        window.history.pushState({path:newurl},'',newurl);
-        window.location.hash = hash;
-    }, []);
+    const handleSelect = (id: string) => {
+        setRocrateID(id);
+    };
+
     //perform the get request to get the rocrate.json file
     useEffect(() => {
         if (preRocrate.includes(".json")) {
@@ -100,133 +72,36 @@ export default function MainContainer(props: any) {
         setData(extractData(rocrate));
     }, [rocrate]);
 
-    //when hash is updated check if it is a file or folder and if it is a file set the contents_file state to it
-    useEffect(() => {
-        if (hash.includes("#")) {
-            let hash_split = hash.split("#");
-            //search in the @graph array for the file with the @id equal to the hash
-            for (let i in rocrate["@graph"]) {
-                let item = rocrate["@graph"][i];
-                if (item["@id"] == hash_split[1]) {
-                    //check if the file is a folder or a file
-                    if (item["@type"] == "File") {
-                        setMode("content")
-                        //perform a axios request to get the file contents
-                        axios.get(item["@id"]).then(response => {
-                            //console.log the type of data recieved
-                            console.log(typeof response.data);
-                            console.log(response.data);
-                            //console.log(response.data);
-                            setContentsFile(response.data);
-                        }
-                        ).catch(error => {
-                            console.log(error);
-                        }
-                        );
-                    }
-                    if (item["@type"] != "File" && item["@type"] != "Dataset") {
-                        setMode("metadata");
-                    }
-                }
-            }
-        }
-    }, [hash]);
-
-    //function that will show or hide the metadata table and change the icon id for table is rocrate_metadata_table , id for button is eyebutton
-    const showHideMetadata = () => {
-        if (showmeta) {
-            setShowMeta(false);
-        } else {
-            setShowMeta(true);
-        }
+    if (loading || Object.keys(rocrate).length === 0) {
+        return <div>Loading...</div>;
     }
-
-    console.log(hash);
 
     return (
         <>
-            <div className="flex_row">
-                <h1 className="secondary-underline">{reponame} version {version} rocrate preview</h1>
-                <button className="file_menu_button" id="eyebutton" onClick={() => showHideMetadata()}>
-                    {
-                        showmeta ?
-                        <TbTableOff />
-                        : <TbTable />
-                    }
-                </button>
+            <br/>
+            <div className="flex flex-row justify-between items-center">
+                <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
+                <SearchComponent rocrate={rocrate} onSelect={handleSelect} />
             </div>
             <br />
-            {
-                showmeta ?
-                <RocrateMetadataTable 
-                    data={data} 
-                    Loading={loading} 
-                />
-                : null
-            }
-            <div className="flex_row">
-                <ContentNavigation 
-                    rocrate={rocrate} 
-                    hash={hash} 
-                    loading={loading} 
-                    query_params={query_params} 
-                />
-                <FileMenu 
-                    rocrate={rocrate} 
-                    hash={hash} 
-                    loading={loading} 
-                    query_params={query_params}
-                    setmode={setMode}
-                    mode={mode}
-                />
-            </div>
-            <RootContentTable 
-                rocrate={rocrate} 
-                hash={hash} 
-                loading={loading} 
-            />
-            {
-                hash.includes("Contextual_Entities") ?
-                <NodesTable
-                    rocrate={rocrate}
-                    hash={hash}
-                    loading={loading}
-                />
-                : 
-                hash.includes("resource_uris") ?
-                <ExternalFileLinksTable
-                    rocrate={rocrate}
-                    hash={hash}
-                    loading={loading}
-                />
-                :
-                <>
-                    <FolderView 
-                        rocrate={rocrate} 
-                        hash={hash} 
-                        loading={loading} 
-                        query_params={query_params} 
-                    />
-                    <FileMetadataTable 
-                        rocrate={rocrate} 
-                        hash={hash} 
-                        loading={loading}
-                        mode={mode}
-                    />
-                    <FileViewerComponent 
-                        rocrate={rocrate} 
-                        hash={hash} 
-                        loading={loading} 
-                        contents_file={contents_file}
-                        mode={mode}
-                        extrafileviewmode={extrafileviewmode}
-                        setExtraFileViewMode={setExtraFileViewMode}
-                    />
-                </>
-            }
-            
+            {rocrateID === "" ? (
+                <div className="flex flex-wrap">
+                    <div className="w-full sm:w-1/2 p-4" onClick={() => setRocrateID("./")}>
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
+                            <FaFolder className="text-4xl text-gray-500 mr-2"/>
+                            <p className="text-lg font-semibold">Dataset files</p>
+                        </div>
+                    </div>
+                    <div className="w-full sm:w-1/2 p-4" onClick={() => setRocrateID("Dataset entities")}>
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
+                            <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
+                            <p className="text-lg font-semibold">Dataset entities</p>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            )}
         </>
     )
 }
-
-//<Footer reponame={reponame}/>
