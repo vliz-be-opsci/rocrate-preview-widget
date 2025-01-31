@@ -104,6 +104,9 @@
                     "@id": "count_thes_terms.xlsx"
                 },
                 {
+                    "@id": "sediment_measured.csv"
+                },
+                {
                     "@id": "imis6293.xml"
                 },
                 {
@@ -450,6 +453,10 @@
         },
         {
             "@id": "does_not_exist.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "sediment_measured.csv",
             "@type": "File"
         },
         {

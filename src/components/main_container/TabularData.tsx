@@ -71,45 +71,47 @@ const TabularData = ({ fileContent, mimeType }: TabularDataProps) => {
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
             </div>
-            <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-[#4CAF9C]">
-                    {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column) => (
-                                <th
-                                    {...column.getHeaderProps()}
-                                    className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                                    style={{ maxWidth: "300px" }}
-                                >
-                                    {column.render("Header")}
-                                    <div
-                                        {...column.getResizerProps()}
-                                        className={`resizer ${column.isResizing ? "isResizing" : ""}`}
-                                    />
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
-                    {rows.slice(0, 5).map((row) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+            <div className="overflow-x-auto">
+                <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-[#4CAF9C]">
+                        {headerGroups.map((headerGroup) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column) => (
+                                    <th
+                                        {...column.getHeaderProps()}
+                                        className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                                         style={{ maxWidth: "300px" }}
                                     >
-                                        {cell.render("Cell")}
-                                    </td>
+                                        {column.render("Header")}
+                                        <div
+                                            {...column.getResizerProps()}
+                                            className={`resizer ${column.isResizing ? "isResizing" : ""}`}
+                                        />
+                                    </th>
                                 ))}
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()} className="bg-white divide-y divide-gray-200">
+                        {rows.slice(0, 5).map((row) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map((cell) => (
+                                        <td
+                                            {...cell.getCellProps()}
+                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                            style={{ maxWidth: "300px" }}
+                                        >
+                                            {cell.render("Cell")}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
