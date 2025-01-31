@@ -21,6 +21,8 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
     useEffect(() => {
+        setError(null); // Reset error state when rocrateID changes
+
         const fetchFileContent = async (url: string) => {
             try {
                 const response = await fetch(url);

@@ -12,10 +12,12 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
 
     const renderContent = () => {
         console.log(mimeType);
+        const isCsv = mimeType.startsWith("text/csv") || mimeType.startsWith("application/vnd.ms-excel");
+        if (isCsv) {
+            return <TabularData fileContent={fileContent} mimeType={mimeType} />;
+        }
+
         switch (mimeType) {
-            case "text/csv":
-            case "application/vnd.ms-excel":
-                return <TabularData fileContent={fileContent} mimeType={mimeType} />;
             // Add cases for different MIME types here
             default:
                 return (
