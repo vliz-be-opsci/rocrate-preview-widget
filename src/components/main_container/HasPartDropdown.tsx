@@ -1,8 +1,9 @@
-import React from "react";
-import { FaFolder, FaFile } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     if (!item || !item.hasPart) {
         return null;
@@ -15,10 +16,10 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
         return `${truncated}...${extension}`;
     };
 
-    const getIcon = (part: any) => {
+    const getIcon = (part: any, isHovered: boolean) => {
         const partItem = rocrate["@graph"].find((item: any) => item["@id"] === part["@id"]);
         if (partItem && partItem["@type"] === "Dataset") {
-            return <FaFolder className="mr-2" />;
+            return isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />;
         }
         return <FaFile className="mr-2" />;
     };
@@ -34,10 +35,16 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
     return (
         <ul className="mt-1 mb-1 w-full bg-white border border-gray-200 rounded shadow-lg grid grid-cols-1 sm:grid-cols-4 gap-2 p-1">
             {item.hasPart.map((part: any, index: number) => (
-                <li key={index} className="p-2 hover:bg-gray-100 cursor-pointer flex items-center" onClick={() => onSelect(part["@id"])}>
-                    {getIcon(part)}
+                <li
+                    key={index}
+                    className="p-2 hover:bg-[#4CAF9C]/80 hover:text-white cursor-pointer flex items-center"
+                    onClick={() => onSelect(part["@id"])}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                >
+                    {getIcon(part, hoveredIndex === index)}
                     {truncateText(part["@id"], 40)}
-                    <span className="ml-2 text-xs font-medium text-gray-600">{getPartCount(part["@id"])}</span>
+                    <span className="ml-2 text-xs font-medium">{getPartCount(part["@id"])}</span>
                 </li>
             ))}
         </ul>
