@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaFolder, FaFile, FaHome, FaCaretDown, FaCaretRight } from "react-icons/fa";
+import { FaFolder, FaFile, FaHome } from "react-icons/fa";
 
 interface BreadcrumbProps {
     rocrate: any;
@@ -50,32 +50,6 @@ const HasPartCount = ({ rocrate, rocrateID }: { rocrate: any; rocrateID: string 
     );
 };
 
-const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
-    const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
-    const [isOpen, setIsOpen] = useState(false);
-
-    if (!item || !item.hasPart) {
-        return null;
-    }
-
-    return (
-        <div className="relative">
-            <button onClick={() => setIsOpen(!isOpen)} className="ml-2">
-                {isOpen ? <FaCaretDown /> : <FaCaretRight />}
-            </button>
-            {isOpen && (
-                <ul className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg">
-                    {item.hasPart.map((part: any, index: number) => (
-                        <li key={index} className="p-2 hover:bg-gray-100 cursor-pointer" onClick={() => onSelect(part["@id"])}>
-                            {part["@id"]}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-};
-
 export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: BreadcrumbProps) {
     const path = findPath(rocrate, rocrateID) || [];
     const [dropdownState, setDropdownState] = useState<{ [key: string]: boolean }>({});
@@ -115,7 +89,6 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                         const partSegments = part.split("/");
                         const lastSegment = partSegments[partSegments.length - 1];
                         const isLast = index === path.length - 1;
-                        const isOpen = dropdownState[part] || false;
                         return (
                             <li key={index} className="relative flex items-center">
                                 <span
@@ -125,40 +98,17 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                 <a
                                     href="#"
                                     className={`flex h-10 items-center ${isLast ? 'bg-[#4CAF9C] text-white font-bold' : 'bg-gray-100'} pe-4 ps-8 text-xs font-medium transition hover:text-gray-900`}
-                                    onClick={() => {
-                                        if (!lastSegment.includes(".")) {
-                                            toggleDropdown(part);
-                                            onSelect(part);
-                                        } else {
-                                            onSelect(part);
-                                        }
-                                    }}
+                                    onClick={() => onSelect(part)}
                                 >
                                     {lastSegment.includes(".") ? <FaFile className={`size-4 ${isLast ? 'text-white' : ''}`} /> : <FaFolder className={`size-4 ${isLast ? 'text-white' : ''}`} />}
                                     <span className={`ms-1.5 ${isLast ? 'font-bold' : ''}`}>{part}</span>
                                     {isLast && <HasPartCount rocrate={rocrate} rocrateID={part} />}
-                                    {isLast && !lastSegment.includes(".") && (
-                                        isOpen ? <FaCaretDown className="ml-2" /> : <FaCaretRight className="ml-2" />
-                                    )}
                                 </a>
                             </li>
                         );
                     })}
                 </ol>
             </nav>
-            {path.map((part, index) => {
-                const isLast = index === path.length - 1;
-                const isOpen = dropdownState[part] || false;
-                return (
-                    isLast && isOpen && (
-                        <ul key={index} className="mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg">
-                            {getSortedParts(rocrate["@graph"].find((item: any) => item["@id"] === part)?.hasPart).map((subPart: any, subIndex: number) => (
-                                <li key={subIndex} className="p-2 hover:bg-gray-100 cursor-pointer flex items-center" onClick={() => onSelect(subPart["@id"])}>{subPart["@id"].endsWith("/") ? <FaFolder className="mr-2" /> : <FaFile className="mr-2" />}{subPart["@id"]}</li>
-                            ))}
-                        </ul>
-                    )
-                );
-            })}
         </>
     );
 }

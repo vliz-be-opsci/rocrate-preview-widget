@@ -6,6 +6,7 @@ import { PiGraphFill } from "react-icons/pi";
 import SearchComponent from "./SearchComponent";
 import Breadcrumb from "./Breadcrumb";
 import RocrateIDViewer from "./RocrateIDViewer";
+import HasPartDropdown from "./HasPartDropdown";
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
     //console.log(rocrate);
@@ -83,6 +84,7 @@ export default function MainContainer(props: any) {
                 <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
                 <SearchComponent rocrate={rocrate} onSelect={handleSelect} />
             </div>
+            <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             <br />
             {rocrateID === "" ? (
                 <div className="flex flex-wrap">
