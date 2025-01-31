@@ -171,6 +171,9 @@
             "hasPart": [
                 {
                     "@id": "test_pdf.pdf"
+                },
+                {
+                    "@id": "does_not_exist.pdf"
                 }
             ]
         },
@@ -443,6 +446,10 @@
         },
         {
             "@id": "test_WMV.wmv",
+            "@type": "File"
+        },
+        {
+            "@id": "does_not_exist.pdf",
             "@type": "File"
         },
         {

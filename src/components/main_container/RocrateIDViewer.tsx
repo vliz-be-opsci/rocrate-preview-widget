@@ -60,7 +60,14 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const renderPreview = () => {
         if (loading) return <p>Loading...</p>;
-        if (error) return <p>{error}</p>;
+        if (error) return (
+            <div className="card text-white bg-danger mb-3">
+                <div className="card-body">
+                    <h5 className="card-title">Error</h5>
+                    <p className="card-text">{error}</p>
+                </div>
+            </div>
+        );
         if (!fileContent) return <p>No preview available</p>;
 
         return <pre className="bg-gray-100 p-4">{fileContent}</pre>;
