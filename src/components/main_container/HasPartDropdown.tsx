@@ -23,12 +23,21 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
         return <FaFile className="mr-2" />;
     };
 
+    const getPartCount = (partID: string) => {
+        const partItem = rocrate["@graph"].find((item: any) => item["@id"] === partID);
+        if (partItem && partItem.hasPart) {
+            return `(${partItem.hasPart.length} items)`;
+        }
+        return "";
+    };
+
     return (
         <ul className="mt-1 mb-1 w-full bg-white border border-gray-200 rounded shadow-lg grid grid-cols-1 sm:grid-cols-4 gap-2 p-1">
             {item.hasPart.map((part: any, index: number) => (
                 <li key={index} className="p-2 hover:bg-gray-100 cursor-pointer flex items-center" onClick={() => onSelect(part["@id"])}>
                     {getIcon(part)}
                     {truncateText(part["@id"], 40)}
+                    <span className="ml-2 text-xs font-medium text-gray-600">{getPartCount(part["@id"])}</span>
                 </li>
             ))}
         </ul>

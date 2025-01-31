@@ -102,7 +102,6 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                 >
                                     {lastSegment.includes(".") ? <FaFile className={`size-4 ${isLast ? 'text-white' : ''}`} /> : <FaFolder className={`size-4 ${isLast ? 'text-white' : ''}`} />}
                                     <span className={`ms-1.5 ${isLast ? 'font-bold' : ''}`}>{part}</span>
-                                    {isLast && <HasPartCount rocrate={rocrate} rocrateID={part} />}
                                 </a>
                             </li>
                         );
