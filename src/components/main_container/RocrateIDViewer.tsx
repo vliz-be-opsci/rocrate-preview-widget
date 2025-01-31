@@ -14,6 +14,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const [activeTab, setActiveTab] = useState("metadata");
     const [fileContent, setFileContent] = useState<string | null>(null);
     const [mimeType, setMimeType] = useState<string | null>(null);
+    const [fileUrl, setFileUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +35,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 const text = await response.text();
                 setFileContent(text);
                 setMimeType(response.headers.get("Content-Type"));
+                setFileUrl(url);
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -74,7 +76,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         );
         if (!fileContent) return <p>No preview available</p>;
 
-        return <FileContentPreview fileContent={fileContent} mimeType={mimeType || "text/plain"} />;
+        return <FileContentPreview fileContent={fileContent} mimeType={mimeType || "text/plain"} fileUrl={fileUrl || ""} />;
     };
 
     const downloadFile = () => {

@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  publicDir: 'public', // This is the default setting, but you can specify it explicitly
+  optimizeDeps: {
+    include: ['react-data-grid'],
+  },
   server: {
     open: true,
   },

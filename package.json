@@ -5,10 +5,13 @@
   "dependencies": {
     "@r2wc/react-to-web-component": "^2.0.2",
     "axios": "^1.4.0",
+    "match-sorter": "^8.0.0",
     "react": "^18.2.0",
+    "react-data-grid": "^7.0.0-beta.47",
     "react-dom": "^18.2.0",
     "react-icons": "^5.4.0",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "react-table": "^7.8.0"
   },
   "scripts": {
     "start": "vite",
