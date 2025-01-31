@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MetadataTable from "./MetadataTable";
+import { getFullPath } from "./Breadcrumb";
 
 interface RocrateIDViewerProps {
     rocrate: any;
@@ -16,28 +17,38 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
     useEffect(() => {
+        const fetchFileContent = async (url: string) => {
+            try {
+                const response = await fetch(url);
+                if (response.status === 304) {
+                    // Handle 304 Not Modified by using cached content if available
+                    setLoading(false);
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error("File not found");
+                }
+                const text = await response.text();
+                setFileContent(text);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
         if (activeTab === "preview" && item && item["@type"] === "File") {
             setLoading(true);
-            fetch(rocrateID)
-                .then(response => {
-                    if (response.status === 304) {
-                        // Handle 304 Not Modified by using cached content if available
-                        setLoading(false);
-                        return;
-                    }
-                    if (!response.ok) {
-                        throw new Error("File not found");
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    setFileContent(text);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    setError(err.message);
-                    setLoading(false);
+            const fullPath = getFullPath(rocrate, rocrateID);
+            console.log(fullPath);
+            if (fullPath) {
+                fetchFileContent(fullPath).catch(() => {
+                    // If fetching by full path fails, try fetching by rocrateID
+                    fetchFileContent(rocrateID);
                 });
+            } else {
+                fetchFileContent(rocrateID);
+            }
         }
     }, [activeTab, rocrateID, item]);
 

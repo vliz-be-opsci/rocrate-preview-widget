@@ -1,0 +1,458 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@graph": [
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            },
+            "author": {
+                "@id": "https://orcid.org/0000-0002-9648-6484"
+            }
+        },
+        {
+            "@id": "audio/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md",
+                    "prefLabel": "README.md"
+                },
+                {
+                    "@id": "test_MP3.mp3"
+                },
+                {
+                    "@id": "test_OOG.ogg"
+                },
+                {
+                    "@id": "test_WAV.wav"
+                }
+            ]
+        },
+        {
+            "@id": "code/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": ".Rhistory"
+                },
+                {
+                    "@id": "DADA2pipeline16S.r"
+                },
+                {
+                    "@id": "dmbon-assistant.sh"
+                },
+                {
+                    "@id": "person_id_tracker.py"
+                },
+                {
+                    "@id": "plugins.js"
+                },
+                {
+                    "@id": "README.md"
+                }
+            ]
+        },
+        {
+            "@id": "compressed_files/",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "test_zip.zip"
+                }
+            ]
+        },
+        {
+            "@id": "nested_structure",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "sdfvhijufdrihjuqedfrjmedfmoqfhjgmosqdfh_svgsde-gbvd-g-sdfbv-sdfb-sdf-bsdf-bs-dfbv-xdvb-frsgbv-dsfx-gb-vliquhrvf.txt"
+                }
+            ]
+        },
+        {
+            "@id": "folder_in_folder",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "nested_structure"
+                },
+                {
+                    "@id": "whaterver.txt"
+                }
+            ]
+        },
+        {
+            "@id": "data",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "folder_in_folder"
+                },
+                {
+                    "@id": "count_thes_terms.csv"
+                },
+                {
+                    "@id": "count_thes_terms.xlsx"
+                },
+                {
+                    "@id": "imis6293.xml"
+                },
+                {
+                    "@id": "package.json"
+                },
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "rocrate2pages.yml"
+                }
+            ]
+        },
+        {
+            "@id": "images",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "test_GIF.gif"
+                },
+                {
+                    "@id": "test_ICO.ico"
+                },
+                {
+                    "@id": "test_jpg.jpg"
+                },
+                {
+                    "@id": "test_png.png"
+                },
+                {
+                    "@id": "test_svg.svg"
+                },
+                {
+                    "@id": "test_WEBP.webp"
+                }
+            ]
+        },
+        {
+            "@id": "microsoft",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "test_csv.csv"
+                },
+                {
+                    "@id": "test_ppt.pptx"
+                },
+                {
+                    "@id": "test_word.docx"
+                },
+                {
+                    "@id": "test_xlsx.xlsx"
+                }
+            ]
+        },
+        {
+            "@id": "pdf",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "test_pdf.pdf"
+                }
+            ]
+        },
+        {
+            "@id": "video",
+            "@type": "Dataset",
+            "hasPart": [
+                {
+                    "@id": "README.md"
+                },
+                {
+                    "@id": "test_AVI.avi"
+                },
+                {
+                    "@id": "test_MKV.mkv"
+                },
+                {
+                    "@id": "test_mp4.mp4"
+                },
+                {
+                    "@id": "test_MPG.mpg"
+                },
+                {
+                    "@id": "test_WEBM.webm"
+                },
+                {
+                    "@id": "test_WMV.wmv"
+                },
+                {
+                    "@id": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                }
+            ],
+            "mentions": [
+                {
+                    "@id": "_:0463d574529b43169c97acb6507e74c4"
+                }
+            ]
+        },
+        {
+            "@id": "./",
+            "@type": [
+                "Dataset",
+                "Profile"
+            ],
+            "spatial": "<http://www.opengis.net/def/crs/OGC/1.3/CRS84> POLYGON ((40.2197 52.3797,22.1374 52.3797,22.1374 44.3877,40.2197 44.3877,40.2197 52.3797))",
+            "hasPart": [
+                {
+                    "@id": "audio/"
+                },
+                {
+                    "@id": "code/"
+                },
+                {
+                    "@id": "compressed_files/"
+                },
+                {
+                    "@id": "data"
+                },
+                {
+                    "@id": "images"
+                },
+                {
+                    "@id": "microsoft"
+                },
+                {
+                    "@id": "pdf"
+                },
+                {
+                    "@id": "video"
+                },
+                {
+                    "@id": "README.md"
+                }
+            ],
+            "mentions": [
+                {
+                    "@id": "_:aa121296a172495dbeb123e17ef99985"
+                }
+            ]
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-9648-6484",
+            "@context": "http://schema.org",
+            "@type": "Person",
+            "mainEntityOfPage": "https://orcid.org/0000-0002-9648-6484",
+            "name": "Marc Portier",
+            "givenName": "Marc",
+            "familyName": "Portier",
+            "alternateName": "mpo",
+            "address": {
+                "@id": "_:39dbf476ac284f9797d71a0a0c83fc22"
+            },
+            "affiliation": {
+                "@id": "_:aa121296a172495dbeb123e17ef99985"
+            },
+            "@reverse": {},
+            "url": [
+                "https://www.linkedin.com/in/marcportier/",
+                "https://twitter.com/mportier",
+                "http://purl.org/np/RAUPyY2DISDVAcR2SVZBUz6_RFUqaCphxWmy1REVFeoWo"
+            ]
+        },
+        {
+            "@id": "_:39dbf476ac284f9797d71a0a0c83fc22",
+            "addressCountry": "BE",
+            "@type": "PostalAddress",
+            "prefLabel": "Random postal adress"
+        },
+        {
+            "@id": "_:aa121296a172495dbeb123e17ef99985",
+            "@type": "Organization",
+            "name": "Vlaams Instituut voor de Zee",
+            "alternateName": "VMDC, Flemish Marine Data Centre",
+            "identifier": {
+                "@id": "_:0463d574529b43169c97acb6507e74c4"
+            }
+        },
+        {
+            "@id": "_:0463d574529b43169c97acb6507e74c4",
+            "@type": "PropertyValue",
+            "propertyID": "RINGGOLD",
+            "value": "71343"
+        },
+        {
+            "@id": "README.md",
+            "@type": "File",
+            "Person": {
+                "@id": "https://orcid.org/0000-0002-9648-6484"
+            },
+            "license": "CC BY-NC-SA"
+        },
+        {
+            "@id": "test_MP3.mp3",
+            "@type": "File"
+        },
+        {
+            "@id": "test_OOG.ogg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WAV.wav",
+            "@type": "File"
+        },
+        {
+            "@id": ".Rhistory",
+            "@type": "File"
+        },
+        {
+            "@id": "/DADA2pipeline16S.r",
+            "@type": "File"
+        },
+        {
+            "@id": "dmbon-assistant.sh",
+            "@type": "File"
+        },
+        {
+            "@id": "person_id_tracker.py",
+            "@type": "File",
+            "mentions": [
+                {
+                    "@id": "_:0463d574529b43169c97acb6507e74c4"
+                }
+            ]
+        },
+        {
+            "@id": "plugins.js",
+            "@type": "File"
+        },
+        {
+            "@id": "test_zip.zip",
+            "@type": "File"
+        },
+        {
+            "@id": "sdfvhijufdrihjuqedfrjmedfmoqfhjgmosqdfh_svgsde-gbvd-g-sdfbv-sdfb-sdf-bsdf-bs-dfbv-xdvb-frsgbv-dsfx-gb-vliquhrvf.txt",
+            "@type": "File"
+        },
+        {
+            "@id": "whaterver.txt",
+            "@type": "File"
+        },
+        {
+            "@id": "count_thes_terms.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "count_thes_terms.xlsx",
+            "@type": "File"
+        },
+        {
+            "@id": "imis6293.xml",
+            "@type": "File"
+        },
+        {
+            "@id": "package.json",
+            "@type": "File",
+            "label": "package.json"
+        },
+        {
+            "@id": "rocrate2pages.yml",
+            "@type": "File"
+        },
+        {
+            "@id": "test_GIF.gif",
+            "@type": "File"
+        },
+        {
+            "@id": "test_ICO.ico",
+            "@type": "File"
+        },
+        {
+            "@id": "test_jpg.jpg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_png.png",
+            "@type": "File"
+        },
+        {
+            "@id": "test_svg.svg",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WEBP.webp",
+            "@type": "File"
+        },
+        {
+            "@id": "test_csv.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "test_ppt.pptx",
+            "@type": "File"
+        },
+        {
+            "@id": "test_word.docx",
+            "@type": "File"
+        },
+        {
+            "@id": "test_xlsx.xlsx",
+            "@type": "File"
+        },
+        {
+            "@id": "test_pdf.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "README.md",
+            "@type": "File"
+        },
+        {
+            "@id": "test_AVI.avi",
+            "@type": "File"
+        },
+        {
+            "@id": "test_MKV.mkv",
+            "@type": "File"
+        },
+        {
+            "@id": "test_mp4.mp4",
+            "@type": "File"
+        },
+        {
+            "@id": "test_MPG.mpg",
+            "@type": "File",
+            "test": "test_here"
+        },
+        {
+            "@id": "test_WEBM.webm",
+            "@type": "File"
+        },
+        {
+            "@id": "test_WMV.wmv",
+            "@type": "File"
+        },
+        {
+            "@id": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "@type": "File",
+            "mentions": [
+                {
+                    "@id": "_:0463d574529b43169c97acb6507e74c4"
+                }
+            ]
+        }
+    ]
+}

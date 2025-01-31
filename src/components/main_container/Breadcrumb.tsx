@@ -30,6 +30,12 @@ const findPath = (rocrate: any, targetID: string, currentPath: string[] = ["./"]
     return null;
 };
 
+export const getFullPath = (rocrate: any, targetID: string): string | null => {
+    const path = findPath(rocrate, targetID);
+    if (!path) return null;
+    return path.map((part, index) => (index < path.length - 1 && !part.endsWith("/") ? part + "/" : part)).join("");
+};
+
 const HasPartCount = ({ rocrate, rocrateID }: { rocrate: any; rocrateID: string }) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
