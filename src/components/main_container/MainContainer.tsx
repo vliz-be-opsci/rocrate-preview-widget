@@ -7,6 +7,7 @@ import SearchComponent from "./SearchComponent";
 import Breadcrumb from "./Breadcrumb";
 import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
+import EntityList from "./EntityList";
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
     //console.log(rocrate);
@@ -102,6 +103,8 @@ export default function MainContainer(props: any) {
                     </div>
                 </div>
                 
+            ) : rocrateID === "Dataset entities" ? (
+                <EntityList rocrate={rocrate} onSelect={handleSelect} />
             ) : (
                 <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
