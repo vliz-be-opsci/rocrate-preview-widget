@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import MetadataTable from "./MetadataTable";
 import { getFullPath } from "./Breadcrumb";
 import { FaDownload, FaTimes } from "react-icons/fa";
+import FileContentPreview from "./FileContentPreview";
 
 interface RocrateIDViewerProps {
     rocrate: any;
@@ -12,6 +13,7 @@ interface RocrateIDViewerProps {
 const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps) => {
     const [activeTab, setActiveTab] = useState("metadata");
     const [fileContent, setFileContent] = useState<string | null>(null);
+    const [mimeType, setMimeType] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +33,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 }
                 const text = await response.text();
                 setFileContent(text);
+                setMimeType(response.headers.get("Content-Type"));
                 setLoading(false);
             } catch (err) {
                 setError(err.message);
@@ -71,12 +74,12 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         );
         if (!fileContent) return <p>No preview available</p>;
 
-        return <pre className="bg-gray-100 p-4">{fileContent}</pre>;
+        return <FileContentPreview fileContent={fileContent} mimeType={mimeType || "text/plain"} />;
     };
 
     const downloadFile = () => {
         const element = document.createElement("a");
-        const file = new Blob([fileContent || ""], { type: "text/plain" });
+        const file = new Blob([fileContent || ""], { type: mimeType || "text/plain" });
         element.href = URL.createObjectURL(file);
         element.download = rocrateID.split("/").pop() || "download.txt";
         document.body.appendChild(element);
