@@ -1,5 +1,6 @@
 import React from "react";
 import TabularData from "./TabularData";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 interface FileContentPreviewProps {
     fileContent: string;
@@ -26,9 +27,13 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
                             <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
                             <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
                         </div>
-                        <div className="bg-yellow-400 text-black p-4 rounded mb-3">
-                            <h5 className="font-bold">Warning</h5>
-                            <p>There is not yet a file viewer implementation for {mimeType}. If you want to view the file, please download it.</p>
+                        <div className="bg-yellow-400 text-black p-4 rounded mb-3 border border-yellow-800" style={{ backgroundColor: "#fff3cd" }}>
+                            <div className="flex items-center">
+                                <FaExclamationTriangle className="text-yellow-800 mr-1" />
+                                <div>
+                                    <p className="text-yellow-800"> There is not yet a file viewer implementation for {mimeType}. If you want to view the file, please download it.</p>
+                                </div>
+                            </div>
                         </div>
                         <pre className="bg-gray-100 p-4">{fileContent.slice(0, 2000)}</pre>
                     </div>
