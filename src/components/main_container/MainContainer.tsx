@@ -121,6 +121,18 @@ export default function MainContainer(props: any) {
         setShowSearchResults(false);
     }, [rocrateID]);
 
+    useEffect(() => {
+        const handlePopState = () => {
+            const hash = window.location.hash.substring(1);
+            setRocrateID(hash);
+        };
+
+        window.addEventListener("popstate", handlePopState);
+        return () => {
+            window.removeEventListener("popstate", handlePopState);
+        };
+    }, []);
+
     if (loading || Object.keys(rocrate).length === 0) {
         return <div>Loading...</div>;
     }
@@ -155,7 +167,7 @@ export default function MainContainer(props: any) {
                             <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Count: {datasetEntitiesCount}</span>
                         </div>
                     </div>
-                    <div className="w-full sm:w-1/2 ml_1" onClick={() => setRocrateID("Dataset entities")}>
+                    <div className="w-full sm:w-1/2 ml_1" onClick={() => setRocrateID("Contextual_entities")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
                             <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
@@ -165,7 +177,7 @@ export default function MainContainer(props: any) {
                 </div>
                 </>
                 
-            ) : rocrateID === "Dataset entities" ? (
+            ) : rocrateID === "Contextual_entities" ? (
                 <EntityList rocrate={rocrate} onSelect={handleSelect} />
             ) : (
                 <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
