@@ -1,6 +1,7 @@
 import React from "react";
 import TabularData from "./TabularData";
 import CodePreview from "./CodePreview";
+import ImagePreview from "./ImagePreview";
 import { FaExclamationTriangle } from "react-icons/fa";
 
 interface FileContentPreviewProps {
@@ -22,6 +23,10 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
 
         if (mimeType.startsWith("text/")) {
             return <CodePreview fileContent={fileContent} mimeType={mimeType} fileName={fileName} />;
+        }
+
+        if (mimeType.startsWith("image/")) {
+            return <ImagePreview fileUrl={fileUrl} mimeType={mimeType} />;
         }
 
         switch (mimeType) {
