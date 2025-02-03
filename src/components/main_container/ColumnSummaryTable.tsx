@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaExclamationTriangle, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { extent, mean, median, deviation } from "d3-array";
@@ -10,6 +11,8 @@ interface ColumnSummaryTableProps {
 }
 
 const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
     const detectDelimiter = (content: string) => {
         const delimiters = [",", "\t", ";", "|"];
         const lines = content.split("\n");
@@ -35,7 +38,7 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
         const uniqueValues = new Set(column.filter((value) => value !== "NA" && value !== ""));
         const numericValues = column.filter((value) => !isNaN(Number(value)) && value !== "NA" && value !== "").map(Number);
 
-        if (uniqueValues.size <= 10) {
+        if (uniqueValues.size <= 5) {
             return "categorical";
         } else if (numericValues.length === column.length) {
             return "numeric";
@@ -80,7 +83,21 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
                     },
                 ],
             };
-            return <Doughnut data={data} />;
+
+            if (summary.valueCounts.length === 0) {
+                return <>
+                <div className="bg-yellow-400 text-black p-2 rounded mb-3 border border-yellow-800 flex item-center" style={{ backgroundColor: "#fff3cd" }}>
+                    <div className="flex items-center">
+                        <FaExclamationTriangle className="text-yellow-800 mr-1" />
+                        <div>
+                            <p className="text-yellow-800">All values in column are none</p>
+                        </div>
+                    </div>
+                </div>
+                </>;
+            }
+
+            return <Doughnut data={data} width={200} height={200} />;
         } else if (type === "numeric") {
             const data = {
                 labels: ["Min", "Max", "Mean", "Median", "Std Dev"],
@@ -92,7 +109,7 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
                     },
                 ],
             };
-            return <Bar data={data} />;
+            return <Bar data={data} width={200} height={200} />;
         } else {
             return (
                 <div>
@@ -104,33 +121,66 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
         }
     };
 
+    const renderNAChart = (naCount: number, totalCount: number) => {
+        const data = {
+            labels: ["NA", "Non-NA"],
+            datasets: [
+                {
+                    data: [naCount, totalCount - naCount],
+                    backgroundColor: ["#FF6384", "#36A2EB"],
+                },
+            ],
+        };
+        return <Doughnut data={data} width={200} height={200} />;
+    };
+
     return (
         <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-[#4CAF9C]">
-                    <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Column</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">NA Count</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Type</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Summary</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {headers.map((header, index) => {
-                        const column = body.map((row) => row[index] || "");
-                        const type = getColumnType(column);
-                        const summary = getColumnSummary(column, type);
-                        return (
-                            <tr key={index}>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{header}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{summary.naCount}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{type}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{renderChart(summary, type)}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Table Summary</h2>
+                <button
+                    className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    {isCollapsed ? <FaChevronDown className="mr-2" /> : <FaChevronUp className="mr-2" />}
+                    {isCollapsed ? "Expand" : "Collapse"}
+                </button>
+            </div>
+            {!isCollapsed && (
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-[#4CAF9C]">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Column</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">NA Count</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Type</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Summary</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {headers.map((header, index) => {
+                            const column = body.map((row) => row[index] || "");
+                            const type = getColumnType(column);
+                            const summary = getColumnSummary(column, type);
+                            return (
+                                <tr key={index}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{header}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div style={{ width: "220px", height: "200px" }}>
+                                            {renderNAChart(summary.naCount, column.length)}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{type}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <div style={{ width: "220px", height: "200px" }}>
+                                            {renderChart(summary, type)}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };
