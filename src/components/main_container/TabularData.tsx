@@ -1,4 +1,5 @@
 import React from "react";
+import ColumnSummaryTable from "./ColumnSummaryTable";
 
 interface TabularDataProps {
     fileContent: string;
@@ -80,6 +81,7 @@ const TabularData = ({ fileContent, mimeType }: TabularDataProps) => {
                     </tbody>
                 </table>
             </div>
+            <ColumnSummaryTable fileContent={fileContent} />
         </div>
     );
 };
