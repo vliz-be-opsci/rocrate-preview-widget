@@ -1,5 +1,6 @@
 import React from "react";
 import TabularData from "./TabularData";
+import CodePreview from "./CodePreview";
 import { FaExclamationTriangle } from "react-icons/fa";
 
 interface FileContentPreviewProps {
@@ -10,12 +11,17 @@ interface FileContentPreviewProps {
 
 const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPreviewProps) => {
     const fileSize = new Blob([fileContent]).size;
+    const fileName = fileUrl.split('/').pop() || "";
 
     const renderContent = () => {
         console.log(mimeType);
         const isCsv = mimeType.startsWith("text/csv") || mimeType.startsWith("application/vnd.ms-excel");
         if (isCsv) {
             return <TabularData fileContent={fileContent} mimeType={mimeType} />;
+        }
+
+        if (mimeType.startsWith("text/")) {
+            return <CodePreview fileContent={fileContent} mimeType={mimeType} fileName={fileName} />;
         }
 
         switch (mimeType) {
