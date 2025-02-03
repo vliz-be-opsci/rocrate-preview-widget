@@ -96,12 +96,12 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                     onClick={() => onSelect(part)}
                                 ></span>
                                 <a
-                                    href="#"
+                                    href={`#${part}`}
                                     className={`flex h-10 items-center ${isLast ? 'bg-[#4CAF9C] text-white font-bold' : 'bg-gray-100'} pe-4 ps-8 text-xs font-medium transition hover:text-gray-900`}
                                     onClick={() => onSelect(part)}
                                 >
                                     {lastSegment.includes(".") ? <FaFile className={`size-4 ${isLast ? 'text-white' : ''}`} /> : <FaFolder className={`size-4 ${isLast ? 'text-white' : ''}`} />}
-                                    <span className={`ms-1.5 ${isLast ? 'font-bold' : ''}`}>{part}</span>
+                                    <span className={`ms-1.5 ${isLast ? 'font-bold' : ''}`}>{lastSegment}</span>
                                 </a>
                             </li>
                         );

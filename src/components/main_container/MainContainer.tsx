@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FaFolder } from "react-icons/fa";
 import { PiGraphFill } from "react-icons/pi";
 import SearchComponent from "./SearchComponent";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb, { getFullPath } from "./Breadcrumb";
 import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
@@ -73,6 +73,29 @@ export default function MainContainer(props: any) {
     useEffect(() => {
         setData(extractData(rocrate));
     }, [rocrate]);
+
+    useEffect(() => {
+        if (!loading && rocrate["@graph"]) {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const item = rocrate["@graph"].find((item: any) => item["@id"] === hash);
+                if (item) {
+                    setRocrateID(hash);
+                } else {
+                    const fullPath = getFullPath(rocrate, hash);
+                    if (fullPath) {
+                        setRocrateID(fullPath);
+                    }
+                }
+            }
+        }
+    }, [rocrate, loading]);
+
+    useEffect(() => {
+        if (rocrateID) {
+            window.location.hash = rocrateID;
+        }
+    }, [rocrateID]);
 
     if (loading || Object.keys(rocrate).length === 0) {
         return <div>Loading...</div>;
