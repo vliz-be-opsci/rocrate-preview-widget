@@ -1,14 +1,19 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import SearchDropdown from "./SearchDropdown";
 
 interface SearchComponentProps {
     rocrate: any;
     onSelect: (id: string) => void;
+    onClose: () => void;
+    onFocus: () => void;
+    onResults: (results: any[]) => void;
 }
 
-export default function SearchComponent({ rocrate, onSelect }: SearchComponentProps) {
+export default function SearchComponent({ rocrate, onSelect, onFocus, onResults }: SearchComponentProps) {
     const [searchText, setSearchText] = useState("");
     const [results, setResults] = useState<any[]>([]);
+    const searchRef = useRef<HTMLDivElement>(null);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const text = event.target.value;
@@ -18,8 +23,10 @@ export default function SearchComponent({ rocrate, onSelect }: SearchComponentPr
                 item["@id"].includes(text)
             );
             setResults(filteredResults);
+            onResults(filteredResults);
         } else {
             setResults([]);
+            onResults([]);
         }
     };
 
@@ -29,22 +36,30 @@ export default function SearchComponent({ rocrate, onSelect }: SearchComponentPr
         setResults([]);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+            setSearchText("");
+            setResults([]);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div>
+        <div ref={searchRef}>
             <input
                 type="text"
                 value={searchText}
                 onChange={handleSearch}
+                onFocus={onFocus}
                 placeholder="Search by @id"
                 className="border p-2 rounded"
             />
-            <ul>
-                {results.map((result, index) => (
-                    <li key={index} className="p-2 border-b cursor-pointer" onClick={() => handleSelect(result["@id"])}>
-                        {result["@id"]}
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 }

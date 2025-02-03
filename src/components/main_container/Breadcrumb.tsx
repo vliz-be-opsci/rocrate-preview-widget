@@ -87,7 +87,10 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                     </li>
                     {path.map((part, index) => {
                         const partSegments = part.split("/");
-                        const lastSegment = partSegments[partSegments.length - 1];
+                        let lastSegment = partSegments[partSegments.length - 1];
+                        if (lastSegment.length === 0 && partSegments.length > 1) {
+                            lastSegment = partSegments[partSegments.length - 2];
+                        }
                         const isLast = index === path.length - 1;
                         return (
                             <li key={index} className="relative flex items-center">

@@ -15,10 +15,20 @@ const EntityList = ({ rocrate, onSelect }: EntityListProps) => {
                 {entities.map((entity: any, index: number) => (
                     <li
                         key={index}
-                        className="p-2 hover:bg-[#4CAF9C]/80 hover:text-white cursor-pointer flex items-center"
+                        className="p-2 hover:bg-[#4CAF9C]/80 hover:text-white cursor-pointer flex items-center justify-between"
                         onClick={() => onSelect(entity["@id"])}
                     >
-                        {entity["@id"]}
+                        <div className="flex items-center">
+                            {entity["@id"]}
+                        </div>
+                        <a
+                            href={`http://schema.org/${entity["@type"]}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 hover:underline"
+                        >
+                            {entity["@type"]}
+                        </a>
                     </li>
                 ))}
             </ul>
