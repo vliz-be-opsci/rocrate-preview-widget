@@ -1,7 +1,7 @@
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { FaJs, FaHtml5, FaCss3Alt, FaMarkdown, FaPython, FaJava, FaPhp, FaRust, FaFileCode,FaTerminal, FaCuttlefish, FaGem, FaYarn } from "react-icons/fa";
+import { FaJs, FaHtml5, FaCss3Alt, FaMarkdown, FaPython, FaJava, FaPhp, FaRust, FaFileCode, FaTerminal, FaCuttlefish, FaGem, FaYarn, FaInfoCircle } from "react-icons/fa";
 
 interface CodePreviewProps {
     fileContent: string;
@@ -129,6 +129,8 @@ const CodePreview = ({ fileContent, mimeType, fileName }: CodePreviewProps) => {
 
     const language = getLanguage(mimeType, fileName);
     const fileSize = new Blob([fileContent]).size;
+    const sizeContentToDisplay = 2500;
+    const previewContent = fileContent.length > sizeContentToDisplay ? fileContent.substring(0, sizeContentToDisplay) + "..." : fileContent;
 
     return (
         <div>
@@ -140,9 +142,17 @@ const CodePreview = ({ fileContent, mimeType, fileName }: CodePreviewProps) => {
                     <span className="ml-1">{language}</span>
                 </span>
             </div>
-            <SyntaxHighlighter language={language} style={coy}>
-                {fileContent}
-            </SyntaxHighlighter>
+            {fileContent.length > sizeContentToDisplay && (
+                <div className="bg-blue-100 text-blue-800 p-2 rounded mb-3 flex items-center">
+                    <FaInfoCircle className="mr-2" />
+                    <span>This preview is not the full file. Only the first {sizeContentToDisplay} characters are shown. Download the file to view full content.</span>
+                </div>
+            )}
+            <div style={{ backgroundColor: "#f5f5f5" }}>
+                <SyntaxHighlighter language={language} style={coy}>
+                    {previewContent}
+                </SyntaxHighlighter>
+            </div>
         </div>
     );
 };
