@@ -50,7 +50,7 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
 
         if (uniqueValues.size <= 5) {
             return "categorical";
-        } else if (numericValues.length === column.length) {
+        } else if (numericValues.length >= column.length / 2) {
             return "numeric";
         } else {
             return "string";
