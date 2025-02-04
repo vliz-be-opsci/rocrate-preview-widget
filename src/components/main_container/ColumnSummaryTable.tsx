@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { FaExclamationTriangle, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import React, { useState, useEffect, useRef } from "react";
+import { FaExclamationTriangle, FaChevronDown, FaChevronUp, FaInfoCircle } from "react-icons/fa";
 import { Chart, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from "chart.js";
-import { Doughnut, Bar } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import { extent, mean, median, deviation } from "d3-array";
 
 Chart.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
@@ -12,6 +12,16 @@ interface ColumnSummaryTableProps {
 
 const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [cardWidth, setCardWidth] = useState(0);
+    const [filterText, setFilterText] = useState("");
+    const [autoFilterNA, setAutoFilterNA] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (cardRef.current) {
+            setCardWidth(cardRef.current.offsetWidth);
+        }
+    }, [cardRef.current]);
 
     const detectDelimiter = (content: string) => {
         const delimiters = [",", "\t", ";", "|"];
@@ -97,7 +107,7 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
                 </>;
             }
 
-            return <Doughnut data={data} width={200} height={200} />;
+            return <Bar data={data} width={cardWidth} height={200} options={{ indexAxis: 'y', plugins: { legend: { display: false } }, scales: { y: { display: false } } }} />;
         } else if (type === "numeric") {
             const data = {
                 labels: ["Min", "Max", "Mean", "Median", "Std Dev"],
@@ -109,13 +119,22 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
                     },
                 ],
             };
-            return <Bar data={data} width={200} height={200} />;
+            return <Bar data={data} width={cardWidth} height={200} options={{ plugins: { legend: { display: false } }, scales: { y: { display: false } } }} />;
         } else {
             return (
-                <div>
-                    <p>Min Length: {summary.minLength}</p>
-                    <p>Max Length: {summary.maxLength}</p>
-                    <p>Unique Strings: {summary.uniqueStrings}</p>
+                <div className="flex flex-col space-y-1">
+                    <div className="flex items-center">
+                        <FaInfoCircle className="text-blue-800 mr-1" />
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Min Length: {summary.minLength}</span>
+                    </div>
+                    <div className="flex items-center">
+                        <FaInfoCircle className="text-blue-800 mr-1" />
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Max Length: {summary.maxLength}</span>
+                    </div>
+                    <div className="flex items-center">
+                        <FaInfoCircle className="text-blue-800 mr-1" />
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Unique Strings: {summary.uniqueStrings}</span>
+                    </div>
                 </div>
             );
         }
@@ -127,59 +146,75 @@ const ColumnSummaryTable = ({ fileContent }: ColumnSummaryTableProps) => {
             datasets: [
                 {
                     data: [naCount, totalCount - naCount],
-                    backgroundColor: ["#FF6384", "#36A2EB"],
+                    backgroundColor: ["#FF6384", "#4CAF9C"],
                 },
             ],
         };
-        return <Doughnut data={data} width={200} height={200} />;
+        return <Doughnut data={data} width={100} height={100} options={{ plugins: { legend: { display: false } } }} />;
     };
+
+    const filteredHeaders = headers.filter((header, index) => {
+        const column = body.map((row) => row[index] || "");
+        const summary = getColumnSummary(column, getColumnType(column));
+        const matchesFilter = header.toLowerCase().includes(filterText.toLowerCase());
+        const hasNonNAValues = summary.naCount !== column.length;
+        return matchesFilter && (!autoFilterNA || hasNonNAValues);
+    });
 
     return (
         <div className="overflow-x-auto">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">Table Summary</h2>
-                <button
-                    className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    onClick={() => setIsCollapsed(!isCollapsed)}
-                >
-                    {isCollapsed ? <FaChevronDown className="mr-2" /> : <FaChevronUp className="mr-2" />}
-                    {isCollapsed ? "Expand" : "Collapse"}
-                </button>
+                <div className="flex items-center space-x-2">
+                    <input
+                        type="text"
+                        placeholder="Filter columns..."
+                        value={filterText}
+                        onChange={(e) => setFilterText(e.target.value)}
+                        className="px-2 py-1 border rounded"
+                    />
+                    <button
+                        className={`px-4 py-2 text-sm font-medium text-white rounded ${autoFilterNA ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                        onClick={() => setAutoFilterNA(!autoFilterNA)}
+                    >
+                        {autoFilterNA ? 'Show All' : 'Hide NA Columns'}
+                    </button>
+                    <button
+                        className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                    >
+                        {isCollapsed ? <FaChevronDown className="mr-2" /> : <FaChevronUp className="mr-2" />}
+                        {isCollapsed ? "Expand" : "Collapse"}
+                    </button>
+                </div>
             </div>
             {!isCollapsed && (
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-[#4CAF9C]">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Column</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">NA Count</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Type</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Summary</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {headers.map((header, index) => {
-                            const column = body.map((row) => row[index] || "");
-                            const type = getColumnType(column);
-                            const summary = getColumnSummary(column, type);
-                            return (
-                                <tr key={index}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{header}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div style={{ width: "220px", height: "200px" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+                    {filteredHeaders.map((header, index) => {
+                        const column = body.map((row) => row[headers.indexOf(header)] || "");
+                        const type = getColumnType(column);
+                        const summary = getColumnSummary(column, type);
+                        return (
+                            <div key={index} className="bg-white shadow-md rounded-lg p-4" style={{ width: "100%" }} ref={cardRef}>
+                                <div className="flex flex-col">
+                                    <div className="flex items-center justify-between">
+                                        <span>{header}</span>
+                                        <div style={{ width: "30px", height: "30px" }}>
                                             {renderNAChart(summary.naCount, column.length)}
                                         </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{type}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <div style={{ width: "220px", height: "200px" }}>
-                                            {renderChart(summary, type)}
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                                    </div>
+                                    <div className="flex items-center space-x-1 mb-1">
+                                        <FaInfoCircle className="text-blue-800" />
+                                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">{type}</span>
+                                    </div>
+                                    <div style={{ width: "100%", height: "100px" }}>
+                                        {renderChart(summary, type)}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             )}
         </div>
     );

@@ -46,7 +46,7 @@ const TabularData = ({ fileContent, mimeType }: TabularDataProps) => {
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto mb-5">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-[#4CAF9C]">
                         <tr>
