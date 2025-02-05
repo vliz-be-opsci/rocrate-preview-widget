@@ -167,7 +167,7 @@ export default function MainContainer(props: any) {
                 <MainDashboardCrate data={data} rocrate={rocrate} />
                 <div className="flex flex-row mt-3">
                     <div className="w-full sm:w-1/2 mr-1" onClick={() => setRocrateID("./")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
                             <FaFolder className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Dataset entities</p>
                             {Object.keys(entityCounts)
@@ -179,20 +179,34 @@ export default function MainContainer(props: any) {
                                 ))}
                         </div>
                     </div>
-                    <div className="w-full sm:w-1/2 ml_1" onClick={() => setRocrateID("Contextual_entities")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
+                    <div className="w-full sm:w-1/2 ml-1" onClick={() => setRocrateID("Contextual_entities")}>
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
                             <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
-                            {Object.keys(entityCounts)
-                                .filter((type) => type !== "Dataset" && type !== "File")
-                                .map((type, index) => (
-                                    <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                                        {type}: {entityCounts[type]}
-                                    </span>
-                                ))}
+                            <div className="overflow-hidden whitespace-nowrap max-w-full hover:overflow-visible">
+                                <div className="flex animate-marquee">
+                                    {Object.keys(entityCounts)
+                                        .filter((type) => type !== "Dataset" && type !== "File")
+                                        .map((type, index) => (
+                                            <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded inline-block">
+                                                {type}: {entityCounts[type]}
+                                            </span>
+                                        ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <style jsx>{`
+                    .animate-marquee {
+                        animation: marquee 10s linear infinite;
+                    }
+                    @keyframes marquee {
+                        0% { transform: translateX(100%); }
+                        100% { transform: translateX(-100%); }
+                    }
+                `}</style>
                 </>
                 
             ) : rocrateID === "Contextual_entities" ? (
