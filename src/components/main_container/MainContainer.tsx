@@ -58,8 +58,7 @@ export default function MainContainer(props: any) {
     const [loading, setLoading] = useState(true);
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
-    const [datasetEntitiesCount, setDatasetEntitiesCount] = useState(0);
-    const [contextualEntitiesCount, setContextualEntitiesCount] = useState(0);
+    const [entityCounts, setEntityCounts] = useState<{ [key: string]: number }>({});
 
     const handleSelect = (id: string) => {
         setRocrateID(id);
@@ -107,10 +106,17 @@ export default function MainContainer(props: any) {
                     }
                 }
             }
-            const contextualEntitiesCount = rocrate["@graph"].filter((item: any) => item["@type"] !== "Dataset" && item["@type"] !== "File").length;
-            const datasetEntitiesCount = rocrate["@graph"].filter((item: any) => item["@type"] === "File" || item["@type"] === "Dataset").length;
-            setContextualEntitiesCount(contextualEntitiesCount);
-            setDatasetEntitiesCount(datasetEntitiesCount);
+
+            const counts: { [key: string]: number } = {};
+            rocrate["@graph"].forEach((item: any) => {
+                const type = Array.isArray(item["@type"]) ? item["@type"][0] : item["@type"];
+                if (counts[type]) {
+                    counts[type]++;
+                } else {
+                    counts[type] = 1;
+                }
+            });
+            setEntityCounts(counts);
         }
     }, [rocrate, loading]);
 
@@ -164,14 +170,26 @@ export default function MainContainer(props: any) {
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
                             <FaFolder className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Dataset entities</p>
-                            <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Count: {datasetEntitiesCount}</span>
+                            {Object.keys(entityCounts)
+                                .filter((type) => type === "Dataset" || type === "File")
+                                .map((type, index) => (
+                                    <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                                        {type}: {entityCounts[type]}
+                                    </span>
+                                ))}
                         </div>
                     </div>
                     <div className="w-full sm:w-1/2 ml_1" onClick={() => setRocrateID("Contextual_entities")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white">
                             <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
-                            <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Count: {contextualEntitiesCount}</span>
+                            {Object.keys(entityCounts)
+                                .filter((type) => type !== "Dataset" && type !== "File")
+                                .map((type, index) => (
+                                    <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                                        {type}: {entityCounts[type]}
+                                    </span>
+                                ))}
                         </div>
                     </div>
                 </div>

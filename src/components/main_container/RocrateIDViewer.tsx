@@ -140,7 +140,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                             aria-controls="accordion-collapse-body-2"
                             onClick={() => setActiveTab("preview")}
                         >
-                            <span>Preview File ( top 5 rows )</span>
+                            <span>Preview File</span>
                             {fileContent ? (
                                 <FaDownload
                                     className="ml-3 cursor-pointer text-white bg-[#4CAF9C] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 text-2xl p-1 rounded-md"
