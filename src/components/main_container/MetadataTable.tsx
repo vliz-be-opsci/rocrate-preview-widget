@@ -10,11 +10,13 @@ const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
     const renderValue = (value: any) => {
         if (Array.isArray(value)) {
             return (
-                <ul className="list-disc pl-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
                     {value.map((item, index) => (
-                        <li key={index}>{renderValue(item)}</li>
+                        <div key={index} className="bg-gray-100 p-2 rounded">
+                            {renderValue(item)}
+                        </div>
                     ))}
-                </ul>
+                </div>
             );
         } else if (typeof value === "object" && value !== null) {
             return <MetadataTable data={value} onSelect={onSelect} />;

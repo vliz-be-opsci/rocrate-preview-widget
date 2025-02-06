@@ -44,12 +44,12 @@ const TabularData = ({ fileContent, mimeType }: TabularDataProps) => {
     return (
         <div>
             <div className="flex space-x-2 mb-4">
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Total Rows: {body.length}</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Columns: {headers.length}</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
-                <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
+                <span className="flex items-center bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Total Rows: {body.length}</span>
+                <span className="flex items-center bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Columns: {headers.length}</span>
+                <span className="flex items-center bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
+                <span className="flex items-center bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
                 <button
-                    className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex items-center px-4 py-2 text-sm font-medium text-white bg-[#4CAF9C] rounded hover:bg-[#388E7B] focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onClick={() => setShowSummary(!showSummary)}
                 >
                     {showSummary ? <FaTable className="mr-2" /> : <FaList className="mr-2" />}
