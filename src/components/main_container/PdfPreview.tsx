@@ -32,7 +32,7 @@ const PdfPreview = ({ fileUrl }: PdfPreviewProps) => {
     };
 
     return (
-        <div className="pdf-preview">
+        <div className="pdf-preview" style={{ width: "100%" }}>
             <div className="controls flex justify-center mb-4">
                 <button onClick={goToPrevPage} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">Previous</button>
                 <span className="px-4 py-2">Page {pageNumber} of {numPages}</span>
@@ -47,9 +47,9 @@ const PdfPreview = ({ fileUrl }: PdfPreviewProps) => {
                 />
                 <button onClick={goToPage} className="px-4 py-2 bg-blue-500 text-white rounded ml-2">Go</button>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center" style={{ width: "100%" }}>
                 <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} />
+                    <Page pageNumber={pageNumber} width={window.innerWidth} />
                 </Document>
             </div>
         </div>
