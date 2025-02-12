@@ -11,7 +11,8 @@ interface RocrateIDViewerProps {
 }
 
 const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps) => {
-    const [activeTab, setActiveTab] = useState("metadata");
+    const [metadataOpen, setMetadataOpen] = useState(true);
+    const [previewOpen, setPreviewOpen] = useState(true);
     const [fileContent, setFileContent] = useState<string | null>(null);
     const [mimeType, setMimeType] = useState<string | null>(null);
     const [fileUrl, setFileUrl] = useState<string | null>(null);
@@ -23,7 +24,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     useEffect(() => {
         setError(null); // Reset error state when rocrateID changes
 
-        const fetchFileContent = async (url: string) => {
+        const fetchFileContent = async (url: string, rocrateidsearch:boolean) => {
             try {
                 const response = await fetch(url);
                 if (response.status === 304) {
@@ -32,7 +33,12 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     return;
                 }
                 if (!response.ok) {
-                    throw new Error("File not found");
+                    if (rocrateidsearch){
+                        throw new Error("File not found");
+                        return;
+                    }
+                    fetchFileContent(rocrateID, true);
+                    return;
                 }
                 const text = await response.text();
                 setFileContent(text);
@@ -50,12 +56,12 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             const fullPath = getFullPath(rocrate, rocrateID);
             console.log(fullPath);
             if (fullPath) {
-                fetchFileContent(fullPath).catch(() => {
+                fetchFileContent(fullPath, false).catch(() => {
                     // If fetching by full path fails, try fetching by rocrateID
-                    fetchFileContent(rocrateID);
+                    fetchFileContent(rocrateID, true);
                 });
             } else {
-                fetchFileContent(rocrateID);
+                fetchFileContent(rocrateID, true);
             }
         }
     }, [rocrateID, item]);
@@ -97,14 +103,14 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     type="button"
                     className="flex items-center justify-between w-full p-2 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-md focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                     data-accordion-target="#accordion-collapse-body-1"
-                    aria-expanded={activeTab === "metadata"}
+                    aria-expanded={metadataOpen}
                     aria-controls="accordion-collapse-body-1"
-                    onClick={() => setActiveTab("metadata")}
+                    onClick={() => setMetadataOpen(!metadataOpen)}
                 >
-                    <span>Metadata</span>
+                    <span>Info</span>
                     <svg
                         data-accordion-icon
-                        className={`w-3 h-3 ${activeTab === "metadata" ? "rotate-180" : ""} shrink-0`}
+                        className={`w-3 h-3 ${metadataOpen ? "rotate-180" : ""} shrink-0`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -122,7 +128,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             </h2>
             <div
                 id="accordion-collapse-body-1"
-                className={activeTab === "metadata" ? "" : "hidden"}
+                className={metadataOpen ? "" : "hidden"}
                 aria-labelledby="accordion-collapse-heading-1"
             >
                 <div className="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
@@ -136,11 +142,11 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                             type="button"
                             className="flex items-center justify-between w-full p-2 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
                             data-accordion-target="#accordion-collapse-body-2"
-                            aria-expanded={activeTab === "preview"}
+                            aria-expanded={previewOpen}
                             aria-controls="accordion-collapse-body-2"
-                            onClick={() => setActiveTab("preview")}
+                            onClick={() => setPreviewOpen(!previewOpen)}
                         >
-                            <span>Preview File</span>
+                            <span>Content</span>
                             {fileContent ? (
                                 <FaDownload
                                     className="ml-3 cursor-pointer text-white bg-[#4CAF9C] hover:bg-gray-200 hover:text-gray-500 hover:border-gray-500 text-2xl p-1 rounded-md"
@@ -156,7 +162,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                             )}
                             <svg
                                 data-accordion-icon
-                                className={`w-3 h-3 ${activeTab === "preview" ? "rotate-180" : ""} shrink-0`}
+                                className={`w-3 h-3 ${previewOpen ? "rotate-180" : ""} shrink-0`}
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -174,7 +180,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     </h2>
                     <div
                         id="accordion-collapse-body-2"
-                        className={activeTab === "preview" ? "" : "hidden"}
+                        className={previewOpen ? "" : "hidden"}
                         aria-labelledby="accordion-collapse-heading-2"
                     >
                         <div className="p-5 border border-b-0 border-gray-200 dark:border-gray-700">

@@ -2,6 +2,8 @@ import React from "react";
 import TabularData from "./TabularData";
 import CodePreview from "./CodePreview";
 import ImagePreview from "./ImagePreview";
+import PdfPreview from "./PdfPreview";
+import AudioPreview from "./AudioPreview";
 import { FaExclamationTriangle } from "react-icons/fa";
 
 interface FileContentPreviewProps {
@@ -29,6 +31,14 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
             return <ImagePreview fileUrl={fileUrl} mimeType={mimeType} />;
         }
 
+        if (mimeType === "application/pdf") {
+            return <PdfPreview fileUrl={fileUrl} />;
+        }
+
+        if (mimeType.startsWith("audio/")) {
+            return <AudioPreview fileUrl={fileUrl} fileSize={fileSize} mimeType={mimeType} />;
+        }
+
         switch (mimeType) {
             // Add cases for different MIME types here
             default:
@@ -43,6 +53,7 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
                                 <FaExclamationTriangle className="text-yellow-800 mr-1" />
                                 <div>
                                     <p className="text-yellow-800"> There is not yet a file viewer implementation for {mimeType}. If you want to view the file, please download it.</p>
+                                    <p className="text-yellow-800"> If you want a preview for this filetype , make an issue at <b><a href="https://github.com/vliz-be-opsci/rocrate-preview-widget/issues">vliz-be-opsci</a></b></p>
                                 </div>
                             </div>
                         </div>

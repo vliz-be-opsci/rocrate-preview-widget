@@ -8,7 +8,9 @@ export default defineConfig({
       'react-data-grid',
       'chart.js',
       'react-chartjs-2',
-      'd3-array'
+      'd3-array',
+      'react-pdf',
+      'wavesurfer.js'
     ],
   },
   server: {
