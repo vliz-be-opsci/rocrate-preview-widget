@@ -45,12 +45,12 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
     if (!item) return null;
 
     if (item["@type"] === "File" && item.description) {
-        return <div className="my-4"><h3>Summary</h3><p>{item.description}</p></div>;
+        return <div className="my-1"><h3>Summary</h3><p>{item.description}</p></div>;
     }
 
     if (item["@type"] === "Dataset" && readmeContent) {
         return (
-            <div className="my-4">
+            <div className="my-1">
                 <h3>Summary</h3>
                 {loading && <p>Loading README...</p>}
                 {error && <p>Error: {error}</p>}
@@ -60,7 +60,7 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
     }
 
     if (item.description) {
-        return <div className="my-4"><h3>Summary</h3><p>{item.description}</p></div>;
+        return <div className="my-1"><h3>Summary</h3><p>{item.description}</p></div>;
     }
 
     return null;
