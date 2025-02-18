@@ -90,6 +90,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 <button
                     className="mt-2 mb-4 flex items-center justify-center bg-[#4CAF9C] text-white py-1 px-3 rounded-full hover:bg-[#45a089] shadow-md"
                     onClick={downloadFile}
+                    title={fileUrl || ""}
                 >
                     <FaDownload className="mr-2" />
                     Download
@@ -111,7 +112,47 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     return (
         <div id="accordion-collapse" data-accordion="collapse">
-            <SummaryRocrateID rocrate={rocrate} rocrateID={rocrateID} />
+            {item && (item.description || (item["@type"] === "Dataset" && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
+                <>
+                    <h2 id="accordion-collapse-heading-summary">
+                        <button
+                            type="button"
+                            className="flex items-center justify-between w-full p-2 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                            data-accordion-target="#accordion-collapse-body-summary"
+                            aria-expanded={metadataOpen}
+                            aria-controls="accordion-collapse-body-summary"
+                            onClick={() => setMetadataOpen(!metadataOpen)}
+                        >
+                            <span>Summary</span>
+                            <svg
+                                data-accordion-icon
+                                className={`w-3 h-3 ${metadataOpen ? "rotate-180" : ""} shrink-0`}
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M9 5 5 1 1 5"
+                                />
+                            </svg>
+                        </button>
+                    </h2>
+                    <div
+                        id="accordion-collapse-body-summary"
+                        className={metadataOpen ? "" : "hidden"}
+                        aria-labelledby="accordion-collapse-heading-summary"
+                    >
+                        <div className="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
+                            <SummaryRocrateID rocrate={rocrate} rocrateID={rocrateID} />
+                        </div>
+                    </div>
+                </>
+            )}
             {item && item["@type"] === "File" && (
                 <>
                     <h2 id="accordion-collapse-heading-2">
