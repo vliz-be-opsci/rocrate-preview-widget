@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TabularData from "./TabularData";
 import CodePreview from "./CodePreview";
 import ImagePreview from "./ImagePreview";
@@ -13,18 +13,61 @@ interface FileContentPreviewProps {
 }
 
 const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPreviewProps) => {
-    const fileSize = new Blob([fileContent]).size;
+    const [content, setContent] = useState(fileContent);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchFileContent = async (url: string, fallback: boolean) => {
+            try {
+                const response = await fetch(url);
+                if (response.status === 304) {
+                    setLoading(false);
+                    return;
+                }
+                if (!response.ok) {
+                    if (fallback) {
+                        throw new Error("File not found");
+                    }
+                    fetchFileContent(fileUrl, true);
+                    return;
+                }
+                const text = await response.text();
+                setContent(text);
+                setLoading(false);
+            } catch (err) {
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        if (!fileContent) {
+            setLoading(true);
+            fetchFileContent(fileUrl, false);
+        }
+    }, [fileContent, fileUrl]);
+
+    const fileSize = new Blob([content]).size;
     const fileName = fileUrl.split('/').pop() || "";
 
     const renderContent = () => {
-        console.log(mimeType);
+        if (loading) return <p>Loading...</p>;
+        if (error) return (
+            <div className="card text-white bg-danger mb-3">
+                <div className="card-body">
+                    <h5 className="card-title">Error</h5>
+                    <p className="card-text">{error}</p>
+                </div>
+            </div>
+        );
+
         const isCsv = mimeType.startsWith("text/csv") || mimeType.startsWith("application/vnd.ms-excel");
         if (isCsv) {
-            return <TabularData fileContent={fileContent} mimeType={mimeType} />;
+            return <TabularData fileContent={content} mimeType={mimeType} />;
         }
 
         if (mimeType.startsWith("text/")) {
-            return <CodePreview fileContent={fileContent} mimeType={mimeType} fileName={fileName} />;
+            return <CodePreview fileContent={content} mimeType={mimeType} fileName={fileName} />;
         }
 
         if (mimeType.startsWith("image/")) {
@@ -40,7 +83,6 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
         }
 
         switch (mimeType) {
-            // Add cases for different MIME types here
             default:
                 return (
                     <div>
@@ -57,7 +99,7 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
                                 </div>
                             </div>
                         </div>
-                        <pre className="bg-gray-100 p-4">{fileContent.slice(0, 2000)}</pre>
+                        <pre className="bg-gray-100 p-4">{content.slice(0, 2000)}</pre>
                     </div>
                 );
         }
