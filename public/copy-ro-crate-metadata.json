@@ -311,7 +311,8 @@
         },
         {
             "@id": "test_MP3.mp3",
-            "@type": "File"
+            "@type": "File",
+            "description": "some testfile about this and that"
         },
         {
             "@id": "test_OOG.ogg",
@@ -344,7 +345,8 @@
         },
         {
             "@id": "plugins.js",
-            "@type": "File"
+            "@type": "File",
+            "email": "somemail@demo.com"
         },
         {
             "@id": "test_zip.zip",

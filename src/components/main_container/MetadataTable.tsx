@@ -1,5 +1,5 @@
 import React from "react";
-import { FaLink } from "react-icons/fa";
+import { FaLink, FaEnvelope } from "react-icons/fa";
 
 interface MetadataTableProps {
     data: any;
@@ -7,16 +7,16 @@ interface MetadataTableProps {
 }
 
 const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
-    const renderValue = (value: any) => {
+    const renderValue = (value: any, key: string) => {
         if (Array.isArray(value)) {
             return (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
                     {value.map((item, index) => (
                         <div key={index} className="bg-gray-100 p-2 rounded">
                             {typeof item === "object" && item !== null ? (
-                                <div className="block truncate">{renderValue(item)}</div>
+                                <div className="block truncate">{renderValue(item, key)}</div>
                             ) : (
-                                renderValue(item)
+                                renderValue(item, key)
                             )}
                         </div>
                     ))}
@@ -26,8 +26,15 @@ const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
             return <MetadataTable data={value} onSelect={onSelect} />;
         } else {
             const stringValue = JSON.stringify(value);
-            const displayValue = stringValue.length > 15 ? `${stringValue.slice(0, 15)}...` : stringValue;
-            return <span title={stringValue}>{displayValue}</span>;
+            if (key === "email") {
+                return (
+                    <a href={`mailto:${stringValue}`} className="flex items-center">
+                        <FaEnvelope className="mr-1" />
+                        <span className="truncate">{stringValue}</span>
+                    </a>
+                );
+            }
+            return <span className="truncate" title={stringValue}>{stringValue}</span>;
         }
     };
 
@@ -52,7 +59,7 @@ const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
                             className={`py-2 px-4 border-b text-left ${key === "@id" ? "cursor-pointer text-blue-600 hover:underline" : ""}`}
                             onClick={key === "@id" ? () => onSelect(value) : undefined}
                         >
-                            {renderValue(value)}
+                            {renderValue(value, key)}
                         </td>
                     </tr>
                 ))}

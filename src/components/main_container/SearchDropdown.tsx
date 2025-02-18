@@ -45,8 +45,12 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                         onMouseEnter={() => setHoveredIndex(index)}
                         onMouseLeave={() => setHoveredIndex(null)}
                     >
-                        {getIcon(item, hoveredIndex === index)}
-                        {truncateText(item["@id"], 40)}
+                        <div className="flex items-center">
+                            {getIcon(item, hoveredIndex === index)}
+                        </div>
+                        <div className="flex-1 text-right truncate">
+                            {item["@id"]}
+                        </div>
                     </li>
                 ))}
             </ul>

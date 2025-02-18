@@ -10,7 +10,8 @@ export default defineConfig({
       'react-chartjs-2',
       'd3-array',
       'react-pdf',
-      'wavesurfer.js'
+      'wavesurfer.js',
+      'react-markdown'
     ],
   },
   server: {

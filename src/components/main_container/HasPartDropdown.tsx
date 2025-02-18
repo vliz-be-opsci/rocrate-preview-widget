@@ -42,8 +42,12 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
                 >
-                    {getIcon(part, hoveredIndex === index)}
-                    {truncateText(part["@id"], 40)}
+                    <div className="flex items-center">
+                        {getIcon(part, hoveredIndex === index)}
+                    </div>
+                    <div className="flex-1 text-right truncate">
+                        {part["@id"]}
+                    </div>
                     <span className="ml-2 text-xs font-medium">{getPartCount(part["@id"])}</span>
                 </li>
             ))}

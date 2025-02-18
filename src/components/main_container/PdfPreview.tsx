@@ -49,7 +49,7 @@ const PdfPreview = ({ fileUrl }: PdfPreviewProps) => {
             </div>
             <div className="flex justify-center">
                 <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} width={window.innerWidth} />
+                    <Page pageNumber={pageNumber} />
                 </Document>
             </div>
         </div>
