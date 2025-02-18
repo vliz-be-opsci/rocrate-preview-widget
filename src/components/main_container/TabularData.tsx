@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ColumnSummaryTable from "./ColumnSummaryTable";
 import { FaTable, FaList } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa"; // Import warning icon
 
 interface TabularDataProps {
     fileContent: string;
@@ -57,7 +58,19 @@ const TabularData = ({ fileContent, mimeType }: TabularDataProps) => {
                 </button>
             </div>
             {showSummary ? (
-                <ColumnSummaryTable fileContent={fileContent} />
+                <>
+                    <div className="bg-yellow-400 text-black p-4 rounded mb-3 border border-yellow-800" style={{ backgroundColor: "#fff3cd" }}>
+                        <div className="flex items-center">
+                            <FaExclamationTriangle className="text-yellow-800 mr-1" />
+                            <div>
+                                <p className="text-yellow-800">
+                                    The categorisation of the columns was defined based on the number of unique values that are present in each column. Note that it can be that these values are numerical by nature but that these were categorised automatically by the preview widget.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <ColumnSummaryTable fileContent={fileContent} />
+                </>
             ) : (
                 <div className="overflow-x-auto mb-5">
                     <h2 className="text-lg font-semibold">Head of file</h2>
