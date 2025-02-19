@@ -87,16 +87,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
         return (
             <div>
-                <button
-                    className="mt-2 mb-4 flex items-center justify-center bg-[#4CAF9C] text-white py-1 px-3 rounded-full hover:bg-[#45a089] shadow-md"
-                    onClick={downloadFile}
-                    title={fileUrl || ""}
-                >
-                    <FaDownload className="mr-2" />
-                    Download
-                </button>
                 <FileContentPreview fileContent={fileContent} mimeType={mimeType || "text/plain"} fileUrl={fileUrl || ""} />
-                
             </div>
         );
     };
@@ -165,6 +156,14 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                             onClick={() => setPreviewOpen(!previewOpen)}
                         >
                             <span>Content</span>
+                            <button
+                                className="mt-2 mb-4 flex items-center justify-center bg-[#4CAF9C] text-white py-1 px-3 rounded-full hover:bg-[#45a089] shadow-md"
+                                onClick={downloadFile}
+                                title={fileUrl || ""}
+                            >
+                                <FaDownload className="mr-2" />
+                                Download
+                            </button>
                             <svg
                                 data-accordion-icon
                                 className={`w-3 h-3 ${previewOpen ? "rotate-180" : ""} shrink-0`}
