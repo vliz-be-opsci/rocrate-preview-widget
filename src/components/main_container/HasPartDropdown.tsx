@@ -39,7 +39,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                     <div className="flex items-center">
                         {getIcon(part, hoveredIndex === index)}
                     </div>
-                    <div className="flex-1 text-right truncate" title={part["@id"]}>
+                    <div className="flex-1 text-left truncate" title={part["@id"]} style={{ direction: 'rtl', textAlign: 'left' }}>
                         {getLabelForItem(getIDforItem(part["@id"], rocrate["@graph"]))}
                     </div>
                     <span className="ml-2 text-xs font-medium">{getPartCount(part["@id"])}</span>

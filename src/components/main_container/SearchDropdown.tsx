@@ -12,8 +12,8 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
 
     const getSortedParts = (parts: any[]) => {
         return parts.sort((a, b) => {
-            const aIsFolder = a["@id"].endswith("/");
-            const bIsFolder = b["@id"].endswith("/");
+            const aIsFolder = a["@id"].endsWith("/");
+            const bIsFolder = b["@id"].endsWith("/");
             if (aIsFolder && !bIsFolder) return -1;
             if (!aIsFolder && bIsFolder) return 1;
             return a["@id"].localeCompare(b["@id"]);
@@ -49,7 +49,7 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                         <div className="flex items-center">
                             {getIcon(item, hoveredIndex === index)}
                         </div>
-                        <div className="flex-1 text-right truncate" title={item["@id"]}>
+                        <div className="flex-1 text-left truncate" title={item["@id"]} style={{ direction: 'rtl', textAlign: 'left' }}>
                             {getLabelForItem(getIDforItem(item["@id"], rocrate["@graph"]))}
                         </div>
                     </li>
