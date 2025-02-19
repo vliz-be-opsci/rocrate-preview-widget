@@ -9,13 +9,6 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
         return null;
     }
 
-    const truncateText = (text: string, maxLength: number) => {
-        if (text.length <= maxLength) return text;
-        const extension = text.includes(".") ? text.slice(text.lastIndexOf(".")) : "";
-        const truncated = text.slice(0, maxLength - extension.length - 3);
-        return `${truncated}...${extension}`;
-    };
-
     const getIcon = (part: any, isHovered: boolean) => {
         const partItem = rocrate["@graph"].find((item: any) => item["@id"] === part["@id"]);
         if (partItem && partItem["@type"] === "Dataset") {
@@ -45,7 +38,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                     <div className="flex items-center">
                         {getIcon(part, hoveredIndex === index)}
                     </div>
-                    <div className="flex-1 text-right truncate">
+                    <div className="flex-1 text-right truncate" title={part["@id"]}>
                         {part["@id"]}
                     </div>
                     <span className="ml-2 text-xs font-medium">{getPartCount(part["@id"])}</span>

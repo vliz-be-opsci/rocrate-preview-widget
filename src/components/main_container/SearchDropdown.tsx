@@ -48,7 +48,7 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                         <div className="flex items-center">
                             {getIcon(item, hoveredIndex === index)}
                         </div>
-                        <div className="flex-1 text-right truncate">
+                        <div className="flex-1 text-right truncate" title={item["@id"]}>
                             {item["@id"]}
                         </div>
                     </li>
