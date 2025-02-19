@@ -13,3 +13,90 @@
     width: 20px;
     height: 20px;
 }
+
+/* modest theme for md files */
+.modest pre,
+.modest code {
+    font-family: Menlo, Monaco, "Courier New", monospace;
+}
+
+.modest pre {
+    padding: .5rem;
+    line-height: 1.25;
+    overflow-x: scroll;
+}
+
+.modest a,
+.modest a:visited {
+    color: #3498db;
+}
+
+.modest a:hover,
+.modest a:focus,
+.modest a:active {
+    color: #2980b9;
+}
+
+/* https://github.com/mrmrs/fluidity */
+
+.modest img,
+.modest canvas,
+.modest iframe,
+.modest video,
+.modest svg,
+.modest select,
+.modest textarea {
+    max-width: 100%;
+}
+
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700);
+
+@import url(http://fonts.googleapis.com/css?family=Arimo:700,700italic);
+
+.modest h1,
+.modest h2,
+.modest h3,
+.modest h4,
+.modest h5,
+.modest h6 {
+    font-family: Arimo, Helvetica, sans-serif;
+    text-align: left;
+}
+
+.modest h1 {
+    text-align: center;
+}
+
+.modest h1 {
+    font-size: 2.5rem;
+}
+
+.modest h2 {
+    font-size: 2rem;
+}
+
+.modest h3 {
+    font-size: 1.75rem;
+}
+
+.modest h4 {
+    font-size: 1.5rem;
+}
+
+.modest h5 {
+    font-size: 1.25rem;
+}
+
+.modest h6 {
+    font-size: 1rem;
+}
+
+.modest blockquote {
+    border-left: 8px solid #fafafa;
+    padding: 1rem;
+}
+
+.modest pre,
+.modest code {
+    background-color: #fafafa;
+}

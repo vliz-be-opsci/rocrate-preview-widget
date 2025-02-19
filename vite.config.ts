@@ -11,7 +11,8 @@ export default defineConfig({
       'd3-array',
       'react-pdf',
       'wavesurfer.js',
-      'react-markdown'
+      'react-markdown',
+      'remark-gfm'
     ],
   },
   server: {

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
 import { getFullPath } from "./Breadcrumb";
+
 
 interface SummaryRocrateIDProps {
     rocrate: any;
@@ -45,22 +47,35 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
     if (!item) return null;
 
     if (item["@type"] === "File" && item.description) {
-        return <div className="my-1"><h3>Summary</h3><p>{item.description}</p></div>;
+        return <div className="my-1"><p>{item.description}</p></div>;
     }
 
-    if (item["@type"] === "Dataset" && readmeContent) {
+    if (item["@type"] === "Dataset") {
         return (
             <div className="my-1">
-                <h3>Summary</h3>
                 {loading && <p>Loading README...</p>}
-                {error && <p>Error: {error}</p>}
-                {readmeContent && <ReactMarkdown>{readmeContent}</ReactMarkdown>}
+                {error && (
+                    <div className="error-card">
+                        <p>Error: {error}</p>
+                        <p>
+                            Please report this issue at <strong>github/vliz-be-opsci</strong>:
+                            <a href="https://github.com/vliz-be-opsci/rocrate-preview-widget/issues/new" target="_blank" rel="noopener noreferrer">
+                                https://github.com/vliz-be-opsci/rocrate-preview-widget/issues/new
+                            </a>
+                        </p>
+                    </div>
+                )}
+                {readmeContent && (
+                    <ReactMarkdown className="modest" remarkPlugins={[[remarkGfm, { singleTilde: false }]]}>
+                        {readmeContent}
+                    </ReactMarkdown>
+                )}
             </div>
         );
     }
 
     if (item.description) {
-        return <div className="my-1"><h3>Summary</h3><p>{item.description}</p></div>;
+        return <div className="my-1"><p>{item.description}</p></div>;
     }
 
     return null;
