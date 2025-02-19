@@ -70,7 +70,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const renderMetadata = () => {
         if (!item) return <p>No metadata available</p>;
 
-        return <MetadataTable data={item} onSelect={onSelect} />;
+        return <MetadataTable data={item} rocrate={rocrate} onSelect={onSelect}/>;
     };
 
     const renderPreview = () => {

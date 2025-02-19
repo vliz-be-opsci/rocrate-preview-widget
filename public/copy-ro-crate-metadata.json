@@ -19,8 +19,7 @@
             "@type": "Dataset",
             "hasPart": [
                 {
-                    "@id": "README.md",
-                    "prefLabel": "README.md"
+                    "@id": "README.md"
                 },
                 {
                     "@id": "test_MP3.mp3"
@@ -435,24 +434,30 @@
         },
         {
             "@id": "test_MKV.mkv",
-            "@type": "File"
+            "@type": "File",
+            "description": "random description for this file , a true mkv file indeed. This file has both a prefLabel and a name which one will be chosen oooooooooh spooky dookie",
+            "prefLabel": "random preflabel cause I can",
+            "name": "random name cause I can"
         },
         {
             "@id": "test_mp4.mp4",
-            "@type": "File"
+            "@type": "File",
+            "altLabel": "random altlabel cause I can"
         },
         {
             "@id": "test_MPG.mpg",
             "@type": "File",
-            "test": "test_here"
+            "prefLabel":"random preflabel cause I can"
         },
         {
             "@id": "test_WEBM.webm",
-            "@type": "File"
+            "@type": "File",
+            "title": "random title cause I can"
         },
         {
             "@id": "test_WMV.wmv",
-            "@type": "File"
+            "@type": "File",
+            "name": "random name cause I can"
         },
         {
             "@id": "does_not_exist.pdf",

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
+import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 interface SearchDropdownProps {
     rocrate: any;
@@ -11,8 +12,8 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
 
     const getSortedParts = (parts: any[]) => {
         return parts.sort((a, b) => {
-            const aIsFolder = a["@id"].endsWith("/");
-            const bIsFolder = b["@id"].endsWith("/");
+            const aIsFolder = a["@id"].endswith("/");
+            const bIsFolder = b["@id"].endswith("/");
             if (aIsFolder && !bIsFolder) return -1;
             if (!aIsFolder && bIsFolder) return 1;
             return a["@id"].localeCompare(b["@id"]);
@@ -49,7 +50,7 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                             {getIcon(item, hoveredIndex === index)}
                         </div>
                         <div className="flex-1 text-right truncate" title={item["@id"]}>
-                            {item["@id"]}
+                            {getLabelForItem(getIDforItem(item["@id"], rocrate["@graph"]))}
                         </div>
                     </li>
                 ))}

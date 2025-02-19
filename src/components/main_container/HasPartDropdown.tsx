@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
+import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
@@ -39,7 +40,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                         {getIcon(part, hoveredIndex === index)}
                     </div>
                     <div className="flex-1 text-right truncate" title={part["@id"]}>
-                        {part["@id"]}
+                        {getLabelForItem(getIDforItem(part["@id"], rocrate["@graph"]))}
                     </div>
                     <span className="ml-2 text-xs font-medium">{getPartCount(part["@id"])}</span>
                 </li>

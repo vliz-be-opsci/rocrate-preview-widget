@@ -1,12 +1,14 @@
 import React from "react";
 import { FaLink, FaEnvelope } from "react-icons/fa";
+import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 interface MetadataTableProps {
     data: any;
+    rocrate: any;
     onSelect: (id: string) => void;
 }
 
-const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
+const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
     const renderValue = (value: any, key: string) => {
         if (Array.isArray(value)) {
             return (
@@ -23,9 +25,16 @@ const MetadataTable = ({ data, onSelect }: MetadataTableProps) => {
                 </div>
             );
         } else if (typeof value === "object" && value !== null) {
-            return <MetadataTable data={value} onSelect={onSelect} />;
+            return <MetadataTable data={value} rocrate={rocrate} onSelect={onSelect} />;
         } else {
             const stringValue = JSON.stringify(value);
+            if (key === "@id") {
+                return (
+                    <span className="truncate cursor-pointer text-blue-600 hover:underline" onClick={() => onSelect(stringValue)}>
+                        {getLabelForItem(getIDforItem(value, rocrate["@graph"]))}
+                    </span>
+                );
+            }
             if (key === "email") {
                 return (
                     <a href={`mailto:${stringValue}`} className="flex items-center">

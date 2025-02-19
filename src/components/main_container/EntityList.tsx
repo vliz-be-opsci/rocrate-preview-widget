@@ -1,4 +1,5 @@
 import React from "react";
+import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 interface EntityListProps {
     rocrate: any;
@@ -19,7 +20,7 @@ const EntityList = ({ rocrate, onSelect }: EntityListProps) => {
                         onClick={() => onSelect(entity["@id"])}
                     >
                         <div className="flex items-center">
-                            {entity["@id"]}
+                            {getLabelForItem(getIDforItem(entity["@id"], rocrate["@graph"]))}
                         </div>
                         <a
                             href={`http://schema.org/${entity["@type"]}`}
