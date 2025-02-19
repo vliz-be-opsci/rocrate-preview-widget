@@ -17,21 +17,28 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
     useEffect(() => {
-        const fetchReadmeContent = async (url: string, rocrateidsearch:boolean) => {
+        const fetchReadmeContent = async (url: string, rocrateidsearch: boolean, rocrateID?: string) => {
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    if (rocrateidsearch){
-                        throw new Error("Failed to fetch README content. Please check if the path is correct in the RO-Crate metadata.");
-                    }
-                    fetchReadmeContent(url, true);
-                };
+            let response;
+            if (rocrateidsearch && rocrateID) {
+                response = await fetch(rocrateID);
+            } else {
+                response = await fetch(url);
+            }
+            if (!response.ok) {
+                if (rocrateidsearch) {
+                    throw new Error("Failed to fetch README content. Please check if the path is correct in the RO-Crate metadata.");
+                    return;
+                }
+                fetchReadmeContent(url, true, rocrateID);
+            } else {
                 const text = await response.text();
                 setReadmeContent(text);
                 setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
+            }
+            } catch (err: any) {
+            setError(err.message);
+            setLoading(false);
             }
         };
 
@@ -41,7 +48,7 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
                 setLoading(true);
                 const fullPath = getFullPath(rocrate, readmeItem["@id"]);
                 if (fullPath) {
-                    fetchReadmeContent(fullPath, false);
+                    fetchReadmeContent(fullPath, false, readmeItem["@id"]);
                 } else {
                     fetchReadmeContent(readmeItem["@id"], true);
                 }
