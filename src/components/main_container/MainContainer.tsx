@@ -164,7 +164,6 @@ export default function MainContainer(props: any) {
             
             {rocrateID === "" ? (
                 <>
-                <MainDashboardCrate data={data} rocrate={rocrate} />
                 <div className="flex flex-row mt-3">
                     <div className="w-full sm:w-1/2 mr-1" onClick={() => setRocrateID("./")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
@@ -195,6 +194,7 @@ export default function MainContainer(props: any) {
                         </div>
                     </div>
                 </div>
+                <MainDashboardCrate data={data} rocrate={rocrate} />
                 </>
                 
             ) : rocrateID === "Contextual_entities" ? (
