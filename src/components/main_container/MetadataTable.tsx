@@ -27,7 +27,7 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
         } else if (typeof value === "object" && value !== null) {
             return <MetadataTable data={value} rocrate={rocrate} onSelect={onSelect} />;
         } else {
-            const stringValue = JSON.stringify(value);
+            const stringValue = value;
             if (key === "@id") {
                 return (
                     <span className="truncate cursor-pointer text-blue-600 hover:underline" onClick={() => onSelect(stringValue)}>
