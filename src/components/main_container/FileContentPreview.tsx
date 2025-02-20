@@ -4,6 +4,7 @@ import CodePreview from "./CodePreview";
 import ImagePreview from "./ImagePreview";
 import PdfPreview from "./PdfPreview";
 import AudioPreview from "./AudioPreview";
+import TurtlePreview from "./TurtlePreview";
 import { FaExclamationTriangle } from "react-icons/fa";
 
 interface FileContentPreviewProps {
@@ -64,6 +65,10 @@ const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileContentPrevi
         const isCsv = mimeType.startsWith("text/csv") || mimeType.startsWith("application/vnd.ms-excel");
         if (isCsv) {
             return <TabularData fileContent={content} mimeType={mimeType} />;
+        }
+
+        if (mimeType === "text/turtle") {
+            return <TurtlePreview fileContent={content} mimeType={mimeType} />;
         }
 
         if (mimeType.startsWith("text/")) {

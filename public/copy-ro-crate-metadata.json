@@ -109,6 +109,9 @@
                     "@id": "imis6293.xml"
                 },
                 {
+                    "@id": "all-triples.ttl"
+                },
+                {
                     "@id": "package.json"
                 },
                 {
@@ -465,6 +468,10 @@
         },
         {
             "@id": "sediment_measured.csv",
+            "@type": "File"
+        },
+        {
+            "@id": "all-triples.ttl",
             "@type": "File"
         },
         {
