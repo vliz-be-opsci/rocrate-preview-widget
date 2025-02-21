@@ -1,4 +1,5 @@
 //this file will contain all other components that wil lbe used in this project
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { FaFolder } from "react-icons/fa";
 import { PiGraphFill } from "react-icons/pi";
