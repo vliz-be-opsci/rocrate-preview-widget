@@ -50,29 +50,31 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
     return (
         <div className="grid grid-cols-1 gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
             {Object.entries(data).map(([key, value], index) => (
-                <div key={index} className="bg-white p-4 rounded shadow-md">
-                    <div className="font-semibold mb-2">
-                        {key.startsWith("@") ? (
-                            key
-                        ) : (
-                            <a href={`http://schema.org/${key}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
-                                <FaLink className="mr-1" />
-                                {key}
-                            </a>
-                        )}
+                key !== "hasPart" && (
+                    <div key={index} className="bg-white p-4 rounded shadow-md">
+                        <div className="font-semibold mb-2">
+                            {key.startsWith("@") ? (
+                                key
+                            ) : (
+                                <a href={`http://schema.org/${key}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                                    <FaLink className="mr-1" />
+                                    {key}
+                                </a>
+                            )}
+                        </div>
+                        <div className="text-gray-700">
+                            {Array.isArray(value) && value.some(item => typeof item === "object" && item !== null) ? (
+                                value.map((item, idx) => (
+                                    <div key={idx} className="mb-2">
+                                        {renderValue(item, key)}
+                                    </div>
+                                ))
+                            ) : (
+                                renderValue(value, key)
+                            )}
+                        </div>
                     </div>
-                    <div className="text-gray-700">
-                        {Array.isArray(value) && value.some(item => typeof item === "object" && item !== null) ? (
-                            value.map((item, idx) => (
-                                <div key={idx} className="mb-2">
-                                    {renderValue(item, key)}
-                                </div>
-                            ))
-                        ) : (
-                            renderValue(value, key)
-                        )}
-                    </div>
-                </div>
+                )
             ))}
         </div>
     );
