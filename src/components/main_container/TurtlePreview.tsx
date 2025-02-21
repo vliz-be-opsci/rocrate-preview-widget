@@ -1,3 +1,4 @@
+/*
 import React, { useState, useEffect } from "react";
 import * as rdflib from "rdflib";
 
@@ -169,3 +170,4 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
 };
 
 export default TurtlePreview;
+*/

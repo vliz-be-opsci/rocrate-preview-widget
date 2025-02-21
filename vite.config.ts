@@ -12,8 +12,7 @@ export default defineConfig({
       'react-pdf',
       'wavesurfer.js',
       'react-markdown',
-      'remark-gfm',
-      'rdflib',
+      'remark-gfm'
     ],
   },
   server: {
