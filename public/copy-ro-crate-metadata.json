@@ -173,6 +173,17 @@
         {
             "@id": "pdf",
             "@type": "Dataset",
+            "about": "https://www.w3.org/TR/2014/WD-pdf2json-20140130/",
+            "affiliation": {
+                "@id": "_:aa121296a172495dbeb123e17ef99985"
+            },
+            "alternateName": "Portable Document Format",
+            "description": "PDF is a file format used to present documents in a manner independent of application software, hardware, and operating systems.",
+            "identifier": "https://www.w3.org/TR/2014/WD-pdf2json-20140130/",
+            "name": "PDF",
+            "prefLabel": "PDF",
+            "sameAs": "https://www.w3.org/TR/2014/WD-pdf2json-20140130/",
+            "title": "PDF",
             "hasPart": [
                 {
                     "@id": "test_pdf.pdf"

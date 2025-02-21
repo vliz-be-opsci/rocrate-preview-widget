@@ -157,7 +157,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                         >
                             <span>Content</span>
                             <button
-                                className="mt-2 mb-4 flex items-center justify-center bg-[#4CAF9C] text-white py-1 px-3 rounded-full hover:bg-[#45a089] shadow-md"
+                                className="flex items-center justify-center bg-[#4CAF9C] text-white px-3 rounded hover:bg-[#45a089] shadow-md"
                                 onClick={downloadFile}
                                 title={fileUrl || ""}
                             >

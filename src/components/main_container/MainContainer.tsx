@@ -1,5 +1,4 @@
 //this file will contain all other components that wil lbe used in this project
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { FaFolder } from "react-icons/fa";
 import { PiGraphFill } from "react-icons/pi";
@@ -146,7 +145,7 @@ export default function MainContainer(props: any) {
     return (
         <>
             <br/>
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-center">
                 <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
                 <SearchComponent
                     rocrate={rocrate}
@@ -164,8 +163,8 @@ export default function MainContainer(props: any) {
             
             {rocrateID === "" ? (
                 <>
-                <div className="flex flex-row mt-3">
-                    <div className="w-full sm:w-1/2 mr-1" onClick={() => setRocrateID("./")}>
+                <div className="flex flex-col sm:flex-row mt-3">
+                    <div className="w-full sm:w-1/2 mb-2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("./")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
                             <FaFolder className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Dataset entities</p>
@@ -178,7 +177,7 @@ export default function MainContainer(props: any) {
                                 ))}
                         </div>
                     </div>
-                    <div className="w-full sm:w-1/2 ml-1" onClick={() => setRocrateID("Contextual_entities")}>
+                    <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
                             <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
