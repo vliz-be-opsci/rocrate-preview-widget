@@ -17,7 +17,8 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
     const resultsPerPage = 20;
 
     useEffect(() => {
-        console.log("Fetching triples from file:", fileUrl);
+        const absoluteFileUrl = new URL(fileUrl, window.location.href).href;
+        console.log("Fetching triples from file:", absoluteFileUrl);
         const fetchTriples = async () => {
             const engine = new QueryEngine();
             const query = `
@@ -27,15 +28,18 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                 }
             `;
             try {
-                const result = await engine.query(query, {
-                    sources: [fileUrl]
+                const result = await engine.queryBindings(query, {
+                    sources: [absoluteFileUrl]
                 });
-                const bindings = await result.bindings();
-                const triples = bindings.map(binding => ({
-                    subject: binding.get('?subject').value,
-                    predicate: binding.get('?predicate').value,
-                    object: binding.get('?object').value
-                }));
+                console.log("Query result:", result);
+                const triples: any[] = [];
+                result.on('data', (binding: any) => {
+                    triples.push({
+                        subject: binding.get('subject').value,
+                        predicate: binding.get('predicate').value,
+                        object: binding.get('object').value
+                    });
+                });
                 setTriples(triples);
                 setLoading(false);
             } catch (err) {
