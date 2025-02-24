@@ -19,7 +19,8 @@
     "react-syntax-highlighter": "^15.6.1",
     "react-table": "^7.8.0",
     "remark-gfm": "^4.0.1",
-    "wavesurfer.js": "^6.1.4"
+    "wavesurfer.js": "^6.1.4",
+    "@comunica/query-sparql": "^2.6.0"
   },
   "scripts": {
     "start": "vite",

@@ -12,7 +12,8 @@ export default defineConfig({
       'react-pdf',
       'wavesurfer.js',
       'react-markdown',
-      'remark-gfm'
+      'remark-gfm',
+      '@comunica/query-sparql'
     ],
   },
   server: {

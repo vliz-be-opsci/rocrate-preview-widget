@@ -1,34 +1,52 @@
-/*
 import React, { useState, useEffect } from "react";
-import * as rdflib from "rdflib";
+import { QueryEngine } from '@comunica/query-sparql';
 
 interface TurtlePreviewProps {
     fileContent: string;
     mimeType: string;
+    fileUrl: string;
 }
 
-const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
-    const [store, setStore] = useState(new rdflib.Store());
+const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) => {
+    const [triples, setTriples] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
-    const [triples, setTriples] = useState<rdflib.Statement[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const resultsPerPage = 20;
 
     useEffect(() => {
-        const store = new rdflib.Store();
-        rdflib.parse(fileContent, store, "http://example.org/base#", "text/turtle", (err) => {
-            if (err) {
+        console.log("Fetching triples from file:", fileUrl);
+        const fetchTriples = async () => {
+            const engine = new QueryEngine();
+            const query = `
+                SELECT ?subject ?predicate ?object
+                WHERE {
+                    ?subject ?predicate ?object.
+                }
+            `;
+            try {
+                const result = await engine.query(query, {
+                    sources: [fileUrl]
+                });
+                const bindings = await result.bindings();
+                const triples = bindings.map(binding => ({
+                    subject: binding.get('?subject').value,
+                    predicate: binding.get('?predicate').value,
+                    object: binding.get('?object').value
+                }));
+                setTriples(triples);
+                setLoading(false);
+            } catch (err) {
+                console.error("Error fetching triples:", err);
                 setError(err.message);
-            } else {
-                setStore(store);
-                setTriples(store.statements);
+                setLoading(false);
             }
-            setLoading(false);
-        });
-    }, [fileContent]);
+        };
+
+        fetchTriples();
+    }, [fileUrl]);
 
     const handleSubjectClick = (subject: string) => {
         setSelectedSubject(subject);
@@ -41,14 +59,14 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
 
     const renderTriples = () => {
         if (selectedSubject) {
-            const relatedTriples = triples.filter(triple => triple.subject.value === selectedSubject);
+            const relatedTriples = triples.filter(triple => triple.subject === selectedSubject);
             return (
                 <div>
                     <h5>Triples related to {selectedSubject}</h5>
                     <ul>
                         {relatedTriples.map((triple, index) => (
                             <li key={index}>
-                                {triple.subject.value} - {triple.predicate.value} - {triple.object.value}
+                                {triple.subject} - {triple.predicate} - {triple.object}
                             </li>
                         ))}
                     </ul>
@@ -57,9 +75,9 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
         }
 
         const filteredTriples = triples.filter(triple =>
-            triple.subject.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            triple.predicate.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            triple.object.value.toLowerCase().includes(searchTerm.toLowerCase())
+            triple.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            triple.predicate.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            triple.object.toLowerCase().includes(searchTerm.toLowerCase())
         );
         const totalResults = filteredTriples.length;
         const totalPages = Math.ceil(totalResults / resultsPerPage);
@@ -89,27 +107,27 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {displayedTriples.map((triple, index) => (
-                            <tr key={index} onClick={() => handleSubjectClick(triple.subject.value)}>
+                            <tr key={index} onClick={() => handleSubjectClick(triple.subject)}>
                                 <td 
                                     className="px-6 py-1 whitespace-nowrap text-sm text-gray-500" 
                                     style={{ maxWidth: "300px", cursor: "pointer" }}
-                                    title={triple.subject.value}
+                                    title={triple.subject}
                                 >
-                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.subject.value}</div>
+                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.subject}</div>
                                 </td>
                                 <td 
                                     className="px-6 py-1 whitespace-nowrap text-sm text-gray-500" 
                                     style={{ maxWidth: "300px", cursor: "pointer" }}
-                                    title={triple.predicate.value}
+                                    title={triple.predicate}
                                 >
-                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.predicate.value}</div>
+                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.predicate}</div>
                                 </td>
                                 <td 
                                     className="px-6 py-1 whitespace-nowrap text-sm text-gray-500" 
                                     style={{ maxWidth: "300px", cursor: "pointer" }}
-                                    title={triple.object.value}
+                                    title={triple.object}
                                 >
-                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.object.value}</div>
+                                    <div className="truncate" style={{ maxWidth: "300px" }}>{triple.object}</div>
                                 </td>
                             </tr>
                         ))}
@@ -146,11 +164,9 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
 
     if (error) {
         return (
-            <div className="card text-white bg-danger mb-3">
-                <div className="card-body">
-                    <h5 className="card-title">Error</h5>
-                    <p className="card-text">{error}</p>
-                </div>
+            <div className="bg-red-500 text-white p-4 rounded mb-3">
+                <h5 className="font-bold">Error</h5>
+                <p>{error}</p>
             </div>
         );
     }
@@ -161,7 +177,7 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {new Blob([fileContent]).size} bytes</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                    Triples: {loading ? "Loading..." : store.length}
+                    Triples: {loading ? "Loading..." : triples.length}
                 </span>
             </div>
             {renderTriples()}
@@ -170,4 +186,4 @@ const TurtlePreview = ({ fileContent, mimeType }: TurtlePreviewProps) => {
 };
 
 export default TurtlePreview;
-*/
+

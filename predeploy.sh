@@ -20,9 +20,9 @@ rm -rf "./build/video"
 # log into the venv 
 source venv/Scripts/activate
 # install the requirements
-pip install -r requirements.txt
+# pip install -r requirements.txt
 # run the python script
-python ./get_all_versions_build.py
+# python ./get_all_versions_build.py
 
 #remove the temp folder recursively
 rm -rf "./temp"
