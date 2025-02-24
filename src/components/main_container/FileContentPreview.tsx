@@ -67,7 +67,7 @@ export const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileConte
             return <TabularData fileContent={content} mimeType={mimeType} />;
         }
         
-        if (mimeType === "text/turtle") {
+        if (mimeType.startsWith("text/turtle")) {
             return <TurtlePreview fileContent={content} mimeType={mimeType} fileUrl={fileUrl}/>;
         }
         
