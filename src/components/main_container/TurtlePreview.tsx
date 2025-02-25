@@ -14,6 +14,7 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
     const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [loadedTriplesCount, setLoadedTriplesCount] = useState(0);
     const resultsPerPage = 20;
 
     useEffect(() => {
@@ -33,15 +34,23 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                 });
                 console.log("Query result:", result);
                 const triples: any[] = [];
+                let count = 0;
                 result.on('data', (binding: any) => {
                     triples.push({
                         subject: binding.get('subject').value,
                         predicate: binding.get('predicate').value,
                         object: binding.get('object').value
                     });
+                    count++;
+                    setTriples([...triples]); // Update state with new triples
+                    if (count % 100 === 0) {
+                        setLoadedTriplesCount(count);
+                    }
                 });
-                setTriples(triples);
-                setLoading(false);
+                result.on('end', () => {
+                    setLoading(false);
+                    setLoadedTriplesCount(triples.length);
+                });
             } catch (err) {
                 console.error("Error fetching triples:", err);
                 setError(err.message);
@@ -181,9 +190,15 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {new Blob([fileContent]).size} bytes</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                    Triples: {loading ? "Loading..." : triples.length}
+                    Triples: {loading ? `${loadedTriplesCount} loaded...` : triples.length}
                 </span>
             </div>
+            {loading && (
+                <div className="bg-yellow-100 text-yellow-800 p-4 rounded mb-3">
+                    <h5 className="font-bold">Loading</h5>
+                    <p>The TTL file is being loaded and processed in the triplestore...</p>
+                </div>
+            )}
             {renderTriples()}
         </div>
     );
