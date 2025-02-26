@@ -28,6 +28,9 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
     const relatedResultsPerPage = 10; // Set to 10 for related triples table
     const [sparqlQuery, setSparqlQuery] = useState<string>("");
 
+    // Function to determine if loading is complete and the button should be hidden
+    const isLoadingComplete = !loading && !paused;
+
     // Keep pausedRef in sync with paused state
     useEffect(() => {
         pausedRef.current = paused;
@@ -477,27 +480,39 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                     Triples: {loading || paused ? `${loadedTriplesCount} loaded...` : triples.length}
                 </span>
                 
-                <button
-                    onClick={handlePauseResume}
-                    className={`ml-auto px-3 rounded text-white ${paused ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
-                    disabled={!loading && !paused} // Disable when all triples are loaded
-                >
-                    {paused ? (
-                        <span className="flex items-center text-xs py-0.5 rounded">
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            </svg>
-                            Resume Loading
-                        </span>
-                    ) : (
-                        <span className="flex items-center text-xs py-0.5 rounded">
-                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Pause Loading
-                        </span>
-                    )}
-                </button>
+                {/* Only show pause/resume button while loading or paused */}
+                {(!isLoadingComplete) && (
+                    <button
+                        onClick={handlePauseResume}
+                        className={`ml-auto px-3 rounded text-white ${paused ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
+                    >
+                        {paused ? (
+                            <span className="flex items-center text-xs py-0.5 rounded">
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                </svg>
+                                Resume Loading
+                            </span>
+                        ) : (
+                            <span className="flex items-center text-xs py-0.5 rounded">
+                                <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Pause Loading
+                            </span>
+                        )}
+                    </button>
+                )}
+                
+                {/* Show completion status when loading is complete */}
+                {isLoadingComplete && (
+                    <span className="ml-auto bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        All Triples Loaded
+                    </span>
+                )}
             </div>
             
             {loading && !paused && (
