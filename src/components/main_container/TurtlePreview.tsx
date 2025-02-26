@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { QueryEngine } from '@comunica/query-sparql';
-import Sigma from "sigma";
-import Graph from "graphology";
-import ForceSupervisor from "graphology-layout-forceatlas2/worker";
+import GraphVis from "../graph/GraphVis";
 
 interface TurtlePreviewProps {
     fileContent: string;
@@ -13,6 +11,7 @@ interface TurtlePreviewProps {
 const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) => {
     const [triples, setTriples] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [paused, setPaused] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
     const [relatedSubjects, setRelatedSubjects] = useState<Set<string>>(new Set());
@@ -20,13 +19,32 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
     const [currentPage, setCurrentPage] = useState(1);
     const [loadedTriplesCount, setLoadedTriplesCount] = useState(0);
     const sigmaRef = useRef<any>(null);
-    const graphContainerRef = useRef<HTMLDivElement>(null);
-    const graphInstanceRef = useRef<any>(null);
+    const bindingStreamRef = useRef<any>(null);
+    const triplesRef = useRef<any[]>([]);  // Store triples in a ref for access across effects
+    const pausedRef = useRef<boolean>(false);  // Use ref to track paused state for the data handler
     const resultsPerPage = 20;
+    const [relatedSearchTerm, setRelatedSearchTerm] = useState("");
+    const [relatedCurrentPage, setRelatedCurrentPage] = useState(1);
+    const relatedResultsPerPage = 10; // Set to 10 for related triples table
+    const [sparqlQuery, setSparqlQuery] = useState<string>("");
+
+    // Keep pausedRef in sync with paused state
+    useEffect(() => {
+        pausedRef.current = paused;
+    }, [paused]);
 
     useEffect(() => {
         const absoluteFileUrl = new URL(fileUrl, window.location.href).href;
         console.log("Fetching triples from file:", absoluteFileUrl);
+        
+        // Clear existing triples when loading a new file
+        triplesRef.current = [];
+        setTriples([]);
+        setLoadedTriplesCount(0);
+        setLoading(true);
+        setPaused(false);
+        pausedRef.current = false;
+        
         const fetchTriples = async () => {
             const engine = new QueryEngine();
             const query = `
@@ -40,24 +58,51 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                     sources: [absoluteFileUrl]
                 });
                 console.log("Query result:", result);
-                const triples: any[] = [];
-                let count = 0;
-                result.on('data', (binding: any) => {
-                    triples.push({
+                bindingStreamRef.current = result;
+
+                // This is a separate function to handle each binding
+                // It will be controlled by the paused state
+                const handleBinding = (binding: any) => {
+                    // Skip if paused
+                    if (pausedRef.current) {
+                        return;
+                    }
+                    
+                    const newTriple = {
                         subject: binding.get('subject').value,
                         predicate: binding.get('predicate').value,
                         object: binding.get('object').value
-                    });
-                    count++;
-                    setTriples([...triples]); // Update state with new triples
-                    if (count % 100 === 0) {
-                        setLoadedTriplesCount(count);
+                    };
+                    
+                    triplesRef.current.push(newTriple);
+                    const currentCount = triplesRef.current.length;
+                    
+                    // Update state less frequently to improve performance
+                    if (currentCount % 10 === 0) {
+                        setTriples([...triplesRef.current]);
                     }
-                });
+                    
+                    if (currentCount % 100 === 0) {
+                        setLoadedTriplesCount(currentCount);
+                    }
+                };
+
+                // Set up data event listener
+                result.on('data', handleBinding);
+
                 result.on('end', () => {
+                    // Ensure the final state is updated
+                    setTriples([...triplesRef.current]);
+                    setLoadedTriplesCount(triplesRef.current.length);
                     setLoading(false);
-                    setLoadedTriplesCount(triples.length);
                 });
+                
+                result.on('error', (err: any) => {
+                    console.error("Error in binding stream:", err);
+                    setError(err.message);
+                    setLoading(false);
+                });
+
             } catch (err) {
                 console.error("Error fetching triples:", err);
                 setError(err.message);
@@ -66,7 +111,29 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
         };
 
         fetchTriples();
+
+        // Cleanup function
+        return () => {
+            if (bindingStreamRef.current) {
+                try {
+                    bindingStreamRef.current.destroy();
+                } catch (e) {
+                    console.error("Error destroying binding stream:", e);
+                }
+            }
+        };
     }, [fileUrl]);
+
+    const handlePauseResume = () => {
+        const newPausedState = !paused;
+        setPaused(newPausedState);
+        pausedRef.current = newPausedState;
+        
+        // If resuming from pause, ensure the UI shows loading state
+        if (!newPausedState && triplesRef.current.length > 0) {
+            setLoading(true);
+        }
+    };
 
     const fetchRelatedTriples = (subject: string) => {
         if (relatedSubjects.has(subject)) {
@@ -88,7 +155,23 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
     const handleObjectClick = (object: string) => {
         // Check if object is a URI (starts with http)
         if (object.startsWith('http')) {
-            fetchRelatedTriples(object);
+            // If this URI is already selected, deactivate it but keep previous selections
+            if (object === selectedSubject) {
+                const newRelatedSubjects = new Set(relatedSubjects);
+                newRelatedSubjects.delete(object);
+                
+                // If there are still related subjects, select the latest one
+                if (newRelatedSubjects.size > 0) {
+                    const lastSubject = Array.from(newRelatedSubjects).pop();
+                    setSelectedSubject(lastSubject || null);
+                    setRelatedSubjects(newRelatedSubjects);
+                } else {
+                    // If no subjects remain, go back to main view
+                    handleBackToMain();
+                }
+            } else {
+                fetchRelatedTriples(object);
+            }
         }
     };
 
@@ -102,125 +185,10 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
         setCurrentPage(1);
     };
 
-    // Create and render graph visualization
-    useEffect(() => {
-        if (selectedSubject && graphContainerRef.current && !loading) {
-            // Only render the graph when triples are fully loaded
-            // Clear any existing graph
-            if (graphInstanceRef.current) {
-                graphInstanceRef.current.kill();
-                graphInstanceRef.current = null;
-            }
-            
-            // Get related triples for the selected subject
-            const relatedTriples = triples.filter(triple => 
-                relatedSubjects.has(triple.subject) || 
-                (triple.object.startsWith('http') && relatedSubjects.has(triple.object))
-            );
-            
-            if (relatedTriples.length === 0) return;
-            
-            // Create a new graph
-            const graph = new Graph();
-            
-            // Add nodes and edges
-            const nodeMap = new Map();
-            
-            // Add all subjects and objects as nodes with random positions
-            relatedTriples.forEach(triple => {
-                if (!nodeMap.has(triple.subject)) {
-                    nodeMap.set(triple.subject, {
-                        id: triple.subject,
-                        label: getShortLabel(triple.subject),
-                        size: 10,
-                        x: Math.random(),  // Random x position
-                        y: Math.random(),  // Random y position
-                        color: triple.subject === selectedSubject ? "#FF5733" : "#6c757d"
-                    });
-                }
-                
-                if (triple.object.startsWith('http') && !nodeMap.has(triple.object)) {
-                    nodeMap.set(triple.object, {
-                        id: triple.object,
-                        label: getShortLabel(triple.object),
-                        size: 8,
-                        x: Math.random(),  // Random x position
-                        y: Math.random(),  // Random y position
-                        color: triple.object === selectedSubject ? "#FF5733" : "#9c27b0"
-                    });
-                }
-            });
-            
-            // Add nodes to graph
-            nodeMap.forEach((nodeData, nodeId) => {
-                graph.addNode(nodeId, nodeData);
-            });
-            
-            // Add edges between nodes
-            relatedTriples.forEach((triple, index) => {
-                if (triple.object.startsWith('http') && graph.hasNode(triple.object)) {
-                    try {
-                        graph.addEdge(triple.subject, triple.object, {
-                            id: `e${index}`,
-                            label: getShortLabel(triple.predicate),
-                            size: 1,
-                            color: "#ccc"
-                        });
-                    } catch (error) {
-                        console.error("Error adding edge:", error);
-                    }
-                }
-            });
-            
-            try {
-                // Create sigma instance
-                const container = graphContainerRef.current;
-                container.innerHTML = "";
-                
-                const renderer = new Sigma(graph, container, {
-                    minCameraRatio: 0.1,
-                    maxCameraRatio: 10,
-                    renderLabels: true,
-                    renderEdgeLabels: false,
-                    labelFont: "Arial",
-                    labelSize: 12,
-                    labelWeight: "normal"
-                });
-                
-                // Start force layout
-                const layout = new ForceSupervisor(graph, {
-                    settings: {
-                        gravity: 1,
-                        adjustSizes: true,
-                        linLogMode: true,
-                        outboundAttractionDistribution: true,
-                        barnesHutOptimize: true,
-                        slowDown: 10
-                    }
-                });
-                
-                layout.start();
-                setTimeout(() => layout.stop(), 3000); // Run layout for 3 seconds
-                
-                // Add node click event
-                renderer.on("clickNode", ({ node }) => {
-                    handleObjectClick(node);
-                });
-                
-                graphInstanceRef.current = {
-                    graph,
-                    renderer,
-                    layout,
-                    kill: () => {
-                        layout.stop();
-                        renderer.kill();
-                    }
-                };
-            } catch (error) {
-                console.error("Error initializing sigma:", error);
-            }
-        }
-    }, [selectedSubject, relatedSubjects, triples, loading]);
+    const handleRelatedSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRelatedSearchTerm(e.target.value);
+        setRelatedCurrentPage(1);
+    };
 
     // Helper function to shorten labels
     const getShortLabel = (uri: string): string => {
@@ -233,11 +201,49 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
         return uri.length > 20 ? uri.substring(0, 20) + "..." : uri;
     };
 
+    useEffect(() => {
+        if (selectedSubject && relatedSubjects.size > 0) {
+            // Build a SPARQL query to find triples related to selected subjects
+            const subjectUris = Array.from(relatedSubjects);
+            
+            let query = "SELECT ?subject ?predicate ?object\nWHERE {\n";
+            
+            // Add each subject with a UNION pattern
+            subjectUris.forEach((uri, index) => {
+                if (index > 0) {
+                    query += "  UNION\n";
+                }
+                // Fixed the string literal - removed the unexpected quote at the end
+                query += `  {\n    <${uri}> ?predicate ?object .\n    BIND(<${uri}> AS ?subject)\n  }\n`;
+            });
+            
+            query += "}\n";
+            setSparqlQuery(query);
+        } else {
+            setSparqlQuery("");
+        }
+    }, [selectedSubject, relatedSubjects]);
+
     const renderTriples = () => {
         if (selectedSubject) {
             const relatedTriples = triples.filter(triple => 
                 relatedSubjects.has(triple.subject) || 
                 (triple.object === selectedSubject)
+            );
+            
+            // Filter relatedTriples based on search term
+            const filteredRelatedTriples = relatedTriples.filter(triple =>
+                triple.subject.toLowerCase().includes(relatedSearchTerm.toLowerCase()) ||
+                triple.predicate.toLowerCase().includes(relatedSearchTerm.toLowerCase()) ||
+                triple.object.toLowerCase().includes(relatedSearchTerm.toLowerCase())
+            );
+            
+            // Calculate pagination
+            const totalRelatedResults = filteredRelatedTriples.length;
+            const totalRelatedPages = Math.ceil(totalRelatedResults / relatedResultsPerPage);
+            const displayedRelatedTriples = filteredRelatedTriples.slice(
+                (relatedCurrentPage - 1) * relatedResultsPerPage, 
+                relatedCurrentPage * relatedResultsPerPage
             );
             
             return (
@@ -258,6 +264,33 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                         <p className="text-sm font-mono">{selectedSubject}</p>
                     </div>
                     
+                    <div className="bg-gray-800 text-green-400 p-4 mb-4 rounded font-mono text-sm overflow-auto">
+                        <div className="flex justify-between items-center mb-2">
+                            <h6 className="text-white font-bold">SPARQL Query:</h6>
+                            <button 
+                                className="bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
+                                onClick={() => navigator.clipboard.writeText(sparqlQuery)}
+                                title="Copy to clipboard"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <pre className="whitespace-pre-wrap">{sparqlQuery}</pre>
+                    </div>
+                    
+                    <div className="flex space-x-2 mb-4">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Filter related triples..."
+                            value={relatedSearchTerm}
+                            onChange={handleRelatedSearchChange}
+                        />
+                        <span className="bg-info text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                            Related Results: {totalRelatedResults}
+                        </span>
+                    </div>
+                    
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-[#4CAF9C]">
                             <tr>
@@ -267,7 +300,7 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {relatedTriples.map((triple, index) => (
+                            {displayedRelatedTriples.map((triple, index) => (
                                 <tr key={index}>
                                     <td 
                                         className="px-6 py-1 whitespace-nowrap text-sm text-gray-500" 
@@ -296,19 +329,35 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
                             ))}
                         </tbody>
                     </table>
+
+                    {/* Pagination for related triples */}
+                    <div className="pagination flex items-center space-x-2 mt-4">
+                        <button
+                            className="btn btn-secondary text-blue-500"
+                            onClick={() => setRelatedCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={relatedCurrentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <span className="text-sm">
+                            Page {relatedCurrentPage} of {totalRelatedPages || 1}
+                        </span>
+                        <button
+                            className="btn btn-secondary text-blue-500"
+                            onClick={() => setRelatedCurrentPage(prev => Math.min(prev + 1, totalRelatedPages))}
+                            disabled={relatedCurrentPage === totalRelatedPages || totalRelatedPages === 0}
+                        >
+                            Next
+                        </button>
+                    </div>
                     
                     {!loading ? (
-                        <div className="mt-6">
-                            <h5 className="text-lg font-semibold mb-2">Graph Visualization</h5>
-                            <div 
-                                ref={graphContainerRef} 
-                                className="border border-gray-300 rounded-md"
-                                style={{ height: "400px", width: "100%" }}
-                            ></div>
-                            <p className="text-sm text-gray-500 mt-2">
-                                Click on nodes to explore relationships. Red node is the currently selected subject.
-                            </p>
-                        </div>
+                        <GraphVis 
+                            triples={triples} 
+                            selectedSubject={selectedSubject}
+                            relatedSubjects={relatedSubjects}
+                            onNodeClick={handleObjectClick}
+                        />
                     ) : (
                         <div className="mt-6">
                             <div className="bg-blue-100 text-blue-800 p-4 rounded mb-3">
@@ -421,19 +470,50 @@ const TurtlePreview = ({ fileContent, mimeType, fileUrl }: TurtlePreviewProps) =
 
     return (
         <div>
-            <div className="flex space-x-2 mb-4">
+            <div className="flex space-x-2 mb-4 items-center">
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {new Blob([fileContent]).size} bytes</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
                 <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                    Triples: {loading ? `${loadedTriplesCount} loaded...` : triples.length}
+                    Triples: {loading || paused ? `${loadedTriplesCount} loaded...` : triples.length}
                 </span>
+                
+                <button
+                    onClick={handlePauseResume}
+                    className={`ml-auto px-3 rounded text-white ${paused ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
+                    disabled={!loading && !paused} // Disable when all triples are loaded
+                >
+                    {paused ? (
+                        <span className="flex items-center text-xs py-0.5 rounded">
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                            </svg>
+                            Resume Loading
+                        </span>
+                    ) : (
+                        <span className="flex items-center text-xs py-0.5 rounded">
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Pause Loading
+                        </span>
+                    )}
+                </button>
             </div>
-            {loading && (
+            
+            {loading && !paused && (
                 <div className="bg-yellow-100 text-yellow-800 p-4 rounded mb-3">
                     <h5 className="font-bold">Loading</h5>
                     <p>The TTL file is being loaded and processed in the triplestore...</p>
                 </div>
             )}
+            
+            {paused && (
+                <div className="bg-orange-100 text-orange-800 p-4 rounded mb-3">
+                    <h5 className="font-bold">Loading Paused</h5>
+                    <p>Triple loading has been paused. Click 'Resume Loading' to continue fetching triples from the file.</p>
+                </div>
+            )}
+            
             {renderTriples()}
         </div>
     );
