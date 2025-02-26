@@ -13,7 +13,10 @@ export default defineConfig({
       'wavesurfer.js',
       'react-markdown',
       'remark-gfm',
-      '@comunica/query-sparql'
+      '@comunica/query-sparql',
+      'sigma',
+      'graphology',
+      'graphology-layout-forceatlas2'
     ],
   },
   server: {

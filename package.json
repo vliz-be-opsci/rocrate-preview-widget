@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@comunica/query-sparql": "^2.6.0",
     "@r2wc/react-to-web-component": "^2.0.2",
     "axios": "^1.4.0",
     "chart.js": "^4.4.7",
     "d3-array": "^3.2.4",
+    "graphology": "^0.26.0",
+    "graphology-layout-forceatlas2": "^0.10.1",
     "match-sorter": "^8.0.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.0",
@@ -19,8 +22,8 @@
     "react-syntax-highlighter": "^15.6.1",
     "react-table": "^7.8.0",
     "remark-gfm": "^4.0.1",
-    "wavesurfer.js": "^6.1.4",
-    "@comunica/query-sparql": "^2.6.0"
+    "sigma": "^3.0.1",
+    "wavesurfer.js": "^6.1.4"
   },
   "scripts": {
     "start": "vite",
