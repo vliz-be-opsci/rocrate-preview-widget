@@ -189,7 +189,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
     };
 
     const renderFacets = () => {
-        const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 10);
+        const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
         return (
             <div>
                 <h3 className="text-lg font-semibold mb-4">Facets</h3>
