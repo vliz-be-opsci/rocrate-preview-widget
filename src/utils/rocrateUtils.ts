@@ -1,3 +1,36 @@
+import { QueryEngine } from '@comunica/query-sparql';
+
+export async function fetchFacetValues(storeRef: any, predicate: string): Promise<string[]> {
+    const engine = new QueryEngine();
+    console.log("Fetching facet values...");
+    console.log("Store size:", storeRef.size);
+    console.log("Predicate:", predicate);
+    const query = `
+        SELECT DISTINCT ?o WHERE {
+            ?s <${predicate}> ?o
+        }
+    `;
+    console.log("Query:", query);
+    const result = await engine.queryBindings(query, {
+        sources: [{ type: 'rdfjsSource', value: storeRef}]
+    });
+    console.log("Facets result:", result);
+
+    const results: string[] = [];
+    result.on('data', (binding) => {
+        const value = binding.get('o');
+        console.log("Binding:", binding);
+        console.log("Value:", value);
+        if (value) {
+            results.push(value.value);
+        }
+    });
+
+    return new Promise((resolve, reject) => {
+        result.on('end', () => resolve(results));
+        result.on('error', reject);
+    });
+}
 
 export const getLabelForItem = (item: any): string => {
     console.log(item);
@@ -19,4 +52,3 @@ export const getIDforItem = (item: any, rocrate_graph:any): any => {
     }
     return item_dict;
 }
-

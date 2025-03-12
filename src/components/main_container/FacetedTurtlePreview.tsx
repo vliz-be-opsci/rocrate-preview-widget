@@ -5,6 +5,7 @@ import TripleTable from "./TripleTable";
 import TriplePagination from "./TriplePagination";
 import TripleLoadingStatus from "./TripleLoadingStatus";
 import TripleError from "./TripleError";
+import { fetchFacetValues } from '../../utils/rocrateUtils';
 
 interface FacetedTurtlePreviewProps {
     fileContent: string;
@@ -22,6 +23,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
     const [loadedTriplesCount, setLoadedTriplesCount] = useState(0);
     const [facets, setFacets] = useState<any[]>([]);
     const [openFacetIndex, setOpenFacetIndex] = useState<number | null>(null);
+    const [items, setItems] = useState<string[]>([]);
     const bindingStreamRef = useRef<any>(null);
     const triplesRef = useRef<any[]>([]);
     const pausedRef = useRef<boolean>(false);
@@ -122,6 +124,9 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                 const facetsData: any[] = [];
                 result.on('data', (binding: any) => {
                     console.log("Facets binding:", binding);
+                    console.log("Facets valueCount:", binding.get('valueCount'));
+                    console.log("Facets predicate:", binding.get('predicate'));
+                    console.log(binding);
                     facetsData.push({
                         predicate: binding.get('predicate').value,
                         valueCount: binding.get('valueCount').value
@@ -195,17 +200,25 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
 
                         return (
                             <div key={index} className="flex flex-col items-center">
-                                <button 
+                                <button
                                     className="bg-blue-500 text-white py-2 px-4 rounded w-full"
-                                    onClick={() => setOpenFacetIndex(openFacetIndex === index ? null : index)}
+                                    onClick={async () => {
+                                        if (openFacetIndex === index) {
+                                            setOpenFacetIndex(null);
+                                        } else {
+                                            setOpenFacetIndex(index);
+                                            const values = await fetchFacetValues(storeRef.current, facet.predicate);
+                                            setItems(values);
+                                        }
+                                    }}
                                 >
                                     <span role="img" aria-label="tabular icon">📊</span> {predicateText} ({facet.valueCount})
                                 </button>
                                 {openFacetIndex === index && (
                                     <ul className="mt-2 bg-gray-100 p-2 rounded shadow-lg w-full">
-                                        <li>Item 1</li>
-                                        <li>Item 2</li>
-                                        <li>Item 3</li>
+                                        {items.map((item, index) => (
+                                            <li key={index}>{item}</li>
+                                        ))}
                                     </ul>
                                 )}
                             </div>
