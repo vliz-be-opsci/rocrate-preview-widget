@@ -14,6 +14,7 @@ export default defineConfig({
       'react-markdown',
       'remark-gfm',
       '@comunica/query-sparql',
+      '@comunica/query-sparql-rdfjs',
       'sigma',
       'graphology',
       'graphology-layout-forceatlas2'

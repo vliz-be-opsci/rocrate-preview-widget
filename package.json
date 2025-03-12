@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@comunica/query-sparql": "^2.6.0",
+    "@comunica/query-sparql-rdfjs": "^4.1.0",
     "@r2wc/react-to-web-component": "^2.0.2",
     "axios": "^1.4.0",
     "chart.js": "^4.4.7",

@@ -112,6 +112,9 @@
                     "@id": "all-triples.ttl"
                 },
                 {
+                    "@id": "hobbit.ttl"
+                },
+                {
                     "@id": "package.json"
                 },
                 {
@@ -475,6 +478,10 @@
         },
         {
             "@id": "does_not_exist.pdf",
+            "@type": "File"
+        },
+        {
+            "@id": "hobbit.ttl",
             "@type": "File"
         },
         {
