@@ -21,11 +21,11 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
     const [currentPage, setCurrentPage] = useState(1);
     const [loadedTriplesCount, setLoadedTriplesCount] = useState(0);
     const [facets, setFacets] = useState<any[]>([]);
+    const [openFacetIndex, setOpenFacetIndex] = useState<number | null>(null);
     const bindingStreamRef = useRef<any>(null);
     const triplesRef = useRef<any[]>([]);
     const pausedRef = useRef<boolean>(false);
     const storeRef = useRef<Store>(new Store());
-    const [isOpen, setIsOpen] = useState(false);
     const resultsPerPage = 20;
 
     const isLoadingComplete = !loading && !paused;
@@ -90,13 +90,13 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                     await fetchFacets();
                 });
 
-                result.on('error', (err: any) => {
-                    setError(err.message);
+                result.on('error', (err: unknown) => {
+                    setError((err as any).message);
                     setLoading(false);
                 });
 
-            } catch (err) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError((err as any).message);
                 setLoading(false);
             }
         };
@@ -134,12 +134,13 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                     setFacets(facetsData);
                 });
 
-                result.on('error', (err: any) => {
+                result.on('error', (err: unknown) => {
+                    setError((err as any).message);
                     console.error("Error fetching facets:", err);
                 });
 
-            } catch (err) {
-                setError(err.message);
+            } catch (err: unknown) {
+                setError((err as any).message);
             }
         };
 
@@ -168,7 +169,11 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
 
         return (
             <div>
-                <TripleTable triples={displayedTriples} />
+                <TripleTable 
+                    triples={displayedTriples} 
+                    onSubjectClick={() => {}} 
+                    onObjectClick={() => {}} 
+                />
                 <TriplePagination
                     currentPage={currentPage}
                     totalPages={totalPages}
@@ -182,23 +187,22 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
         const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 10);
         return (
             <div>
-                <h3>Facets</h3>
-                <div className="grid grid-cols-3 gap-4">
+                <h3 className="text-lg font-semibold mb-4">Facets</h3>
+                <div className="grid grid-cols-4 gap-4">
                     {filteredFacets.map((facet, index) => {
                         const predicateParts = facet.predicate.split(/[#\/]/);
                         const predicateText = predicateParts[predicateParts.length - 1];
-                        
 
                         return (
                             <div key={index} className="flex flex-col items-center">
                                 <button 
-                                    className="bg-blue-500 text-white py-2 px-4 rounded"
-                                    onClick={() => setIsOpen(!isOpen)}
+                                    className="bg-blue-500 text-white py-2 px-4 rounded w-full"
+                                    onClick={() => setOpenFacetIndex(openFacetIndex === index ? null : index)}
                                 >
                                     <span role="img" aria-label="tabular icon">📊</span> {predicateText} ({facet.valueCount})
                                 </button>
-                                {isOpen && (
-                                    <ul className="mt-2">
+                                {openFacetIndex === index && (
+                                    <ul className="mt-2 bg-gray-100 p-2 rounded shadow-lg w-full">
                                         <li>Item 1</li>
                                         <li>Item 2</li>
                                         <li>Item 3</li>
@@ -226,6 +230,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                 loadedTriplesCount={loadedTriplesCount}
                 triplesLength={triples.length}
                 isLoadingComplete={isLoadingComplete}
+                onPauseResume={() => setPaused(!paused)}
             />
             {renderFacets()}
             {renderTriples()}
