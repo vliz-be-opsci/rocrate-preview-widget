@@ -215,9 +215,27 @@ const fetchPrefix = async (facet: string) => {
         fetchAndSetPrefixes();
     }, [facets]);
 
+const [selectedOptions, setSelectedOptions] = useState<{ [facet: string]: string[] }>({});
+
+const handleCheckboxChange = (facet: string, option: string) => {
+    setSelectedOptions(prevState => {
+        const newOptions = { ...prevState };
+        if (!newOptions[facet]) {
+            newOptions[facet] = [];
+        }
+        if (newOptions[facet].includes(option)) {
+            newOptions[facet] = newOptions[facet].filter(opt => opt !== option);
+        } else {
+            newOptions[facet].push(option);
+        }
+        return newOptions;
+    });
+};
+
 const renderFacets = () => {
     const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
     return (
+        <>
         <div style={{ display: 'flex', flexDirection: 'column' }} className="mb-4">
             <h3 className="text-lg font-semibold mb-4">Facets</h3>
             <div className="grid grid-cols-10 gap-4 h-full">
@@ -257,20 +275,42 @@ const renderFacets = () => {
                                 X
                             </button>
                             <ul>
-                                {items.map((item, index) => (
-                                    <li key={index}>{item}</li>
-                                ))}
+                                {items.map((item, index) => {
+                                    const isChecked = selectedOptions[facets[openFacetIndex].predicate]?.includes(item) || false;
+                                    return (
+                                        <div key={index} className="facet-option">
+                                            <input
+                                                type="checkbox"
+                                                id={`${facets[openFacetIndex].predicate}-${item}`}
+                                                checked={isChecked}
+                                                onChange={() => handleCheckboxChange(facets[openFacetIndex].predicate, item)}
+                                            />
+                                            <label htmlFor={`${facets[openFacetIndex].predicate}-${item}`}>{item}</label>
+                                        </div>
+                                    );
+                                })}
                             </ul>
-                        </div>
-                    )}
                 </div>
-                <div className="col-span-2 flex flex-col justify-between border p-2" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
-                    <button className="sticky bottom-0 bg-blue-500 text-white py-2 px-4 rounded w-full mt-2">
-                        <span role="img" aria-label="search icon">🔍</span> Search
-                    </button>
+                    )}
                 </div>
             </div>
         </div>
+        <div className="col-span-2 flex flex-col justify-between border p-2" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+            <h3 className="text-lg font-semibold mb-4">Selected Options</h3>
+            <>
+                <ul>
+                    {Object.keys(selectedOptions).map(facet => (
+                        selectedOptions[facet].map(option => (
+                            <li key={`${facet}-${option}`}>{facet}: {option}</li>
+                        ))
+                    ))}
+                </ul>
+            </>
+            <button className="sticky bottom-0 bg-blue-500 text-white py-2 px-4 rounded w-full mt-2">
+                <span role="img" aria-label="search icon">🔍</span> Search
+            </button>
+        </div>
+        </>
     );
 };
 
