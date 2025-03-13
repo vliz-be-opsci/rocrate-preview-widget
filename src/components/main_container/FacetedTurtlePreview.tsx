@@ -104,6 +104,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
         const fetchFacets = async () => {
             console.log("Fetching facets...");
             console.log("Store size:", storeRef.current.size);
+            console.log("Store content:", storeRef.current.getQuads(null, null, null, null));
             const engine = new QueryEngine();
             const query = `
                 SELECT ?predicate (COUNT(DISTINCT ?object) AS ?valueCount)
@@ -129,6 +130,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                         predicate: binding.get('predicate').value,
                         valueCount: binding.get('valueCount').value
                     });
+                    console.log("Final facets data:", facetsData);
                     setFacets(facetsData);
                 });
 
@@ -232,8 +234,63 @@ const handleCheckboxChange = (facet: string, option: string) => {
     });
 };
 
+const [facetChosen, setFacetChosen] = useState(false);
+
+const handleSearch = async () => {
+    const engine = new QueryEngine();
+    const facetQueries = Object.keys(selectedOptions).map(facet => {
+        const options = selectedOptions[facet].map(option => `<${option}>`).join(' OR ');
+        return `{ ?subject ?predicate ?object . FILTER(?predicate = <${facet}> && ?object IN (${options})) }`;
+    }).join(' UNION ');
+
+    const query = `
+        SELECT ?subject ?predicate ?object
+        WHERE {
+            ${facetQueries}
+        }
+    `;
+
+    try {
+        console.log("Facet query:", query);
+        const result = await engine.queryBindings(query, {
+            sources: [{ type: 'rdfjsSource', value: storeRef.current }]
+        });
+
+        const newTriples: any[] = [];
+        result.on('data', (binding: any) => {
+            newTriples.push({
+                subject: binding.get('subject').value,
+                predicate: binding.get('predicate').value,
+                object: binding.get('object').value
+            });
+        });
+
+        result.on('end', () => {
+            setTriples(newTriples);
+            setCurrentPage(1);
+        });
+
+        result.on('error', (err: unknown) => {
+            setError((err as any).message);
+        });
+
+    } catch (err: unknown) {
+        setError((err as any).message);
+    }
+};
+
+const handleReset = () => {
+    setTriples([...triplesRef.current]);
+    setCurrentPage(1);
+};
+
+useEffect(() => {
+    setFacetChosen(Object.keys(selectedOptions).length > 0);
+}, [selectedOptions]);
+
 const renderFacets = () => {
-    const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
+
+    const filteredFacets = facets;
     return (
         <>
         <div style={{ display: 'flex', flexDirection: 'column' }} className="mb-4">
@@ -306,7 +363,11 @@ const renderFacets = () => {
                     ))}
                 </ul>
             </>
-            <button className="sticky bottom-0 bg-blue-500 text-white py-2 px-4 rounded w-full mt-2">
+            <button 
+                className={`sticky bottom-0 ${facetChosen ? 'bg-blue-500' : 'bg-gray-500'} text-white py-2 px-4 rounded w-full mt-2`}
+                disabled={!facetChosen}
+                onClick={handleSearch}
+            >
                 <span role="img" aria-label="search icon">🔍</span> Search
             </button>
         </div>
