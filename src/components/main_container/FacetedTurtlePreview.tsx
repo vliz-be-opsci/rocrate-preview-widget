@@ -216,44 +216,63 @@ const fetchPrefix = async (facet: string) => {
     }, [facets]);
 
 const renderFacets = () => {
-        const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
-        return (
-            <div>
-                <h3 className="text-lg font-semibold mb-4">Facets</h3>
-                <div className="grid grid-cols-4 gap-4">
-                    {filteredFacets.map((facet, index) => {
-                        const predicateText = predicateTexts[facet.predicate] || facet.predicate;
+    const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column' }} className="mb-4">
+            <h3 className="text-lg font-semibold mb-4">Facets</h3>
+            <div className="grid grid-cols-10 gap-4 h-full">
+                <div className="col-span-4 flex flex-col justify-between">
+                    <div className="border p-2" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                        {filteredFacets.map((facet, index) => {
+                            const predicateText = predicateTexts[facet.predicate] || facet.predicate;
 
-                        return (
-                            <div key={index} className="flex flex-col items-center">
-                                <button
-                                    className="bg-blue-500 text-white py-2 px-4 rounded w-full"
-                                    onClick={async () => {
-                                        if (openFacetIndex === index) {
-                                            setOpenFacetIndex(null);
-                                        } else {
-                                            setOpenFacetIndex(index);
-                                            const values = await fetchFacetValues(storeRef.current, facet.predicate);
-                                            setItems(values);
-                                        }
-                                    }}
-                                >
-                                    <span role="img" aria-label="tabular icon">📊</span> {predicateText} ({facet.valueCount})
-                                </button>
-                                {openFacetIndex === index && (
-                                    <ul className="mt-2 bg-gray-100 p-2 rounded shadow-lg w-full">
-                                        {items.map((item, index) => (
-                                            <li key={index}>{item}</li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
-                        );
-                    })}
+                            return (
+                                <div key={index} className="flex flex-col items-center my-2">
+                                    <button
+                                        className={`py-2 px-4 rounded w-full ${openFacetIndex === index ? 'bg-blue-700' : 'bg-blue-500'} text-white`}
+                                        onClick={async () => {
+                                            if (openFacetIndex === index) {
+                                                setOpenFacetIndex(null);
+                                            } else {
+                                                setOpenFacetIndex(index);
+                                                const values = await fetchFacetValues(storeRef.current, facet.predicate);
+                                                setItems(values);
+                                            }
+                                        }}
+                                    >
+                                        <span role="img" aria-label="tabular icon">📊</span> {predicateText} ({facet.valueCount})
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="col-span-4 relative border p-2" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                    {openFacetIndex !== null && (
+                        <div className="bg-gray-100 p-2 rounded shadow-lg w-full">
+                            <button
+                                className="absolute top-0 right-0 mt-2 mr-2 text-red-500"
+                                onClick={() => setOpenFacetIndex(null)}
+                            >
+                                X
+                            </button>
+                            <ul>
+                                {items.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+                <div className="col-span-2 flex flex-col justify-between border p-2" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+                    <button className="sticky bottom-0 bg-blue-500 text-white py-2 px-4 rounded w-full mt-2">
+                        <span role="img" aria-label="search icon">🔍</span> Search
+                    </button>
                 </div>
             </div>
-        );
-    };
+        </div>
+    );
+};
 
     if (error) {
         return <TripleError error={error} />;
