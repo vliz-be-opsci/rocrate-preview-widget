@@ -24,6 +24,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
     const [facets, setFacets] = useState<any[]>([]);
     const [openFacetIndex, setOpenFacetIndex] = useState<number | null>(null);
     const [items, setItems] = useState<string[]>([]);
+    const [predicateTexts, setPredicateTexts] = useState<{ [key: string]: string }>({});
     const bindingStreamRef = useRef<any>(null);
     const triplesRef = useRef<any[]>([]);
     const pausedRef = useRef<boolean>(false);
@@ -72,9 +73,6 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                         DataFactory.namedNode(newTriple.object)
                     );
                     const currentCount = triplesRef.current.length;
-                    if (currentCount % 10000 === 0) {
-                        await fetchFacets();
-                    }
                     if (currentCount % 1000 === 0) {
                         setTriples([...triplesRef.current]);
                     }
@@ -188,15 +186,43 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
         );
     };
 
-    const renderFacets = () => {
+const fetchPrefix = async (facet: string) => {
+    try {
+        const response = await fetch(`https://prefix.cc/?q=${facet}`, { method: 'HEAD', redirect: 'follow' });
+        const redirectedUrl = response.url;
+        console.log('Redirected URL:', redirectedUrl);
+        const prefix = redirectedUrl.split('/').pop() || facet;
+        if (!prefix.includes(":")) {
+            return facet;
+        }
+
+        return prefix;
+    } catch (error) {
+        console.error('Error fetching prefix:', error);
+        return facet;
+    }
+};
+
+    useEffect(() => {
+        const fetchAndSetPrefixes = async () => {
+            const newPredicateTexts: { [key: string]: string } = {};
+            for (const facet of facets) {
+                const prefix = await fetchPrefix(facet.predicate);
+                newPredicateTexts[facet.predicate] = prefix;
+            }
+            setPredicateTexts(newPredicateTexts);
+        };
+        fetchAndSetPrefixes();
+    }, [facets]);
+
+const renderFacets = () => {
         const filteredFacets = facets.filter(facet => facet.valueCount >= 2 && facet.valueCount <= 20);
         return (
             <div>
                 <h3 className="text-lg font-semibold mb-4">Facets</h3>
                 <div className="grid grid-cols-4 gap-4">
                     {filteredFacets.map((facet, index) => {
-                        const predicateParts = facet.predicate.split(/[#\/]/);
-                        const predicateText = predicateParts[predicateParts.length - 1];
+                        const predicateText = predicateTexts[facet.predicate] || facet.predicate;
 
                         return (
                             <div key={index} className="flex flex-col items-center">
