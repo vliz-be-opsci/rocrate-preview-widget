@@ -7,13 +7,18 @@ interface MainDashboardCrateProps {
 }
 
 const MainDashboardCrate = ({ data, rocrate }: MainDashboardCrateProps) => {
-    const renderDataItem = (label: string, value: string, Icon: any) => (
-        <div className={`p-2 ${value === "None" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"} rounded mb-2 flex items-center`}>
+    console.log("MainDashboardCrate data", data);
+    console.log("MainDashboardCrate rocrate", rocrate);
+const renderDataItem = (label: string, value: any, Icon: any) => {
+    const displayValue = (typeof value === 'object' && value !== null) ? (value["@id"] || JSON.stringify(value)) : value;
+    return (
+        <div className={`p-2 ${displayValue === "None" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"} rounded mb-2 flex items-center`}>
             <Icon className="mr-2" />
             <span className="font-semibold">{label}: </span>
-            <span>{value}</span>
+            <span>{displayValue}</span>
         </div>
     );
+};
 
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
