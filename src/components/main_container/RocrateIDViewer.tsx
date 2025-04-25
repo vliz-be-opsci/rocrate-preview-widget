@@ -24,9 +24,10 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
+    console.log("RocrateIDViewer item", item);
+
     useEffect(() => {
         setError(null); // Reset error state when rocrateID changes
-
         const fetchFileContent = async (url: string, rocrateidsearch:boolean) => {
             try {
                 const response = await fetch(url);
@@ -53,6 +54,16 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 setLoading(false);
             }
         };
+
+        //first check if it is really needed to fetch the file content
+        if (item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
+            console.log("Download URL found:", item["downloadUrl"]);
+            setLoading(true);
+            const downloadURL = item["downloadUrl"];
+            setError("file is not available for download");
+            setLoading(false);
+            return;
+        }
 
         if (item && item["@type"] === "File") {
             setLoading(true);
@@ -96,6 +107,17 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const downloadFile = () => {
         const element = document.createElement("a");
+
+        // first check if the item has a downloadUrl and use it if available
+        if (item && item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
+            const downloadURL = item["downloadUrl"];
+            element.href = downloadURL;
+            element.download = rocrateID.split("/").pop() || "download.txt";
+            document.body.appendChild(element);
+            element.click();
+            return;
+        }
+        // if no downloadUrl is available, use the file content and mimeType to create a Blob
         const file = new Blob([fileContent || ""], { type: mimeType || "text/plain" });
         element.href = URL.createObjectURL(file);
         element.download = rocrateID.split("/").pop() || "download.txt";
@@ -146,7 +168,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     </div>
                 </>
             )}
-            {item && item["@type"] === "File" && (
+            {item && (item["@type"] === "File" || (item["@type"] === "Dataset" && item["downloadUrl"] !== null && item["downloadUrl"] !== undefined)) && (
                 <>
                     <h2 id="accordion-collapse-heading-2">
                         <button
