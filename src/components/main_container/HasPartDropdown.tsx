@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
+import { FaFolder, FaFile, FaFolderOpen, FaLink } from "react-icons/fa";
 import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
@@ -12,6 +12,20 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
 
     const getIcon = (part: any, isHovered: boolean) => {
         const partItem = rocrate["@graph"].find((item: any) => item["@id"] === part["@id"]);
+
+        // check if the partItem has a DownloadUrl property
+        // if it does add a link icon to the next icon
+        if (partItem && partItem.downloadUrl) {
+            return (
+                <div className="flex items-center">
+                    {isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />}
+                    <a href={partItem.downloadUrl} target="_blank" rel="noopener noreferrer">
+                        <FaLink className="text-blue-500 mr-2" />
+                    </a>
+                </div>
+            );
+        }
+
         if (partItem && partItem["@type"] === "Dataset") {
             return isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />;
         }
