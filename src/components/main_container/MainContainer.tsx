@@ -23,7 +23,7 @@ function extractData(rocrate: any) {
         console.log(item);
         if (item["@id"] == "./") {
             //check if the following attributs exists ["author", "datePublished", "description", "keywords", "license"] if not set them to None
-            data["rocrate_author"] = item["author"] || "None";
+            data["rocrate_author"] = item["publisher"] || item["creator"] || item["author"] || "None";
             data["rocrate_datePublished"] = item["datePublished"] || "None";
             data["rocrate_description"] = item["description"] || "None";
             data["rocrate_keywords"] = item["keywords"] || "None";
