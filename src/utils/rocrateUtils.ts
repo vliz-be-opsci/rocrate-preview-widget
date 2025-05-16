@@ -34,7 +34,7 @@ export async function fetchFacetValues(storeRef: any, predicate: string): Promis
 
 export const getLabelForItem = (item: any): string => {
     console.log(item);
-    const labels = ["prefLabel", "name", "title", "altLabel"];
+    const labels = ["prefLabel", "name", "title", "altLabel","skos:prefLabel", "rdfs:label", "schema:name", "schema:title", "dcterms:title", "dc:title"];
     for (const label of labels) {
         if (item[label]) return item[label];
     }
