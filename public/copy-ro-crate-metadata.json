@@ -250,13 +250,29 @@
             "publisher": {
                 "@id": "_:aa121296a172495dbeb123e17ef99985"
             },
+            "small_list": [
+                "this",
+                "is"
+            ],
             "just_list": [
                 "this",
                 "is",
                 "a",
                 "list",
                 "of",
-                "things"
+                "things",
+                "that",
+                "are",
+                "not",
+                "important",
+                "but",
+                "are",
+                "here",
+                "for",
+                "the",
+                "sake",
+                "of",
+                "completeness"
             ],
             "list_of_dicts": [{
                     "@id": "audio/"

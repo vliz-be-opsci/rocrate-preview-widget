@@ -9,12 +9,35 @@ interface MetadataTableProps {
 }
 
 const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
+    const [modalContent, setModalContent] = React.useState<{ content: any[]; key: string } | null>(null);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+    const openModal = (content: any[], key: string) => {
+        setModalContent({ content, key });
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalContent(null);
+    };
     const renderValue = (value: any, key: string) => {
         if (Array.isArray(value)) {
             return (
                 <div className="space-y-2">
-                    {value.map((item, index) => (
-                        <div key={index} className="bg-gray-100 p-2 rounded">
+                    {value.length > 2 && (
+                        <div className="text-gray-500 text-xs italic flex items-center justify-between">
+                            <span>+{value.length - 2} more...</span>
+                            <button
+                                className="text-blue-600 hover:underline"
+                                onClick={() => openModal(value, key)}
+                            >
+                                View all
+                            </button>
+                        </div>
+                    )}
+                    {value.slice(0, 2).map((item, index) => (
+                        <div key={index} className="bg-gray-100 p-1 rounded">
                             {typeof item === "object" && item !== null ? (
                                 <div className="block truncate" title={JSON.stringify(item)}>
                                     {renderValue(item, key)}
@@ -102,21 +125,21 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                                     {Array.isArray(value) && value.some((item: any) => typeof item === "object" && item !== null) ? (
                                         <>
                                         {value.length > 2 && (
-                                                <div className="text-gray-500 text-xs italic flex items-center justify-between">
-                                                    <span>+{value.length - 2} more...</span>
-                                                    <button 
-                                                        className="text-blue-600 hover:underline"
-                                                        onClick={() => {/* Implement view all logic */}}
-                                                    >
-                                                        View all
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {value.slice(0, 2).map((item, idx) => (
-                                                <div key={idx} className="mb-1 p-1">
-                                                    {renderValue(item, key)}
-                                                </div>
-                                            ))}
+                                            <div className="text-gray-500 text-xs italic flex items-center justify-between">
+                                                <span>+{value.length - 2} more...</span>
+                                                <button
+                                                    className="text-blue-600 hover:underline"
+                                                    onClick={() => openModal(value, key)}
+                                                >
+                                                    View all
+                                                </button>
+                                            </div>
+                                        )}
+                                        {value.slice(0, 2).map((item, idx) => (
+                                            <div key={idx}>
+                                                {renderValue(item, key)}
+                                            </div>
+                                        ))}
                                             
                                         </>
                                     ) : (
@@ -128,6 +151,27 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                     );
                 })}
             </div>
+            {/* Modal for viewing all items */}
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
+                        <h2 className="text-lg font-semibold mb-4">{modalContent?.key}</h2>
+                        <div className="max-h-96 overflow-y-auto">
+                            {modalContent?.content.map((item, idx) => (
+                                <div key={idx} className="mb-2 p-2 border-b">
+                                    {renderValue(item, "")}
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            onClick={closeModal}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
