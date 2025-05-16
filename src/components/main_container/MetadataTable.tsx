@@ -87,10 +87,10 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                         key !== "hasPart" && (
                             <div
                                 key={index}
-                                className="bg-white p-4 rounded shadow-md truncate"
+                                className="bg-white p-4 rounded shadow-md truncate overflow-y-scroll max-h-40"
                                 title={typeof value === "object" ? JSON.stringify(value) : String(value || "")}
                             >
-                                <div className="font-semibold mb-2">
+                                <div className="font-semibold mb-2 sticky top-0 bg-white z-10">
                                     {key.startsWith("@") ? null : (
                                         <a href={`http://schema.org/${key}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
                                             <FaLink className="mr-1" />
@@ -99,12 +99,19 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                                     )}
                                 </div>
                                 <div className="text-gray-700">
-                                    {Array.isArray(value) && value.some(item => typeof item === "object" && item !== null) ? (
-                                        value.map((item, idx) => (
-                                            <div key={idx} className="mb-2">
-                                                {renderValue(item, key)}
-                                            </div>
-                                        ))
+                                    {Array.isArray(value) && value.some((item: any) => typeof item === "object" && item !== null) ? (
+                                        <>
+                                            {value.slice(0, 2).map((item, idx) => (
+                                                <div key={idx} className="mb-1 p-1">
+                                                    {renderValue(item, key)}
+                                                </div>
+                                            ))}
+                                            {value.length > 2 && (
+                                                <div className="text-gray-500 text-xs italic">
+                                                    +{value.length - 2} more...
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         renderValue(value, key)
                                     )}
