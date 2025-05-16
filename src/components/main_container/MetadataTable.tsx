@@ -87,7 +87,7 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                         key !== "hasPart" && (
                             <div
                                 key={index}
-                                className="bg-white p-4 rounded shadow-md truncate overflow-y-scroll max-h-40"
+                                className="bg-white p-4 rounded shadow-md truncate overflow-y-auto max-h-40"
                                 title={typeof value === "object" ? JSON.stringify(value) : String(value || "")}
                             >
                                 <div className="font-semibold mb-2 sticky top-0 bg-white z-10">
@@ -101,16 +101,23 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                                 <div className="text-gray-700">
                                     {Array.isArray(value) && value.some((item: any) => typeof item === "object" && item !== null) ? (
                                         <>
+                                        {value.length > 2 && (
+                                                <div className="text-gray-500 text-xs italic flex items-center justify-between">
+                                                    <span>+{value.length - 2} more...</span>
+                                                    <button 
+                                                        className="text-blue-600 hover:underline"
+                                                        onClick={() => {/* Implement view all logic */}}
+                                                    >
+                                                        View all
+                                                    </button>
+                                                </div>
+                                            )}
                                             {value.slice(0, 2).map((item, idx) => (
                                                 <div key={idx} className="mb-1 p-1">
                                                     {renderValue(item, key)}
                                                 </div>
                                             ))}
-                                            {value.length > 2 && (
-                                                <div className="text-gray-500 text-xs italic">
-                                                    +{value.length - 2} more...
-                                                </div>
-                                            )}
+                                            
                                         </>
                                     ) : (
                                         renderValue(value, key)
