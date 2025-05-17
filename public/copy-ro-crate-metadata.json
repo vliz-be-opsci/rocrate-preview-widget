@@ -1,5 +1,11 @@
 {
-    "@context": "https://w3id.org/ro/crate/1.1/context",
+    "@context": {
+        "@vocab": "https://w3id.org/ro/crate/1.2-DRAFT/context",
+        "dcat": "http://www.w3.org/ns/dcat#",
+        "dct": "http://purl.org/dc/terms/",
+        "pcdm": "http://pcdm.org/models#",
+        "skos": "http://www.w3.org/2004/02/skos/core#"
+    },
     "@graph": [
         {
             "@id": "ro-crate-metadata.json",
@@ -250,11 +256,11 @@
             "publisher": {
                 "@id": "_:aa121296a172495dbeb123e17ef99985"
             },
-            "small_list": [
+            "places": [
                 "this",
                 "is"
             ],
-            "just_list": [
+            "pcdm:test": [
                 "this",
                 "is",
                 "a",

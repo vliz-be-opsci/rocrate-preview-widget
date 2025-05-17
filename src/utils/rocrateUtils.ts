@@ -52,3 +52,22 @@ export const getIDforItem = (item: any, rocrate_graph:any): any => {
     }
     return item_dict;
 }
+
+/**
+ * Returns the appropriate context link based on the provided variable and rocrate context.
+ * @param rocrate - The rocrate object containing the context.
+ * @param variable - The variable to resolve (e.g., "schema:Person").
+ * @returns The resolved context link or a default schema.org link.
+ */
+export function getContextLink(rocrate: any, variable: string): string {
+    if (variable.includes(":")) {
+        const prefix = variable.split(":")[0];
+        console.log("Prefix:", prefix);
+        console.log("Variable:", variable);
+        console.log("Rocrate context:", rocrate["@context"]);
+        if (rocrate["@context"] && rocrate["@context"][prefix]) {
+            return `${rocrate["@context"][prefix]}${variable.split(":")[1]}`;
+        }
+    }
+    return `http://schema.org/${variable}`;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { getContextLink } from "../../utils/rocrateUtils";
 import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 interface EntityListProps {
@@ -23,7 +24,7 @@ const EntityList = ({ rocrate, onSelect }: EntityListProps) => {
                             {getLabelForItem(getIDforItem(entity["@id"], rocrate["@graph"]))}
                         </div>
                         <a
-                            href={`http://schema.org/${entity["@type"]}`}
+                            href={getContextLink(rocrate, entity["@type"])}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-blue-600 hover:underline"

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaLink, FaEnvelope } from "react-icons/fa";
+import { getContextLink } from "../../utils/rocrateUtils";
 import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 
 interface MetadataTableProps {
@@ -115,7 +116,7 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                             >
                                 <div className="font-semibold mb-2 sticky top-0 bg-white z-10">
                                     {key.startsWith("@") ? null : (
-                                        <a href={`http://schema.org/${key}`} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                                        <a href={getContextLink(rocrate, key)} target="_blank" rel="noopener noreferrer" className="flex items-center">
                                             <FaLink className="mr-1" />
                                             {key}
                                         </a>
