@@ -21,6 +21,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const [fileUrl, setFileUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [info, setInfo] = useState<string | null>(null);
 
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
@@ -49,7 +50,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 setMimeType(response.headers.get("Content-Type"));
                 setFileUrl(url);
                 setLoading(false);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
                 setLoading(false);
             }
@@ -60,7 +61,11 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             console.log("Download URL found:", item["downloadUrl"]);
             setLoading(true);
             const downloadURL = item["downloadUrl"];
-            setError("file is not available for download");
+            if (downloadURL) {
+                setInfo("File is available for download at: " + downloadURL);
+            } else {
+                setError("file is not available for download");
+            }
             setLoading(false);
             return;
         }
@@ -88,6 +93,14 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const renderPreview = () => {
         if (loading) return <p>Loading...</p>;
+        if (info) return (
+            <div className="card text-white bg-info mb-3">
+                <div className="card-body">
+                    <h5 className="card-title">Info</h5>
+                    <p className="card-text">{info}</p>
+                </div>
+            </div>
+        );
         if (error) return (
             <div className="card text-white bg-danger mb-3">
                 <div className="card-body">
@@ -185,7 +198,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                                 onClick={downloadFile}
                                 title={fileUrl || ""}
                             >
-                                <FaDownload className="mr-2" />
+                                <span className="mr-2">&#x1F4E5;</span> {/* Unicode for download icon */}
                                 Download
                             </button>
                             <svg
