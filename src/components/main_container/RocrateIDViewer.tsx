@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import MetadataTable from "./MetadataTable";
 import { getFullPath } from "./Breadcrumb";
 import { FaDownload, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
 import ReferencedByList from "./ReferencedByList"; // Import the new component
@@ -61,6 +62,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             console.log("Download URL found:", item["downloadUrl"]);
             setLoading(true);
             const downloadURL = item["downloadUrl"];
+
             if (downloadURL) {
                 setInfo("File is available for download at: " + downloadURL);
             } else {
@@ -121,14 +123,36 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const downloadFile = () => {
         const element = document.createElement("a");
-
+        console.log("Download file clicked");
+        console.log("item", item);
         // first check if the item has a downloadUrl and use it if available
         if (item && item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
             const downloadURL = item["downloadUrl"];
+            let filename = downloadURL.split("/").pop() || "";
+            if (!filename.includes(".")) {
+                const idPart = item["@id"] ? item["@id"].split("/").pop() || "" : "";
+                if (idPart.includes(".")) {
+                    filename = idPart;
+                } else {
+                    filename = "download.txt";
+                }
+            }
+            console.log("Download URL found:", downloadURL);
+            console.log("Filename:", filename);
+            const encodingFormat = item["encodingFormat"] || "text/plain";
+            // downloadFileFromCrate(downloadURL, filename, encodingFormat)
+            //     .then(() => {
+            //         console.log("File downloaded successfully");
+            //     })
+            //     .catch((error) => {
+            //         console.error(`Error downloading file ${filename}:`, error);
+            //     });
+
             element.href = downloadURL;
-            element.download = rocrateID.split("/").pop() || "download.txt";
+            element.download = filename;
             document.body.appendChild(element);
             element.click();
+            document.body.removeChild(element);
             return;
         }
         // if no downloadUrl is available, use the file content and mimeType to create a Blob
