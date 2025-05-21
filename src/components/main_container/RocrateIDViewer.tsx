@@ -198,7 +198,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                                 onClick={downloadFile}
                                 title={fileUrl || ""}
                             >
-                                <span className="mr-2">&#x1F4E5;</span> {/* Unicode for download icon */}
+                                <FaDownload className="mr-2" />
                                 Download
                             </button>
                             <svg
