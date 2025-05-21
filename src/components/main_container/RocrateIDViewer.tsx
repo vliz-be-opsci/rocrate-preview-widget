@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MetadataTable from "./MetadataTable";
 import { getFullPath } from "./Breadcrumb";
-import { FaDownload, FaTimes } from "react-icons/fa";
+import { FaDownload, FaTimes, FaInfoCircle } from "react-icons/fa";
 import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
 import ReferencedByList from "./ReferencedByList"; // Import the new component
@@ -96,6 +96,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         if (info) return (
             <div className="card bg-info mb-3">
             <div className="card-body">
+                <FaInfoCircle className="card-icon" style={{ color: "#084298" }} />
                 <h5 className="card-title" style={{ color: "#084298" }}>Info</h5>
                 <p className="card-text" style={{ color: "#084298" }}>{info}</p>
             </div>
