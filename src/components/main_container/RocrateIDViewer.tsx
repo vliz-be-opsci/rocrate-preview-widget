@@ -94,11 +94,11 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const renderPreview = () => {
         if (loading) return <p>Loading...</p>;
         if (info) return (
-            <div className="card text-white bg-info mb-3">
-                <div className="card-body">
-                    <h5 className="card-title">Info</h5>
-                    <p className="card-text">{info}</p>
-                </div>
+            <div className="card bg-info mb-3">
+            <div className="card-body">
+                <h5 className="card-title" style={{ color: "#084298" }}>Info</h5>
+                <p className="card-text" style={{ color: "#084298" }}>{info}</p>
+            </div>
             </div>
         );
         if (error) return (
