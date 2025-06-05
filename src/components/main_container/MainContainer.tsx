@@ -1,8 +1,9 @@
 //this file will contain all other components that wil lbe used in this project
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { FaFolder } from "react-icons/fa";
-import { PiGraphFill } from "react-icons/pi";
+import { FaFolderOpen } from "react-icons/fa";
+import { AiOutlineCluster } from "react-icons/ai";
+import DatasetOverview from "./DatasetOverview";
 import SearchComponent from "./SearchComponent";
 import SearchDropdown from "./SearchDropdown";
 import Breadcrumb, { getFullPath } from "./Breadcrumb";
@@ -153,6 +154,7 @@ export default function MainContainer(props: any) {
                     onSelect={handleSelect}
                     onFocus={handleSearchFocus}
                     onResults={handleSearchResults}
+                    onClose={handleSearchClose}
                 />
             </div>
             {showSearchResults ? (
@@ -165,9 +167,9 @@ export default function MainContainer(props: any) {
             {rocrateID === "" ? (
                 <>
                 <div className="flex flex-col sm:flex-row mt-3">
-                    <div className="w-full sm:w-1/2 mb-2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("./")}>
+                    <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <FaFolder className="text-4xl text-gray-500 mr-2"/>
+                            <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen/></span>
                             <p className="text-lg font-semibold mr-1">Dataset entities</p>
                             {Object.keys(entityCounts)
                                 .filter((type) => type === "Dataset" || type === "File")
@@ -180,7 +182,7 @@ export default function MainContainer(props: any) {
                     </div>
                     <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <PiGraphFill className="text-4xl text-gray-500 mr-2"/>
+                            <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster/></span>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
                             <div className="flex flex-wrap">
                                 {Object.keys(entityCounts)
@@ -199,6 +201,8 @@ export default function MainContainer(props: any) {
                 
             ) : rocrateID === "Contextual_entities" ? (
                 <EntityList rocrate={rocrate} onSelect={handleSelect} />
+            ) : rocrateID === "view_dataset_overview" ? (
+                <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
             ) : (
                 <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}

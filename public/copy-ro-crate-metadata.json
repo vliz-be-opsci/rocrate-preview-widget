@@ -244,6 +244,16 @@
             ]
         },
         {
+            "@id": "test_dataset",
+            "@type": "Dataset",
+            "name": "Test Dataset",
+            "description": "This is a test dataset to demonstrate the RO-Crate metadata format.",
+            "hasPart":[
+                {"@id":"package_02.json"},
+                {"@id":"package_03.json"}
+            ]
+        },
+        {
             "@id": "./",
             "@type": [
                 "Dataset",
@@ -484,6 +494,21 @@
         },
         {
             "@id": "package.json",
+            "@type": "File",
+            "label": "package.json"
+        },
+        {
+            "@id": "package_02.json",
+            "@type": "File",
+            "label": "package.json"
+        },
+        {
+            "@id": "package_03.json",
+            "@type": "File",
+            "label": "package.json"
+        },
+        {
+            "@id": "standalone_file.json",
             "@type": "File",
             "label": "package.json"
         },

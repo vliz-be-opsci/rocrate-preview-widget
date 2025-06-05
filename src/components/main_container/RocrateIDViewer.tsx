@@ -148,9 +148,12 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             //         console.error(`Error downloading file ${filename}:`, error);
             //     });
 
+            // this whole process does not work https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#attributes
+
             element.href = downloadURL;
             element.download = filename;
             document.body.appendChild(element);
+            console.log(element);
             element.click();
             document.body.removeChild(element);
             return;
