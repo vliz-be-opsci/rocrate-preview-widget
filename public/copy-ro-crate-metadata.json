@@ -28,7 +28,7 @@
                     "@id": "README.md"
                 },
                 {
-                    "@id": "test_MP3.mp3"
+                    "@id": "#test_MP3.mp3"
                 },
                 {
                     "@id": "test_OOG.ogg"
@@ -421,7 +421,7 @@
             "license": "CC BY-NC-SA"
         },
         {
-            "@id": "test_MP3.mp3",
+            "@id": "#test_MP3.mp3",
             "@type": "File",
             "description": "some testfile about this and that"
         },
