@@ -1,0 +1,44 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.2",
+    "@graph": [
+        {
+            "@id": "http://example.com/crate415/ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            },
+            "about": {
+                "@id": "http://example.com/crate415/"
+            }
+        },
+        {
+            "@id": "http://example.com/crate415/",
+            "@type": "Dataset",
+            "description": "The RO-Crate Root Data Entity",
+            "hasPart": [
+                {
+                    "@id": "http://example.com/crate415/data1.txt"
+                },
+                {
+                    "@id": "http://example.com/crate415/subfolder/"
+                }
+            ],
+            "name": "Example RO-Crate"
+        },
+        {
+            "@id": "http://example.com/crate415/data1.txt",
+            "@type": "File",
+            "name": "data1.txt",
+            "description": "A text file containing example data.",
+            "encodingFormat": "text/plain",
+            "contentSize": "1234 B",
+            "contentUrl": "http://example.com/crate415/data1.txt"
+        },
+        {
+            "@id": "http://example.com/crate415/subfolder/",
+            "@type": "Dataset",
+            "name": "Subfolder",
+            "description": "A subfolder containing additional files."
+        }
+    ]
+}

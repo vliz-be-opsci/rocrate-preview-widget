@@ -27,6 +27,7 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
             {renderDataItem("Description", data["rocrate_description"], FaInfoCircle)}
             {renderDataItem("Keywords", data["rocrate_keywords"], FaTags)}
             {renderDataItem("License", data["rocrate_license"], FaFileContract)}
+            {renderDataItem("Version", data["rocrate_conformsto"], FaFileContract)}
         </div>
     );
 };

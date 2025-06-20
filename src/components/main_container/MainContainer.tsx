@@ -11,18 +11,26 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
+import { extractRootData } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
-    //console.log(rocrate);
+    console.log(rocrate);
+
+    if (typeof rocrate !== "object" || rocrate === null) {
+        console.log("rocrate is not an object:", rocrate);
+        console.log(rocrate["@graph"]);
+    }
     let data: { [key: string]: any } = {};
     data["rocrate_context"] = rocrate["@context"];
-
+    console.log("Rocrate context:", data["rocrate_context"]);
+    let rootDataEntity = extractRootData(rocrate["@graph"]);
+    console.log("Root Data Entity:", rootDataEntity);
     //loop over the @graph array and check if the @id is "./" or "ro-crate-metadata.json"
     for (let i in rocrate["@graph"]) {
         let item = rocrate["@graph"][i];
         console.log(item);
-        if (item["@id"] == "./") {
+        if (item["@id"] == rootDataEntity["@id"] ) {
             //check if the following attributs exists ["author", "datePublished", "description", "keywords", "license"] if not set them to None
             data["rocrate_author"] = item["publisher"] || item["creator"] || item["author"] || "None";
             data["rocrate_datePublished"] = item["datePublished"] || "None";
@@ -45,7 +53,7 @@ function extractData(rocrate: any) {
         }
         i = i + 1;
     }
-    //console.log(data);
+    console.log(data);
     return data;
 }
 
@@ -85,6 +93,7 @@ export default function MainContainer(props: any) {
                 .then(jsondata => setRocrate(jsondata))
                 .then(() => setLoading(false));
         }else{
+            window.alert("Rocrate file not found. Please check the URL or the file path.");
             setRocrate(preRocrate);
         }
     }, [preRocrate]);
