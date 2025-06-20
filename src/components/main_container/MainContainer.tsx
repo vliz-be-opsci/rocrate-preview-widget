@@ -95,7 +95,7 @@ export default function MainContainer(props: any) {
 
     useEffect(() => {
         if (!loading && rocrate["@graph"]) {
-            const hash = window.location.hash.substring(1);
+            const hash = window.location.hash.match(/#crateid=([^&]*)/)?.[1];
             if (hash) {
                 const item = rocrate["@graph"].find((item: any) => item["@id"] === hash);
                 if (item) {
@@ -107,7 +107,7 @@ export default function MainContainer(props: any) {
                     }
                 }
             }
-
+    
             const counts: { [key: string]: number } = {};
             rocrate["@graph"].forEach((item: any) => {
                 const type = Array.isArray(item["@type"]) ? item["@type"][0] : item["@type"];
@@ -123,17 +123,17 @@ export default function MainContainer(props: any) {
 
     useEffect(() => {
         if (rocrateID) {
-            window.location.hash = rocrateID;
+            window.location.hash = `#crateid=${rocrateID}`;
         }
         setShowSearchResults(false);
     }, [rocrateID]);
 
     useEffect(() => {
         const handlePopState = () => {
-            const hash = window.location.hash.substring(1);
-            setRocrateID(hash);
+            const hash = window.location.hash.match(/#crateid=([^&]*)/)?.[1];
+            setRocrateID(hash || "");
         };
-
+    
         window.addEventListener("popstate", handlePopState);
         return () => {
             window.removeEventListener("popstate", handlePopState);

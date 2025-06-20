@@ -26,6 +26,16 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
             );
         }
 
+        // check if the partItem is a file and if the @id starts with a "#" , if yes then it a remote file
+        // this should then also show a Falink icon 
+        if (partItem && partItem["@type"] === "File" && partItem["@id"].startsWith("#")) {
+            return (
+                <div className="flex items-center">
+                    <FaFile className="mr-2" /><FaLink className="text-blue-500 mr-2" />
+                </div>
+            );
+        }
+
         if (partItem && partItem["@type"] === "Dataset") {
             return isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />;
         }
