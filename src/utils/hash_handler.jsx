@@ -6,16 +6,15 @@ export function getHash() {
 }
 
 //function to set the hash in the uri
-export function setHash(hash) {
-    window.location.hash = hash;
+export function setHash(rocrateid) {
+    window.location.hash = `#crateid=${rocrateid}`;
 }
 
 export function tryExtractWindowQueryParam(query_params) {
-    //if query_params is empty return content
     try {
-        return query_params.split("=")[1];
-    }
-    catch {
+        const match = query_params.match(/#crateid=([^&]*)/);
+        return match ? match[1] : "metadata";
+    } catch {
         return "metadata";
     }
 }
