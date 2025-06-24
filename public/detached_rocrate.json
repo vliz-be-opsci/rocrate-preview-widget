@@ -1,7 +1,7 @@
 {
     "@context": "https://w3id.org/ro/crate/1.2",
     "@graph": [
-        {
+{
             "@id": "http://example.com/crate415/ro-crate-metadata.json",
             "@type": "CreativeWork",
             "conformsTo": {

@@ -87,14 +87,27 @@ export default function MainContainer(props: any) {
 
     //perform the get request to get the rocrate.json file
     useEffect(() => {
-        if (preRocrate.includes(".json")) {
+        if (preRocrate.endsWith(".json")) {
             fetch(preRocrate)
                 .then(response => response.json())
                 .then(jsondata => setRocrate(jsondata))
                 .then(() => setLoading(false));
         }else{
             window.alert("Rocrate file not found. Please check the URL or the file path.");
-            setRocrate(preRocrate);
+            //check if preRocrate is an object and if it is set it to rocrate
+            if (preRocrate !== null) {
+                console.log("Setting preRocrate as rocrate:", preRocrate);
+                //parse the text to json
+                try {
+                    const parsedRocrate = JSON.parse(preRocrate);
+                    console.log("Parsed rocrate:", parsedRocrate);
+                    setRocrate(parsedRocrate);
+                } catch (error) {
+                    console.error("Error parsing preRocrate:", error);
+                    window.alert("Error parsing the rocrate data. Please check the format.");
+                }
+            }
+            setLoading(false);
         }
     }, [preRocrate]);
     //when rocrate is updated extract the data from it
