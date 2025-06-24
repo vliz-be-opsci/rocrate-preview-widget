@@ -93,7 +93,6 @@ export default function MainContainer(props: any) {
                 .then(jsondata => setRocrate(jsondata))
                 .then(() => setLoading(false));
         }else{
-            window.alert("Rocrate file not found. Please check the URL or the file path.");
             //check if preRocrate is an object and if it is set it to rocrate
             if (preRocrate !== null) {
                 console.log("Setting preRocrate as rocrate:", preRocrate);
