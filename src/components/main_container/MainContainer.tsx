@@ -39,17 +39,15 @@ function extractData(rocrate: any) {
             data["rocrate_license"] = item["license"] || "None";
         }
 
-        if (item["@id"] == "ro-crate-metadata.json") {
-            //check if @type is a string or list and if it is a list check if Profile is in the list , also get the @id of the conforms to 
-            if (typeof item["@type"] == "object") {
-                if (item["@type"].includes("Profile")) {
-                    data["rocrate_isprofile"] = true;
-                }
-                else {
-                    data["rocrate_isprofile"] = false;   
-                }
+        if (typeof item["@id"] === "string" && item["@id"].endsWith("ro-crate-metadata.json")) {
+            // Check if @type is a string or array and if it is an array check if Profile is in the array
+            if (Array.isArray(item["@type"])) {
+            data["rocrate_isprofile"] = item["@type"].includes("Profile");
+            } else {
+            data["rocrate_isprofile"] = item["@type"] === "Profile";
             }
-            data["rocrate_conformsto"] = item["conformsTo"]["@id"];
+            // Get the @id of conformsTo if it exists
+            data["rocrate_conformsto"] = item["conformsTo"]?.["@id"] || undefined;
         }
         i = i + 1;
     }

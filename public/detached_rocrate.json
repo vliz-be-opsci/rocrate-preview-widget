@@ -23,7 +23,13 @@
                     "@id": "http://example.com/crate415/subfolder/"
                 }
             ],
-            "name": "Example RO-Crate"
+            "name": "Example RO-Crate",
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "creator": {
+                "@type": "Person",
+                "name": "John Doe",
+                "email": "john.doe@example.com"
+            }
         },
         {
             "@id": "http://example.com/crate415/data1.txt",
