@@ -55,6 +55,11 @@ function extractData(rocrate: any) {
     return data;
 }
 
+/**
+ * Main React component for displaying and interacting with RO-Crate data.
+ *
+ * Manages loading, parsing, and stateful navigation of a RO-Crate JSON structure, including metadata extraction, entity selection, search, and dashboard views. Renders appropriate UI components based on user interaction and URL hash state.
+ */
 export default function MainContainer(props: any) {
     console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
