@@ -1,50 +1,81 @@
 {
-    "@context": "https://w3id.org/ro/crate/1.2",
-    "@graph": [
-{
-            "@id": "http://example.com/crate415/ro-crate-metadata.json",
-            "@type": "CreativeWork",
-            "conformsTo": {
-                "@id": "https://w3id.org/ro/crate/1.2"
-            },
-            "about": {
-                "@id": "http://example.com/crate415/"
-            }
-        },
-        {
-            "@id": "http://example.com/crate415/",
-            "@type": "Dataset",
-            "description": "The RO-Crate Root Data Entity",
-            "hasPart": [
-                {
-                    "@id": "http://example.com/crate415/data1.txt"
-                },
-                {
-                    "@id": "http://example.com/crate415/subfolder/"
-                }
-            ],
-            "name": "Example RO-Crate",
-            "license": "https://creativecommons.org/licenses/by/4.0/",
-            "creator": {
-                "@type": "Person",
-                "name": "John Doe",
-                "email": "john.doe@example.com"
-            }
-        },
-        {
-            "@id": "http://example.com/crate415/data1.txt",
-            "@type": "File",
-            "name": "data1.txt",
-            "description": "A text file containing example data.",
-            "encodingFormat": "text/plain",
-            "contentSize": "1234 B",
-            "contentUrl": "http://example.com/crate415/data1.txt"
-        },
-        {
-            "@id": "http://example.com/crate415/subfolder/",
-            "@type": "Dataset",
-            "name": "Subfolder",
-            "description": "A subfolder containing additional files."
-        }
-    ]
+  "@context": [
+    "https://w3id.org/ro/crate/1.2/context",
+    {
+      "dc": "http://purl.org/dc/terms/",
+      "dcat": "http://www.w3.org/ns/dcat#",
+      "geo": "http://www.opengis.net/ont/geosparql#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "spatial": "dc:spatial",
+      "bbox": "dcat:bbox"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": { "@id": "https://w3id.org/ro/crate/1.2" },
+      "about": { "@id": "./" },
+      "description": "RO‑Crate metadata descriptor (this file)"
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Spatial Coverage Examples",
+      "description": "Dataset demonstrating spatialCoverage and dc:spatial examples",
+      "hasPart": [
+        { "@id": "place-point.json" },
+        { "@id": "place-shape.json" },
+        { "@id": "dc-bbox.json" }
+      ]
+    },
+
+    {
+      "@id": "place-point.json",
+      "@type": "Dataset",
+      "name": "Example: Point Coordinate",
+      "spatialCoverage": { "@id": "ex:point" }
+    },
+    {
+      "@id": "ex:point",
+      "@type": "Place",
+      "name": "Sample Location",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 45.314167,
+        "longitude": 12.508333
+      }
+    },
+
+    {
+      "@id": "place-shape.json",
+      "@type": "Dataset",
+      "name": "Example: Bounding Box Shape",
+      "spatialCoverage": { "@id": "ex:shape" }
+    },
+    {
+      "@id": "ex:shape",
+      "@type": "Place",
+      "name": "Bounding Area",
+      "geo": {
+        "@type": "GeoShape",
+        "box": "45.30 12.50 45.32 12.51"
+      }
+    },
+
+    {
+      "@id": "dc-bbox.json",
+      "@type": "Dataset",
+      "name": "Example: DCAT WKT bbox",
+      "dc:spatial": { "@id": "ex:dc-bbox" }
+    },
+    {
+      "@id": "ex:dc-bbox",
+      "@type": ["rdfs:Resource", "dc:Location"],
+      "bbox": {
+        "@value": "POINT(12.508333 45.314167)",
+        "@type": "geo:wktLiteral"
+      }
+    }
+  ]
 }
