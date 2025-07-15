@@ -1,5 +1,6 @@
 import React from "react";
 import { FaUser, FaCalendarAlt, FaInfoCircle, FaTags, FaFileContract } from "react-icons/fa";
+import MapView from "./MapView";
 
 interface MainDashboardCrateProps {
     data: any;
@@ -21,6 +22,7 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
 };
 
     return (
+        <>
         <div className="p-4 bg-white shadow-md rounded-lg">
             {renderDataItem("Author", data["rocrate_author"], FaUser)}
             {renderDataItem("Date Published", data["rocrate_datePublished"], FaCalendarAlt)}
@@ -29,6 +31,10 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
             {renderDataItem("License", data["rocrate_license"], FaFileContract)}
             {renderDataItem("Version RO-Crate Specification", data["rocrate_conformsto"], FaFileContract)}
         </div>
+        <div className="mt-4">
+            <MapView spatialData={rocrate} />
+        </div>
+        </>
     );
 };
 
