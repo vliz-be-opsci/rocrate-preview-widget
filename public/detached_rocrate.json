@@ -33,25 +33,15 @@
     {
       "@id": "place-point.json",
       "@type": "Dataset",
-      "name": "Example: Point Coordinate",
-      "spatialCoverage": { "@id": "ex:point" }
+      "name": "Example: Point Coordinate"
     },
-    {
-      "@id": "ex:point",
-      "@type": "Place",
-      "name": "Sample Location",
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 45.314167,
-        "longitude": 12.508333
-      }
-    },
-
     {
       "@id": "place-shape.json",
       "@type": "Dataset",
       "name": "Example: Bounding Box Shape",
-      "spatialCoverage": { "@id": "ex:shape" }
+      "spatialCoverage": [
+        { "@id": "ex:shape" }
+    ]
     },
     {
       "@id": "ex:shape",
@@ -59,10 +49,33 @@
       "name": "Bounding Area",
       "geo": {
         "@type": "GeoShape",
-        "box": "45.30 12.50 45.32 12.51"
+        "bbox": "40.30 10.50 45.32 12.51"
       }
     },
-
+    {
+      "@id": "shape2",
+      "@type": ["rdfs:Resource", "dc:Location"],
+      "geo": {
+        "@value": "LINESTRING(10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167)",
+        "@type": "geo:wktLiteral"
+      }
+    },
+    {
+      "@id": "shape3",
+      "@type": ["rdfs:Resource", "dc:Location"],
+      "geo": {
+        "@value": "LINESTRING(1.508333 30.314167, 10.508333 55.314167,)",
+        "@type": "geo:wktLiteral"
+      }
+    },
+    {
+      "@id": "shape3",
+      "@type": ["rdfs:Resource", "dc:Location"],
+      "geo": {
+        "@value": "POLYGON((10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167))",
+        "@type": "geo:wktLiteral"
+      }
+    },
     {
       "@id": "dc-bbox.json",
       "@type": "Dataset",
@@ -73,9 +86,153 @@
       "@id": "ex:dc-bbox",
       "@type": ["rdfs:Resource", "dc:Location"],
       "bbox": {
-        "@value": "POINT(12.508333 45.314167)",
+        "@value": "POINT(10.508333 40.314167)",
         "@type": "geo:wktLiteral"
       }
-    }
+    },
+    {
+     "@id": "shape1",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT (0 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape2",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape3",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "LINESTRING (0 0, 0 1, 1 2)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape4",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "LINESTRING EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape5",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape6",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON ((0 0, 4 0, 4 4, 0 4, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape7",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape8",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTIPOINT ((0 0), (1 1))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape9",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTILINESTRING ((0 0, 1 1), (2 2, 3 3))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape11",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "GEOMETRYCOLLECTION (MULTIPOINT((0 0), (1 1)), POINT(3 4), LINESTRING(2 3, 3 4))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape12",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTZ (0 0 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape13",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT Z (4 5 6)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape14",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT Z EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape15",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTM (10 20 30)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape16",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT M (0 1 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape17",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTZM (10 0 10 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape18",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT ZM (0 20 0 20)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape10",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTIPOLYGON (((1 10, 1 30, 30 3, 3 10, 10 1)), ((40 30, 6 30, 60 1, 40 1, 4 30)))",
+       "@type": "geo:wktLiteral"
+     }
+   }
   ]
 }

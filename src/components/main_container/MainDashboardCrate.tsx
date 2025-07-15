@@ -32,7 +32,7 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
             {renderDataItem("Version RO-Crate Specification", data["rocrate_conformsto"], FaFileContract)}
         </div>
         <div className="mt-4">
-            <MapView spatialData={rocrate} />
+            <MapView rocrate={rocrate} />
         </div>
         </>
     );

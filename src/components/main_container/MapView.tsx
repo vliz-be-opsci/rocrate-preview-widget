@@ -1,3 +1,6 @@
+// Import the @terraformer/wkt package
+// Use the parse function from @terraformer/wkt to handle WKT strings
+import { wktToGeoJSON } from '@terraformer/wkt';
 import React, { useEffect, useRef } from 'react';
 import 'ol/ol.css';
 import { Map, View } from 'ol';
@@ -12,16 +15,82 @@ import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import GeoJSON from 'ol/format/GeoJSON';
 
 interface MapViewProps {
-  spatialData?: {
-    points: [number, number][];
-    boundingBoxes?: { topLeft: [number, number]; bottomRight: [number, number] }[];
-    geoJson?: string; // URL to GeoJSON data
-  };
-}
+  rocrate: Record<string, any>
+};
 
-const MapView: React.FC<MapViewProps> = ({ spatialData }) => {
+const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<Map | null>(null);
+
+  interface SpatialData {
+    points?: [number, number][];
+    boundingBoxes?: { topLeft: [number, number]; bottomRight: [number, number] }[];
+    geoJson?: string[];
+  }
+
+  function extractSpatialData(rocrate: Record<string, any>): SpatialData {
+    const points: [number, number][] = [];
+    const boundingBoxes: { topLeft: [number, number]; bottomRight: [number, number] }[] = [];
+    const geoJson: string[] = [];
+
+    const graph = rocrate['@graph'] || [];
+
+    // Helper to resolve @id references
+    const byId = Object.fromEntries(graph.map((e: any) => [e['@id'], e]));
+    console.log("Graph entities:", graph);
+    for (const entity of graph) {
+      // Handle spatialCoverage, dc:spatial, location
+      const spatialFields = [
+        'spatialCoverage',
+        'dc:spatial',
+        'dc:Location',
+        'spatial',
+        'location',
+      ];
+      
+    // Check if any spatial field is present in @type
+    if (
+      entity['@type'] &&
+      spatialFields.some((field) =>
+        Array.isArray(entity['@type'])
+      ? entity['@type'].includes(field)
+      : entity['@type'] === field
+      )
+    ) {
+      console.log("Spatial entity found:", entity["@id"]);
+      if ('geo' in entity) {
+        const geoValue = entity['geo'];
+        console.log("Geo value found:", geoValue);
+        if (
+          typeof geoValue === 'object' &&
+          geoValue['@type'] === 'geo:wktLiteral' &&
+          typeof geoValue['@value'] === 'string'
+        ) {
+          try {
+            const geojsonObj = wktToGeoJSON(geoValue['@value']);
+            geoJson.push(
+              URL.createObjectURL(
+                new Blob([JSON.stringify(geojsonObj)], { type: 'application/json' })
+              )
+            );
+          } catch (e) {
+            console.warn('Failed to parse WKT:', geoValue['@value'], e);
+          }
+        }
+      }
+      continue;
+    }
+      
+    }
+
+    const result: SpatialData = {};
+    if (points.length) result.points = points;
+    if (boundingBoxes.length) result.boundingBoxes = boundingBoxes;
+    if (geoJson) result.geoJson = geoJson;
+    return result;
+  }
+
+  const spatialData = extractSpatialData(rocrate);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -99,24 +168,26 @@ const MapView: React.FC<MapViewProps> = ({ spatialData }) => {
     }
 
     // Add GeoJSON
-    if (spatialData?.geoJson) {
-      fetch(spatialData.geoJson)
-        .then((response) => response.json())
-        .then((geoJsonData) => {
-          const geoJsonLayer = new VectorLayer({
-            source: new VectorSource({
-              features: new GeoJSON().readFeatures(geoJsonData, {
-                featureProjection: 'EPSG:3857',
+    if (spatialData?.geoJson?.length) {
+      spatialData.geoJson.forEach((geoJsonUrl) => {
+        fetch(geoJsonUrl)
+          .then((response) => response.json())
+          .then((geoJsonData) => {
+            const geoJsonLayer = new VectorLayer({
+              source: new VectorSource({
+                features: new GeoJSON().readFeatures(geoJsonData, {
+                  featureProjection: 'EPSG:3857',
+                }),
               }),
-            }),
+            });
+    
+            mapInstance.current?.addLayer(geoJsonLayer);
           });
-
-          mapInstance.current?.addLayer(geoJsonLayer);
-        });
+      });
     }
 
     return () => {
-      mapInstance.current?.setTarget(null);
+      mapInstance.current?.setTarget(undefined);
     };
   }, [spatialData]);
 
@@ -124,3 +195,5 @@ const MapView: React.FC<MapViewProps> = ({ spatialData }) => {
 };
 
 export default MapView;
+// Temporary TypeScript declaration for @terraformer/wkt
+declare module '@terraformer/wkt';
