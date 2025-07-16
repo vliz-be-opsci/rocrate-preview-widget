@@ -41,7 +41,7 @@
       "name": "Example: Bounding Box Shape",
       "spatialCoverage": [
         { "@id": "ex:shape" }
-    ]
+      ]
     },
     {
       "@id": "ex:shape",
@@ -53,7 +53,7 @@
       }
     },
     {
-      "@id": "shape2",
+      "@id": "shape2a",
       "@type": ["rdfs:Resource", "dc:Location"],
       "geo": {
         "@value": "LINESTRING(10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167)",
@@ -61,10 +61,10 @@
       }
     },
     {
-      "@id": "shape3",
+      "@id": "shape3a",
       "@type": ["rdfs:Resource", "dc:Location"],
       "geo": {
-        "@value": "LINESTRING(1.508333 30.314167, 10.508333 55.314167,)",
+        "@value": "LINESTRING(1.508333 30.314167, 10.508333 55.314167)",
         "@type": "geo:wktLiteral"
       }
     },

@@ -3,7 +3,7 @@
 import { wktToGeoJSON } from '@terraformer/wkt';
 import React, { useEffect, useRef } from 'react';
 import 'ol/ol.css';
-import { Map, View } from 'ol';
+import { Map as OLMap, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -20,7 +20,7 @@ interface MapViewProps {
 
 const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
-  const mapInstance = useRef<Map | null>(null);
+  const mapInstance = useRef<OLMap | null>(null);
 
   interface SpatialData {
     points?: [number, number][];
@@ -86,7 +86,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
     const result: SpatialData = {};
     if (points.length) result.points = points;
     if (boundingBoxes.length) result.boundingBoxes = boundingBoxes;
-    if (geoJson) result.geoJson = geoJson;
+    if (geoJson.length) result.geoJson = geoJson;
     return result;
   }
 
@@ -96,7 +96,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
     if (!mapRef.current) return;
 
     // Initialize map
-    mapInstance.current = new Map({
+    mapInstance.current = new OLMap({
       target: mapRef.current,
       layers: [
         new TileLayer({
@@ -195,5 +195,3 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
 };
 
 export default MapView;
-// Temporary TypeScript declaration for @terraformer/wkt
-declare module '@terraformer/wkt';
