@@ -28,6 +28,14 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
     geoJson?: string[];
   }
 
+  /**
+   * Extracts spatial data from a RO-Crate JSON-LD object.
+   *
+   * Scans the `@graph` array for entities with spatial-related types or fields, and processes any WKT literals found in their `geo` properties. Converts valid WKT strings to GeoJSON objects and stores them as Blob URLs. Returns an object containing arrays of points, bounding boxes, and GeoJSON URLs if found.
+   *
+   * @param rocrate - The RO-Crate JSON-LD object to extract spatial data from
+   * @returns An object containing extracted spatial data, including points, bounding boxes, and GeoJSON Blob URLs
+   */
   function extractSpatialData(rocrate: Record<string, any>): SpatialData {
     const points: [number, number][] = [];
     const boundingBoxes: { topLeft: [number, number]; bottomRight: [number, number] }[] = [];
