@@ -220,12 +220,12 @@ export default function MainContainer(props: any) {
                         </div>
                     </div>
                 </div>
-                <MainDashboardCrate data={data} rocrate={rocrate} />
+                <MainDashboardCrate data={data} rocrate={rocrate} rocrateID={rocrateID} />
                 
                 </>
                 
             ) : rocrateID === "Contextual_entities" ? (
-                <EntityList rocrate={rocrate} onSelect={handleSelect} />
+                <EntityList rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : rocrateID === "view_dataset_overview" ? (
                 <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
             ) : (

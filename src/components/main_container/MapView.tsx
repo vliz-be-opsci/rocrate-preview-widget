@@ -16,11 +16,14 @@ import GeoJSON from 'ol/format/GeoJSON';
 
 interface MapViewProps {
   rocrate: Record<string, any>
+  rocrateID: string;
 };
 
-const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
+const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<OLMap | null>(null);
+  console.log("MapView rocrate", rocrate);
+  console.log("MapView rocrateID", rocrateID);
 
   interface SpatialData {
     points?: [number, number][];
@@ -36,36 +39,104 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
    * @param rocrate - The RO-Crate JSON-LD object to extract spatial data from
    * @returns An object containing extracted spatial data, including points, bounding boxes, and GeoJSON Blob URLs
    */
-  function extractSpatialData(rocrate: Record<string, any>): SpatialData {
+  function extractSpatialData(rocrate: Record<string, any>, rocrateID: string): SpatialData {
     const points: [number, number][] = [];
     const boundingBoxes: { topLeft: [number, number]; bottomRight: [number, number] }[] = [];
     const geoJson: string[] = [];
 
     const graph = rocrate['@graph'] || [];
 
+    if ( rocrateID == "") {
+      console.warn("RO-Crate is empty string so take ./ @graph");
+      rocrateID = "./";
+    }
+
+    let spatialEntities: any[] = [];
+
+    // Handle spatialCoverage, dc:spatial, location
+    const spatialFields = [
+      'spatialCoverage',
+      'dc:spatial',
+      'dc:Location',
+      'spatial',
+      'location',
+    ];
+
     // Helper to resolve @id references
     const byId = Object.fromEntries(graph.map((e: any) => [e['@id'], e]));
     console.log("Graph entities:", graph);
+    console.log("RO-Crate ID map:", rocrateID);
     for (const entity of graph) {
-      // Handle spatialCoverage, dc:spatial, location
-      const spatialFields = [
-        'spatialCoverage',
-        'dc:spatial',
-        'dc:Location',
-        'spatial',
-        'location',
-      ];
-      
-    // Check if any spatial field is present in @type
-    if (
-      entity['@type'] &&
-      spatialFields.some((field) =>
-        Array.isArray(entity['@type'])
-      ? entity['@type'].includes(field)
-      : entity['@type'] === field
-      )
-    ) {
-      console.log("Spatial entity found:", entity["@id"]);
+      console.log("Processing entity:", entity);
+      // firt check if the @id is the rocrateID
+      if (entity['@id'] === rocrateID) {
+        console.log("Found RO-Crate entity:", entity);
+
+        // Find spatial entities referenced by spatial fields in the main entity
+        for (const field of spatialFields) {
+          const spatialRef = entity[field];
+          if (spatialRef) {
+            // Handle array or single reference
+            const refs = Array.isArray(spatialRef) ? spatialRef : [spatialRef];
+            for (const ref of refs) {
+              // If it's an object with @id, resolve it
+              if (typeof ref === 'object' && ref['@id'] && byId[ref['@id']]) {
+          spatialEntities.push(byId[ref['@id']]);
+              }
+              // If it's a string, treat as @id
+              else if (typeof ref === 'string' && byId[ref]) {
+          spatialEntities.push(byId[ref]);
+              }
+              // If it's an inline object, push directly
+              else if (typeof ref === 'object') {
+          spatialEntities.push(ref);
+              }
+            }
+          }
+        }
+        console.log("Spatial entities in RO-Crate (bound to @id):", spatialEntities);
+      break;
+      }
+    }
+
+    // if rocrateid is contextual_entities then get ll spatial entities
+    if (rocrateID === "Contextual_entities") {
+      console.log("RO-Crate ID is 'contextual_entities', using all spatial entities in the graph");
+      let boundspatialEntities = graph.filter((entity: any) => {
+        return spatialFields.some(field => field in entity);
+      });
+      for (const entity of boundspatialEntities) {
+        for (const field of spatialFields) {
+          const spatialRef = entity[field];
+          if (spatialRef) {
+            // Handle array or single reference
+            const refs = Array.isArray(spatialRef) ? spatialRef : [spatialRef];
+            for (const ref of refs) {
+              // If it's an object with @id, resolve it
+              if (typeof ref === 'object' && ref['@id'] && byId[ref['@id']]) {
+          spatialEntities.push(byId[ref['@id']]);
+              }
+              // If it's a string, treat as @id
+              else if (typeof ref === 'string' && byId[ref]) {
+          spatialEntities.push(byId[ref]);
+              }
+              // If it's an inline object, push directly
+              else if (typeof ref === 'object') {
+          spatialEntities.push(ref);
+              }
+            }
+          }
+        }
+        // get all the entitities that are bound to the boundspatialEntities
+        console.log("Spatial entities in RO-Crate (all):", spatialEntities);
+      }
+    }
+
+    // Process each spatial entity found 
+    for (const entity of spatialEntities) {
+      console.log("Processing spatial entity:", entity);
+
+      // Check if it has a geo property with WKT
       if ('geo' in entity) {
         const geoValue = entity['geo'];
         console.log("Geo value found:", geoValue);
@@ -82,13 +153,24 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
               )
             );
           } catch (e) {
-            console.warn('Failed to parse WKT:', geoValue['@value'], e);
+            console.log('Failed to parse WKT:', geoValue['@value'], e);
           }
         }
       }
-      continue;
-    }
-      
+
+      // Check for point coordinates
+      if ('point' in entity && Array.isArray(entity.point)) {
+        points.push(entity.point);
+      }
+
+      // Check for bounding box coordinates
+      if ('boundingBox' in entity && Array.isArray(entity.boundingBox) && entity.boundingBox.length === 4) {
+        const [minX, minY, maxX, maxY] = entity.boundingBox;
+        boundingBoxes.push({
+          topLeft: [minX, maxY],
+          bottomRight: [maxX, minY],
+        });
+      }
     }
 
     const result: SpatialData = {};
@@ -98,7 +180,8 @@ const MapView: React.FC<MapViewProps> = ({ rocrate }) => {
     return result;
   }
 
-  const spatialData = extractSpatialData(rocrate);
+  const spatialData = extractSpatialData(rocrate, rocrateID);
+  console.log("Extracted spatial data:", spatialData);
 
   useEffect(() => {
     if (!mapRef.current) return;

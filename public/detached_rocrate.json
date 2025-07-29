@@ -24,69 +24,69 @@
       "name": "Spatial Coverage Examples",
       "description": "Dataset demonstrating spatialCoverage and dc:spatial examples",
       "hasPart": [
-        { "@id": "place-point.json" },
-        { "@id": "place-shape.json" },
-        { "@id": "dc-bbox.json" }
+        { "@id": "place-point" },
+        { "@id": "place-shape.txt" },
+        { "@id": "solo_point.txt" },
+        { "@id": "geocontains.txt" }
+      ],
+      "spatialCoverage": [
+        { "@id": "shape5" },
+        { "@id": "shape11" }
       ]
     },
-
     {
-      "@id": "place-point.json",
+      "@id": "geocontains.txt",
+      "@type": "File",
+      "name": "Example: Geospatial Contains",
+      "spatialCoverage": { "@id": "geocontains" }
+    },
+    {
+      "@id": "solo_point.txt",
+      "@type": "File",
+      "name": "Example: Point Coordinate",
+      "spatialCoverage": { "@id": "shape1" }
+    },
+    {
+      "@id": "solo_point.txt",
+      "@type": "File",
+      "name": "Example: Point Coordinate",
+      "spatialCoverage": { "@id": "shape9" }
+    },
+    {
+      "@id": "geocontains",
+      "@type": ["rdfs:Resource"],
+      "spatialCoverage": [
+        { "@id": "shape7" },
+        { "@id": "shape8" },
+        { "@id": "shape10" },
+        { "@id": "shape11" },
+        { "@id": "shape12" },
+        { "@id": "shape13" },
+        { "@id": "shape14" },
+        { "@id": "shape15" },
+        { "@id": "shape16" },
+        { "@id": "shape17" },
+        { "@id": "shape18" }
+      ]
+    },
+    {
+      "@id": "place-point",
       "@type": "Dataset",
       "name": "Example: Point Coordinate"
     },
     {
-      "@id": "place-shape.json",
-      "@type": "Dataset",
+      "@id": "place-shape.txt",
+      "@type": "File",
       "name": "Example: Bounding Box Shape",
       "spatialCoverage": [
-        { "@id": "ex:shape" }
+        { "@id": "shape4" }
       ]
-    },
-    {
-      "@id": "ex:shape",
-      "@type": "Place",
-      "name": "Bounding Area",
-      "geo": {
-        "@type": "GeoShape",
-        "bbox": "40.30 10.50 45.32 12.51"
-      }
-    },
-    {
-      "@id": "shape2a",
-      "@type": ["rdfs:Resource", "dc:Location"],
-      "geo": {
-        "@value": "LINESTRING(10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167)",
-        "@type": "geo:wktLiteral"
-      }
-    },
-    {
-      "@id": "shape3a",
-      "@type": ["rdfs:Resource", "dc:Location"],
-      "geo": {
-        "@value": "LINESTRING(1.508333 30.314167, 10.508333 55.314167)",
-        "@type": "geo:wktLiteral"
-      }
     },
     {
       "@id": "shape3",
       "@type": ["rdfs:Resource", "dc:Location"],
       "geo": {
         "@value": "POLYGON((10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167))",
-        "@type": "geo:wktLiteral"
-      }
-    },
-    {
-      "@id": "dc-bbox.json",
-      "@type": "Dataset",
-      "name": "Example: DCAT WKT bbox",
-      "dc:spatial": { "@id": "ex:dc-bbox" }
-    },
-    {
-      "@id": "ex:dc-bbox",
-      "@type": ["rdfs:Resource", "dc:Location"],
-      "bbox": {
-        "@value": "POINT(10.508333 40.314167)",
         "@type": "geo:wktLiteral"
       }
     },
