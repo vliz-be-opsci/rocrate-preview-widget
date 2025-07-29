@@ -83,7 +83,7 @@
       ]
     },
     {
-      "@id": "shape3",
+      "@id": "shape31",
       "@type": ["rdfs:Resource", "dc:Location"],
       "geo": {
         "@value": "POLYGON((10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167))",
@@ -92,6 +92,7 @@
     },
     {
      "@id": "shape1",
+     "title": "Example: Point Coordinate",
      "@type": ["rdfs:Resource", "dc:Location"],
      "geo": {
        "@value": "POINT (0 0)",
@@ -100,6 +101,7 @@
    },
    {
      "@id": "shape2",
+     "label": "Example: Empty Point", 
      "@type": ["rdfs:Resource", "dc:Location"],
      "geo": {
        "@value": "POINT EMPTY",
@@ -108,6 +110,7 @@
    },
    {
      "@id": "shape3",
+     "prefLabel": "Example: Polygon Shape",
      "@type": ["rdfs:Resource", "dc:Location"],
      "geo": {
        "@value": "LINESTRING (0 0, 0 1, 1 2)",
@@ -116,6 +119,7 @@
    },
    {
      "@id": "shape4",
+     "title": "Example: Bounding Box Shape",
      "@type": ["rdfs:Resource", "dc:Location"],
      "geo": {
        "@value": "POLYGON ((-76.7142 14.9457, 84.7142 14.9457, 84.7142 22.945, -76.7142 22.945, -76.7142 14.9457))",

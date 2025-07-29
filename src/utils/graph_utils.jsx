@@ -9,6 +9,21 @@ export const checkIfValueIsEqual = (value, valueToCompare) => {
     }
     }
 
+export const getReferencedBy = (rocrate: any, rocrateID: string) => {
+        return rocrate["@graph"].filter((item: any) => {
+            return Object.values(item).some((value: any) => {
+                if (typeof value === "object" && value !== null) {
+                    if (Array.isArray(value)) {
+                        return value.some((v: any) => v["@id"] === rocrateID);
+                    } else {
+                        return value["@id"] === rocrateID;
+                    }
+                }
+                return false;
+            });
+        });
+    };
+
 //this function will search for specific values that accociate the lavel for a given graph node and return the value of the label
 export const getLabelValue = (node) => {
     //dct:title | http://purl.org/dc/terms/title | title
