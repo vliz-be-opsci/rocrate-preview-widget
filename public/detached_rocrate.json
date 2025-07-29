@@ -118,7 +118,7 @@
      "@id": "shape4",
      "@type": ["rdfs:Resource", "dc:Location"],
      "geo": {
-       "@value": "LINESTRING EMPTY",
+       "@value": "POLYGON ((-76.7142 14.9457, 84.7142 14.9457, 84.7142 22.945, -76.7142 22.945, -76.7142 14.9457))",
        "@type": "geo:wktLiteral"
      }
    },

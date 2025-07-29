@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MetadataTable from "./MetadataTable";
+import MapView from "./MapView";
 import { getFullPath } from "./Breadcrumb";
 import { FaDownload, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { IconType } from "react-icons";
 import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
@@ -14,6 +16,7 @@ interface RocrateIDViewerProps {
 }
 
 const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps) => {
+    const [showMapView, setShowMapView] = useState(false); // State for toggling map view
     const [metadataOpen, setMetadataOpen] = useState(true);
     const [previewOpen, setPreviewOpen] = useState(true);
     const [referencedByOpen, setReferencedByOpen] = useState(true); // State for the new accordion
@@ -87,6 +90,12 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         }
     }, [rocrateID, item]);
 
+    const renderMapView = () => {
+        if (!item || !item.spatialCoverage) return <p>No spatial coverage data available</p>;
+
+        return <MapView rocrate={rocrate} rocrateID={rocrateID} />;
+    };
+    
     const renderMetadata = () => {
         if (!item) return <p>No metadata available</p>;
 
@@ -258,6 +267,48 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     </div>
                 </>
             )}
+            {item && item.spatialCoverage && (
+                <>
+                    <h2 id="accordion-collapse-heading-map">
+                        <button
+                            type="button"
+                            className="flex items-center justify-between w-full p-2 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                            data-accordion-target="#accordion-collapse-body-map"
+                            aria-expanded={showMapView}
+                            aria-controls="accordion-collapse-body-map"
+                            onClick={() => setShowMapView(!showMapView)}
+                        >
+                            <span>Map View</span>
+                            <svg
+                                data-accordion-icon
+                                className={`w-3 h-3 ${showMapView ? "rotate-180" : ""} shrink-0`}
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 10 6"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M9 5 5 1 1 5"
+                                />
+                            </svg>
+                        </button>
+                    </h2>
+                    <div
+                        id="accordion-collapse-body-map"
+                        className={showMapView ? "" : "hidden"}
+                        aria-labelledby="accordion-collapse-heading-map"
+                    >
+                        <div className="p-5 border border-b-0 border-gray-200 dark:border-gray-700">
+                            {renderMapView()}
+                        </div>
+                    </div>
+                </>
+            )}
+            
             <h2 id="accordion-collapse-heading-1">
                 <button
                     type="button"
