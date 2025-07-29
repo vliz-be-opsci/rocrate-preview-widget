@@ -16,7 +16,7 @@ interface RocrateIDViewerProps {
 }
 
 const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps) => {
-    const [showMapView, setShowMapView] = useState(false); // State for toggling map view
+    const [showMapView, setShowMapView] = useState(true); // State for toggling map view
     const [metadataOpen, setMetadataOpen] = useState(true);
     const [previewOpen, setPreviewOpen] = useState(true);
     const [referencedByOpen, setReferencedByOpen] = useState(true); // State for the new accordion
