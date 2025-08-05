@@ -1,5 +1,5 @@
 import React from "react";
-import { getReferencedBy } from "../../utils/rocrateUtils";
+import { getReferencedBy } from "../../utils/graph_utils";
 
 interface ReferencedByListProps {
     rocrate: any;
