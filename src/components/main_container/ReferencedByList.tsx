@@ -1,4 +1,5 @@
 import React from "react";
+import { getReferencedBy } from "../../utils/graph_utils";
 
 interface ReferencedByListProps {
     rocrate: any;
@@ -7,19 +8,9 @@ interface ReferencedByListProps {
 }
 
 const ReferencedByList = ({ rocrate, rocrateID, onSelect }: ReferencedByListProps) => {
-    const referencedBy = rocrate["@graph"].filter((item: any) => {
-        return Object.values(item).some((value: any) => {
-            if (typeof value === "object" && value !== null) {
-                if (Array.isArray(value)) {
-                    return value.some((v: any) => v["@id"] === rocrateID);
-                } else {
-                    return value["@id"] === rocrateID;
-                }
-            }
-            return false;
-        });
-    });
-
+    
+    const referencedBy = getReferencedBy(rocrate, rocrateID);
+    
     return (
         <div className="flex flex-wrap">
             {referencedBy.length > 0 ? (
