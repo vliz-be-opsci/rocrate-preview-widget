@@ -7,6 +7,7 @@ import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
 import ReferencedByList from "./ReferencedByList"; // Import the new component
 import { isBinaryFile } from "../../utils/fileTypeUtils";
+import { hasType } from "../../utils/rocrateUtils";
 
 interface RocrateIDViewerProps {
     rocrate: any;
@@ -94,7 +95,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             return;
         }
 
-        if (item && item["@type"] === "File") {
+        if (item && hasType(item, "File")) {
             setLoading(true);
             const fullPath = getFullPath(rocrate, rocrateID);
             console.log(fullPath);
@@ -197,7 +198,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     return (
         <div id="accordion-collapse" data-accordion="collapse">
-            {item && (item.description || (item["@type"] === "Dataset" && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
+            {item && (item.description || (hasType(item, "Dataset") && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
                 <>
                     <h2 id="accordion-collapse-heading-summary">
                         <button
@@ -238,7 +239,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     </div>
                 </>
             )}
-            {item && (item["@type"] === "File" || (item["@type"] === "Dataset" && item["downloadUrl"] !== null && item["downloadUrl"] !== undefined)) && (
+            {item && (hasType(item, "File") || (hasType(item, "Dataset") && item["downloadUrl"] !== null && item["downloadUrl"] !== undefined)) && (
                 <>
                     <h2 id="accordion-collapse-heading-2">
                         <button
