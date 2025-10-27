@@ -62,11 +62,26 @@ export const getIDforItem = (item: any, rocrate_graph:any): any => {
 export function getContextLink(rocrate: any, variable: string): string {
     if (variable.includes(":")) {
         const prefix = variable.split(":")[0];
+        const suffix = variable.split(":")[1];
         console.log("Prefix:", prefix);
         console.log("Variable:", variable);
         console.log("Rocrate context:", rocrate["@context"]);
-        if (rocrate["@context"] && rocrate["@context"][prefix]) {
-            return `${rocrate["@context"][prefix]}${variable.split(":")[1]}`;
+        
+        if (rocrate["@context"]) {
+            const context = rocrate["@context"];
+            
+            // Handle array context (e.g., ["https://...", {"dct": "http://..."}])
+            if (Array.isArray(context)) {
+                for (const contextItem of context) {
+                    if (contextItem && typeof contextItem === "object" && !Array.isArray(contextItem) && contextItem[prefix]) {
+                        return `${contextItem[prefix]}${suffix}`;
+                    }
+                }
+            }
+            // Handle object context (e.g., {"dct": "http://..."})
+            else if (context && typeof context === "object" && !Array.isArray(context) && context[prefix]) {
+                return `${context[prefix]}${suffix}`;
+            }
         }
     }
     return `http://schema.org/${variable}`;
