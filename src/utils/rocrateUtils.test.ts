@@ -73,4 +73,40 @@ describe('getContextLink', () => {
         const result = getContextLink(rocrate, "dct:format");
         expect(result).toBe("http://schema.org/dct:format");
     });
+
+    test('handles null context gracefully', () => {
+        const rocrate = {
+            "@context": null
+        };
+        const result = getContextLink(rocrate, "dct:format");
+        expect(result).toBe("http://schema.org/dct:format");
+    });
+
+    test('handles array context with null items', () => {
+        const rocrate = {
+            "@context": [
+                "https://w3id.org/ro/crate/1.1/context",
+                null,
+                {
+                    "dct": "http://purl.org/dc/terms/"
+                }
+            ]
+        };
+        const result = getContextLink(rocrate, "dct:format");
+        expect(result).toBe("http://purl.org/dc/terms/format");
+    });
+
+    test('handles array context with nested arrays gracefully', () => {
+        const rocrate = {
+            "@context": [
+                "https://w3id.org/ro/crate/1.1/context",
+                [{"nested": "array"}],
+                {
+                    "dct": "http://purl.org/dc/terms/"
+                }
+            ]
+        };
+        const result = getContextLink(rocrate, "dct:format");
+        expect(result).toBe("http://purl.org/dc/terms/format");
+    });
 });

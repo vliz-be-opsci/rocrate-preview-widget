@@ -73,13 +73,13 @@ export function getContextLink(rocrate: any, variable: string): string {
             // Handle array context (e.g., ["https://...", {"dct": "http://..."}])
             if (Array.isArray(context)) {
                 for (const contextItem of context) {
-                    if (typeof contextItem === "object" && contextItem[prefix]) {
+                    if (contextItem && typeof contextItem === "object" && !Array.isArray(contextItem) && contextItem[prefix]) {
                         return `${contextItem[prefix]}${suffix}`;
                     }
                 }
             }
             // Handle object context (e.g., {"dct": "http://..."})
-            else if (typeof context === "object" && context[prefix]) {
+            else if (context && typeof context === "object" && !Array.isArray(context) && context[prefix]) {
                 return `${context[prefix]}${suffix}`;
             }
         }
