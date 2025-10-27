@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FaFolder, FaFile, FaFolderOpen } from "react-icons/fa";
-import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
+import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
 
 interface SearchDropdownProps {
     rocrate: any;
@@ -29,7 +29,7 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
 
     const getIcon = (part: any, isHovered: boolean) => {
         const partItem = rocrate["@graph"].find((item: any) => item["@id"] === part["@id"]);
-        if (partItem && partItem["@type"] === "Dataset") {
+        if (partItem && hasType(partItem, "Dataset")) {
             return isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />;
         }
         return <FaFile className="mr-2" />;

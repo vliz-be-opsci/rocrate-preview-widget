@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm'
 import { getFullPath } from "./Breadcrumb";
+import { hasType } from "../../utils/rocrateUtils";
 
 
 interface SummaryRocrateIDProps {
@@ -42,7 +43,7 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
             }
         };
 
-        if (item && item["@type"] === "Dataset" && item.hasPart) {
+        if (item && hasType(item, "Dataset") && item.hasPart) {
             const readmeItem = item.hasPart.find((part: any) => part["@id"].toLowerCase().includes("readme"));
             if (readmeItem) {
                 setLoading(true);
@@ -58,11 +59,11 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
 
     if (!item) return null;
 
-    if (item["@type"] === "File" && item.description) {
+    if (hasType(item, "File") && item.description) {
         return <div className="my-1"><p>{item.description}</p></div>;
     }
 
-    if (item["@type"] === "Dataset") {
+    if (hasType(item, "Dataset")) {
         return (
             <div className="my-1">
                 {loading && <p>Loading README...</p>}

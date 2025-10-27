@@ -139,3 +139,30 @@ export function extractRootData(graph: any[]): any {
     // Step 4: Fail if no matching entity is found
     throw new Error("unknown root data entity");
 }
+
+/**
+ * Checks if an item's @type includes a specific type.
+ * @type can be either a string or an array of strings.
+ * @param item - The item to check
+ * @param type - The type to look for (e.g., "File", "Dataset")
+ * @returns true if the item's @type includes the specified type
+ */
+export function hasType(item: any, type: string): boolean {
+    if (!item || !item["@type"]) {
+        return false;
+    }
+    
+    const itemType = item["@type"];
+    
+    // If @type is a string, check for equality
+    if (typeof itemType === "string") {
+        return itemType === type;
+    }
+    
+    // If @type is an array, check if the type is included
+    if (Array.isArray(itemType)) {
+        return itemType.includes(type);
+    }
+    
+    return false;
+}

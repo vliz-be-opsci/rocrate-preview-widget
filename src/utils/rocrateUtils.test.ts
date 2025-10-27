@@ -1,4 +1,4 @@
-import { getContextLink } from './rocrateUtils';
+import { getContextLink, hasType } from './rocrateUtils';
 
 describe('getContextLink', () => {
     test('resolves prefix from object context', () => {
@@ -108,5 +108,72 @@ describe('getContextLink', () => {
         };
         const result = getContextLink(rocrate, "dct:format");
         expect(result).toBe("http://purl.org/dc/terms/format");
+    });
+});
+
+describe('hasType', () => {
+    test('returns true when @type is a string matching the type', () => {
+        const item = {
+            "@id": "test.txt",
+            "@type": "File"
+        };
+        expect(hasType(item, "File")).toBe(true);
+    });
+
+    test('returns false when @type is a string not matching the type', () => {
+        const item = {
+            "@id": "test",
+            "@type": "Dataset"
+        };
+        expect(hasType(item, "File")).toBe(false);
+    });
+
+    test('returns true when @type is an array containing the type', () => {
+        const item = {
+            "@id": "test.txt",
+            "@type": ["File", "SomeOtherType"]
+        };
+        expect(hasType(item, "File")).toBe(true);
+    });
+
+    test('returns true when @type is an array with File as second element', () => {
+        const item = {
+            "@id": "test.txt",
+            "@type": ["SomeOtherType", "File"]
+        };
+        expect(hasType(item, "File")).toBe(true);
+    });
+
+    test('returns false when @type is an array not containing the type', () => {
+        const item = {
+            "@id": "test",
+            "@type": ["Dataset", "SomeOtherType"]
+        };
+        expect(hasType(item, "File")).toBe(false);
+    });
+
+    test('returns false when item has no @type', () => {
+        const item = {
+            "@id": "test"
+        };
+        expect(hasType(item, "File")).toBe(false);
+    });
+
+    test('returns false when item is null', () => {
+        expect(hasType(null, "File")).toBe(false);
+    });
+
+    test('returns false when item is undefined', () => {
+        expect(hasType(undefined, "File")).toBe(false);
+    });
+
+    test('handles multiple types correctly', () => {
+        const item = {
+            "@id": "person",
+            "@type": ["Person", "Agent"]
+        };
+        expect(hasType(item, "Person")).toBe(true);
+        expect(hasType(item, "Agent")).toBe(true);
+        expect(hasType(item, "Organization")).toBe(false);
     });
 });
