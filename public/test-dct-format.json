@@ -1,0 +1,42 @@
+{
+    "@context": [
+        "https://w3id.org/ro/crate/1.1/context",
+        {
+            "dct": "http://purl.org/dc/terms/",
+            "edam": "http://edamontology.org/"
+        }
+    ],
+    "@graph": [
+        {
+            "@id": "./ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            }
+        },
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "name": "Test Dataset with dct:format",
+            "description": "This is a test RO-Crate to verify dct:format link resolution"
+        },
+        {
+            "@id": "./DBB.merged_CDS.faa.bz2",
+            "@type": [
+                "File",
+                "edam:data_2976"
+            ],
+            "name": "Protein coding amino acid sequences",
+            "description": "Coding sequences of merged reads in amino acid format",
+            "downloadUrl": "https://s3.mesocentre.uca.fr/mgf-data-products/files/md5/bd/d5945fedb3bf3af77aa9cb682d585b",
+            "encodingFormat": "application/x-bzip2",
+            "dct:format": {
+                "@id": "edam:format_1929"
+            },
+            "contentSize": "1135038649"
+        }
+    ]
+}
