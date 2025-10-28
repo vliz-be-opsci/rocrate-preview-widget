@@ -1,4 +1,4 @@
-import { getContextLink, hasType } from './rocrateUtils';
+import { getContextLink, hasType, getRoCrateSpecVersion } from './rocrateUtils';
 
 describe('getContextLink', () => {
     test('resolves prefix from object context', () => {
@@ -175,5 +175,88 @@ describe('hasType', () => {
         expect(hasType(item, "Person")).toBe(true);
         expect(hasType(item, "Agent")).toBe(true);
         expect(hasType(item, "Organization")).toBe(false);
+    });
+});
+
+describe('getRoCrateSpecVersion', () => {
+    test('returns @id when conformsTo is a simple object', () => {
+        const conformsTo = {
+            "@id": "https://w3id.org/ro/crate/1.1"
+        };
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.1");
+    });
+
+    test('returns RO-Crate spec URL when conformsTo is an array with multiple items', () => {
+        const conformsTo = [
+            {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            },
+            {
+                "@id": "https://data.emobon.embrc.eu/analysis-results-profile/latest/"
+            }
+        ];
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.2");
+    });
+
+    test('returns RO-Crate spec URL even when it is not the first item', () => {
+        const conformsTo = [
+            {
+                "@id": "https://data.emobon.embrc.eu/analysis-results-profile/latest/"
+            },
+            {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            }
+        ];
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.2");
+    });
+
+    test('returns first @id when array has no RO-Crate spec URL', () => {
+        const conformsTo = [
+            {
+                "@id": "https://example.com/profile/1"
+            },
+            {
+                "@id": "https://example.com/profile/2"
+            }
+        ];
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://example.com/profile/1");
+    });
+
+    test('returns undefined when conformsTo is null', () => {
+        expect(getRoCrateSpecVersion(null)).toBeUndefined();
+    });
+
+    test('returns undefined when conformsTo is undefined', () => {
+        expect(getRoCrateSpecVersion(undefined)).toBeUndefined();
+    });
+
+    test('returns undefined when conformsTo is an empty array', () => {
+        expect(getRoCrateSpecVersion([])).toBeUndefined();
+    });
+
+    test('returns undefined when conformsTo is an empty object', () => {
+        expect(getRoCrateSpecVersion({})).toBeUndefined();
+    });
+
+    test('handles array with null items gracefully', () => {
+        const conformsTo = [
+            null,
+            {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            }
+        ];
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.1");
+    });
+
+    test('handles array with items missing @id', () => {
+        const conformsTo = [
+            {
+                "name": "some-profile"
+            },
+            {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            }
+        ];
+        expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.2");
     });
 });

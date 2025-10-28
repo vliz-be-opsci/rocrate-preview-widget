@@ -1,0 +1,58 @@
+{
+    "@context": [
+        "https://w3id.org/ro/crate/1.2/context",
+        {
+            "@vocab": "https://w3id.org/ro/crate/1.2/context",
+            "dcat": "http://www.w3.org/ns/dcat#",
+            "dct": "http://purl.org/dc/terms/",
+            "pcdm": "http://pcdm.org/models#",
+            "skos": "http://www.w3.org/2004/02/skos/core#",
+            "efo": "http://www.ebi.ac.uk/efo/",
+            "edam": "http://edamontology.org/"
+        }
+    ],
+    "@graph": [
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "conformsTo": [
+                {
+                    "@id": "https://w3id.org/ro/crate/1.2"
+                },
+                {
+                    "@id": "https://data.emobon.embrc.eu/analysis-results-profile/latest/"
+                }
+            ],
+            "about": {
+                "@id": "./"
+            },
+            "author": {
+                "@id": "https://orcid.org/0000-0001-2345-6789"
+            }
+        },
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "name": "Test Dataset with Array conformsTo",
+            "description": "This is a test RO-Crate to verify that version parsing works with conformsTo as an array",
+            "datePublished": "2024-01-01",
+            "author": {
+                "@id": "https://orcid.org/0000-0001-2345-6789"
+            },
+            "license": {
+                "@id": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            "keywords": ["test", "rocrate", "conformsTo"]
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-2345-6789",
+            "@type": "Person",
+            "name": "Test Author"
+        },
+        {
+            "@id": "https://creativecommons.org/licenses/by/4.0/",
+            "@type": "CreativeWork",
+            "name": "CC BY 4.0"
+        }
+    ]
+}
