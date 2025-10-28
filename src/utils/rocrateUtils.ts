@@ -182,8 +182,8 @@ export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
         return undefined;
     }
 
-    // If conformsTo is an object (not array) with @id, return it
-    if (!Array.isArray(conformsTo) && typeof conformsTo === "object" && conformsTo["@id"]) {
+    // If conformsTo is an object (not array and not null) with @id, return it
+    if (!Array.isArray(conformsTo) && typeof conformsTo === "object" && conformsTo !== null && conformsTo["@id"]) {
         return conformsTo["@id"];
     }
 
