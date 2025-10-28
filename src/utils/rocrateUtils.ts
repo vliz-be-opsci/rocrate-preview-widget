@@ -166,3 +166,44 @@ export function hasType(item: any, type: string): boolean {
     
     return false;
 }
+
+/**
+ * Extracts the RO-Crate specification version from the conformsTo property.
+ * The conformsTo property can be either a single object with @id or an array of objects.
+ * This function looks for the first @id that matches the RO-Crate specification pattern.
+ * @param conformsTo - The conformsTo property value (object or array)
+ * @returns The @id of the RO-Crate specification, or undefined if not found
+ */
+export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
+    // RO-Crate specification URL pattern constant
+    const ROCRATE_SPEC_PATTERN = "w3id.org/ro/crate/";
+    
+    if (!conformsTo) {
+        return undefined;
+    }
+
+    // If conformsTo is an object (not array and not null) with @id, return it
+    if (!Array.isArray(conformsTo) && typeof conformsTo === "object" && conformsTo !== null && conformsTo["@id"]) {
+        return conformsTo["@id"];
+    }
+
+    // If conformsTo is an array, find the first RO-Crate specification URL
+    if (Array.isArray(conformsTo)) {
+        for (const item of conformsTo) {
+            if (item && item["@id"]) {
+                // Prioritize URLs that match the RO-Crate specification pattern
+                if (item["@id"].includes(ROCRATE_SPEC_PATTERN)) {
+                    return item["@id"];
+                }
+            }
+        }
+        // If no RO-Crate spec URL found, return the first @id
+        for (const item of conformsTo) {
+            if (item && item["@id"]) {
+                return item["@id"];
+            }
+        }
+    }
+
+    return undefined;
+}

@@ -11,7 +11,7 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
-import { extractRootData } from "../../utils/rocrateUtils";
+import { extractRootData, getRoCrateSpecVersion } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -46,8 +46,8 @@ function extractData(rocrate: any) {
             } else {
             data["rocrate_isprofile"] = item["@type"] === "Profile";
             }
-            // Get the @id of conformsTo if it exists
-            data["rocrate_conformsto"] = item["conformsTo"]?.["@id"] || undefined;
+            // Get the @id of conformsTo using the utility function that handles both object and array
+            data["rocrate_conformsto"] = getRoCrateSpecVersion(item["conformsTo"]);
         }
         i = i + 1;
     }
