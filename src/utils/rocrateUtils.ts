@@ -175,12 +175,15 @@ export function hasType(item: any, type: string): boolean {
  * @returns The @id of the RO-Crate specification, or undefined if not found
  */
 export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
+    // RO-Crate specification URL pattern constant
+    const ROCRATE_SPEC_PATTERN = "w3id.org/ro/crate/";
+    
     if (!conformsTo) {
         return undefined;
     }
 
-    // If conformsTo is an object with @id, return it
-    if (conformsTo["@id"]) {
+    // If conformsTo is an object (not array) with @id, return it
+    if (!Array.isArray(conformsTo) && typeof conformsTo === "object" && conformsTo["@id"]) {
         return conformsTo["@id"];
     }
 
@@ -189,7 +192,7 @@ export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
         for (const item of conformsTo) {
             if (item && item["@id"]) {
                 // Prioritize URLs that match the RO-Crate specification pattern
-                if (item["@id"].includes("w3id.org/ro/crate/")) {
+                if (item["@id"].includes(ROCRATE_SPEC_PATTERN)) {
                     return item["@id"];
                 }
             }

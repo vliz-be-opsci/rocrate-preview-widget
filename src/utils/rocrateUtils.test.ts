@@ -259,4 +259,18 @@ describe('getRoCrateSpecVersion', () => {
         ];
         expect(getRoCrateSpecVersion(conformsTo)).toBe("https://w3id.org/ro/crate/1.2");
     });
+
+    test('correctly distinguishes between array and object with @id property', () => {
+        // This test ensures arrays aren't confused with objects
+        const arrayWithCustomProp = [
+            {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            }
+        ];
+        // Add a custom @id property to the array (edge case)
+        (arrayWithCustomProp as any)["@id"] = "https://should-not-use-this.com";
+        
+        // Should still treat it as an array and find the RO-Crate spec
+        expect(getRoCrateSpecVersion(arrayWithCustomProp)).toBe("https://w3id.org/ro/crate/1.2");
+    });
 });
