@@ -1,50 +1,242 @@
 {
-    "@context": "https://w3id.org/ro/crate/1.2",
-    "@graph": [
-{
-            "@id": "http://example.com/crate415/ro-crate-metadata.json",
-            "@type": "CreativeWork",
-            "conformsTo": {
-                "@id": "https://w3id.org/ro/crate/1.2"
-            },
-            "about": {
-                "@id": "http://example.com/crate415/"
-            }
-        },
-        {
-            "@id": "http://example.com/crate415/",
-            "@type": "Dataset",
-            "description": "The RO-Crate Root Data Entity",
-            "hasPart": [
-                {
-                    "@id": "http://example.com/crate415/data1.txt"
-                },
-                {
-                    "@id": "http://example.com/crate415/subfolder/"
-                }
-            ],
-            "name": "Example RO-Crate",
-            "license": "https://creativecommons.org/licenses/by/4.0/",
-            "creator": {
-                "@type": "Person",
-                "name": "John Doe",
-                "email": "john.doe@example.com"
-            }
-        },
-        {
-            "@id": "http://example.com/crate415/data1.txt",
-            "@type": "File",
-            "name": "data1.txt",
-            "description": "A text file containing example data.",
-            "encodingFormat": "text/plain",
-            "contentSize": "1234 B",
-            "contentUrl": "http://example.com/crate415/data1.txt"
-        },
-        {
-            "@id": "http://example.com/crate415/subfolder/",
-            "@type": "Dataset",
-            "name": "Subfolder",
-            "description": "A subfolder containing additional files."
-        }
-    ]
+  "@context": [
+    "https://w3id.org/ro/crate/1.2/context",
+    {
+      "dc": "http://purl.org/dc/terms/",
+      "dcat": "http://www.w3.org/ns/dcat#",
+      "geo": "http://www.opengis.net/ont/geosparql#",
+      "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+      "spatial": "dc:spatial",
+      "bbox": "dcat:bbox"
+    }
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": { "@id": "https://w3id.org/ro/crate/1.2" },
+      "about": { "@id": "./" },
+      "description": "RO‑Crate metadata descriptor (this file)"
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "Spatial Coverage Examples",
+      "description": "Dataset demonstrating spatialCoverage and dc:spatial examples",
+      "hasPart": [
+        { "@id": "place-point" },
+        { "@id": "place-shape.txt" },
+        { "@id": "solo_point.txt" },
+        { "@id": "geocontains.txt" }
+      ],
+      "spatialCoverage": [
+        { "@id": "shape5" },
+        { "@id": "shape11" }
+      ]
+    },
+    {
+      "@id": "geocontains.txt",
+      "@type": "File",
+      "name": "Example: Geospatial Contains",
+      "spatialCoverage": { "@id": "geocontains" }
+    },
+    {
+      "@id": "solo_point.txt",
+      "@type": "File",
+      "name": "Example: Point Coordinate",
+      "spatialCoverage": { "@id": "shape1" }
+    },
+    {
+      "@id": "solo_point.txt",
+      "@type": "File",
+      "name": "Example: Point Coordinate",
+      "spatialCoverage": { "@id": "shape9" }
+    },
+    {
+      "@id": "geocontains",
+      "@type": ["rdfs:Resource"],
+      "spatialCoverage": [
+        { "@id": "shape7" },
+        { "@id": "shape8" },
+        { "@id": "shape10" },
+        { "@id": "shape11" },
+        { "@id": "shape12" },
+        { "@id": "shape13" },
+        { "@id": "shape14" },
+        { "@id": "shape15" },
+        { "@id": "shape16" },
+        { "@id": "shape17" },
+        { "@id": "shape18" }
+      ]
+    },
+    {
+      "@id": "place-point",
+      "@type": "Dataset",
+      "name": "Example: Point Coordinate"
+    },
+    {
+      "@id": "place-shape.txt",
+      "@type": "File",
+      "name": "Example: Bounding Box Shape",
+      "spatialCoverage": [
+        { "@id": "shape4" }
+      ]
+    },
+    {
+      "@id": "shape31",
+      "@type": ["rdfs:Resource", "dc:Location"],
+      "geo": {
+        "@value": "POLYGON((10.508333 40.314167, 10.508333 45.314167, 12.508333 45.314167, 12.508333 40.314167, 10.508333 40.314167))",
+        "@type": "geo:wktLiteral"
+      }
+    },
+    {
+     "@id": "shape1",
+     "title": "Example: Point Coordinate",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT (0 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape2",
+     "label": "Example: Empty Point", 
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape3",
+     "prefLabel": "Example: Polygon Shape",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "LINESTRING (0 0, 0 1, 1 2)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape4",
+     "title": "Example: Bounding Box Shape",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON ((-76.7142 14.9457, 84.7142 14.9457, 84.7142 22.945, -76.7142 22.945, -76.7142 14.9457))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape5",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape6",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON ((0 0, 4 0, 4 4, 0 4, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape7",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POLYGON EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape8",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTIPOINT ((0 0), (1 1))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape9",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTILINESTRING ((0 0, 1 1), (2 2, 3 3))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape11",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "GEOMETRYCOLLECTION (MULTIPOINT((0 0), (1 1)), POINT(3 4), LINESTRING(2 3, 3 4))",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape12",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTZ (0 0 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape13",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT Z (4 5 6)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape14",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT Z EMPTY",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape15",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTM (10 20 30)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape16",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT M (0 1 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape17",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINTZM (10 0 10 0)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape18",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "POINT ZM (0 20 0 20)",
+       "@type": "geo:wktLiteral"
+     }
+   },
+   {
+     "@id": "shape10",
+     "@type": ["rdfs:Resource", "dc:Location"],
+     "geo": {
+       "@value": "MULTIPOLYGON (((1 10, 1 30, 30 3, 3 10, 10 1)), ((40 30, 6 30, 60 1, 40 1, 4 30)))",
+       "@type": "geo:wktLiteral"
+     }
+   }
+  ]
 }

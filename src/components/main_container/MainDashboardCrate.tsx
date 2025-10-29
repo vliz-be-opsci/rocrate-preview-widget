@@ -1,16 +1,23 @@
 import React from "react";
-import { FaUser, FaCalendarAlt, FaInfoCircle, FaTags, FaFileContract } from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaInfoCircle, FaTags, FaFileContract, FaMapMarkerAlt } from "react-icons/fa";
+import MapView from "./MapView";
 
 interface MainDashboardCrateProps {
     data: any;
     rocrate: any;
+    rocrateID?: string;
 }
 
-const MainDashboardCrate = ({ data, rocrate }: MainDashboardCrateProps) => {
+const MainDashboardCrate = ({ data, rocrate, rocrateID }: MainDashboardCrateProps) => {
     console.log("MainDashboardCrate data", data);
     console.log("MainDashboardCrate rocrate", rocrate);
+    console.log("MainDashboardCrate rocrateID", rocrateID);
+
+const [showMapView, setShowMapView] = React.useState(true);
+
 const renderDataItem = (label: string, value: any, Icon: any) => {
     const displayValue = (typeof value === 'object' && value !== null) ? (value["@id"] || JSON.stringify(value)) : value;
+
     return (
         <div className={`p-2 ${displayValue === "None" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"} rounded mb-2 flex items-center`}>
             <Icon className="mr-2" />
@@ -21,6 +28,7 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
 };
 
     return (
+        <>
         <div className="p-4 bg-white shadow-md rounded-lg">
             {renderDataItem("Author", data["rocrate_author"], FaUser)}
             {renderDataItem("Date Published", data["rocrate_datePublished"], FaCalendarAlt)}
@@ -29,6 +37,7 @@ const renderDataItem = (label: string, value: any, Icon: any) => {
             {renderDataItem("License", data["rocrate_license"], FaFileContract)}
             {renderDataItem("Version RO-Crate Specification", data["rocrate_conformsto"], FaFileContract)}
         </div>
+        </>
     );
 };
 

@@ -1,8 +1,10 @@
 //this file will contain all other components that wil lbe used in this project
 import * as React from "react";
+import MapView from "./MapView";
 import { useState, useEffect } from "react";
-import { FaFolderOpen } from "react-icons/fa";
+import { FaFolderOpen, FaMapMarkerAlt } from "react-icons/fa";
 import { AiOutlineCluster } from "react-icons/ai";
+// Ensure the icons are used correctly as JSX components
 import DatasetOverview from "./DatasetOverview";
 import SearchComponent from "./SearchComponent";
 import SearchDropdown from "./SearchDropdown";
@@ -55,7 +57,13 @@ function extractData(rocrate: any) {
     return data;
 }
 
+/**
+ * Main React component for displaying and interacting with RO-Crate data.
+ *
+ * Manages loading, parsing, and stateful navigation of a RO-Crate JSON structure, including metadata extraction, entity selection, search, and dashboard views. Renders appropriate UI components based on user interaction and URL hash state.
+ */
 export default function MainContainer(props: any) {
+    const [isMaximized, setIsMaximized] = useState(false);
     console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
@@ -182,13 +190,12 @@ export default function MainContainer(props: any) {
                 <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
             <br />
-            
             {rocrateID === "" ? (
                 <>
                 <div className="flex flex-col sm:flex-row mt-3">
                     <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen/></span>
+                            <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen /></span>
                             <p className="text-lg font-semibold mr-1">Dataset entities</p>
                             {Object.keys(entityCounts)
                                 .filter((type) => type === "Dataset" || type === "File")
@@ -201,7 +208,7 @@ export default function MainContainer(props: any) {
                     </div>
                     <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster/></span>
+                            <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster /></span>
                             <p className="text-lg font-semibold mr-1">Contextual entities</p>
                             <div className="flex flex-wrap">
                                 {Object.keys(entityCounts)
@@ -215,11 +222,40 @@ export default function MainContainer(props: any) {
                         </div>
                     </div>
                 </div>
-                <MainDashboardCrate data={data} rocrate={rocrate} />
+                <div className="w-full sm:w-1/2 sm:mb-2 sm:mr-1 mt-4 cursor-pointer" onClick={() => setIsMaximized((prev) => true)}>
+                    <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full relative">
+                        <span className="text-4xl text-gray-500 mr-2"><FaMapMarkerAlt /></span>
+                        <div className="flex flex-col">
+                            <p className="text-lg font-semibold mr-1">Map entities</p>
+                            <p className="text-sm text-gray-600">
+                                {isMaximized ? "" : "Click to maximize."}
+                            </p>
+                        </div>
+                        {isMaximized && (
+                            <button
+                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsMaximized(false);
+                                }}
+                                aria-label="Close"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
+                    {isMaximized && (
+                        <div className="mt-3">
+                            <MapView rocrate={rocrate} rocrateID={rocrateID} />
+                        </div>
+                    )}
+                </div>
+                <MainDashboardCrate data={data} rocrate={rocrate} rocrateID={rocrateID} />
+                
                 </>
                 
             ) : rocrateID === "Contextual_entities" ? (
-                <EntityList rocrate={rocrate} onSelect={handleSelect} />
+                <EntityList rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : rocrateID === "view_dataset_overview" ? (
                 <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
             ) : (
