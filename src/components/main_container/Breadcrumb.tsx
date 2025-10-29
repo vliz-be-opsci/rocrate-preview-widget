@@ -99,6 +99,8 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                 lastSegment = partSegments[partSegments.length - 2];
                             }
                             const isLast = index === path.length - 1;
+                            // Each element in path is already a full @id, not a path segment
+                            // So we can use it directly
                             return (
                                 <li key={index} className="relative flex items-center">
                                     <span
@@ -106,7 +108,7 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                         onClick={() => onSelect(part)}
                                     ></span>
                                     <a
-                                        href={`#${part}`}
+                                        href={`#crateid=${part}`}
                                         className={`flex h-10 items-center ${isLast ? 'bg-[#4CAF9C] text-white font-bold' : 'bg-gray-100'} pe-4 ps-8 text-xs font-medium transition hover:text-gray-900`}
                                         onClick={() => onSelect(part)}
                                     >
@@ -123,7 +125,7 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
                                 onClick={() => onSelect(rocrateID)}
                             ></span>
                             <a
-                                href={`#${rocrateID}`}
+                                href={`#crateid=${rocrateID}`}
                                 className="flex h-10 items-center bg-[#4CAF9C] text-white font-bold pe-4 ps-8 text-xs font-medium transition hover:text-gray-900"
                                 onClick={() => onSelect(rocrateID)}
                             >

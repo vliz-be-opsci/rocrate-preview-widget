@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaFolder, FaFile, FaFolderOpen, FaLink } from "react-icons/fa";
-import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
+import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
@@ -28,7 +28,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
 
         // check if the partItem is a file and if the @id starts with a "#" , if yes then it a remote file
         // this should then also show a Falink icon 
-        if (partItem && partItem["@type"] === "File" && partItem["@id"].startsWith("#")) {
+        if (partItem && hasType(partItem, "File") && partItem["@id"].startsWith("#")) {
             return (
                 <div className="flex items-center">
                     <FaFile className="mr-2" /><FaLink className="text-blue-500 mr-2" />
@@ -36,7 +36,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
             );
         }
 
-        if (partItem && partItem["@type"] === "Dataset") {
+        if (partItem && hasType(partItem, "Dataset")) {
             return isHovered ? <FaFolderOpen className="mr-2" /> : <FaFolder className="mr-2" />;
         }
         return <FaFile className="mr-2" />;

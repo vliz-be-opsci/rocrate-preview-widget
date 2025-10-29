@@ -8,6 +8,8 @@ import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
 import ReferencedByList from "./ReferencedByList"; // Import the new component
+import { isBinaryFile } from "../../utils/fileTypeUtils";
+import { hasType } from "../../utils/rocrateUtils";
 
 interface RocrateIDViewerProps {
     rocrate: any;
@@ -21,6 +23,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     const [previewOpen, setPreviewOpen] = useState(true);
     const [referencedByOpen, setReferencedByOpen] = useState(true); // State for the new accordion
     const [fileContent, setFileContent] = useState<string | null>(null);
+    const [binaryContent, setBinaryContent] = useState<ArrayBuffer | null>(null);
     const [mimeType, setMimeType] = useState<string | null>(null);
     const [fileUrl, setFileUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -33,6 +36,9 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     useEffect(() => {
         setError(null); // Reset error state when rocrateID changes
+        setBinaryContent(null); // Reset binary content
+        setFileContent(null); // Reset text content
+        
         const fetchFileContent = async (url: string, rocrateidsearch:boolean) => {
             try {
                 const response = await fetch(url);
@@ -49,10 +55,27 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     fetchFileContent(rocrateID, true);
                     return;
                 }
-                const text = await response.text();
-                setFileContent(text);
-                setMimeType(response.headers.get("Content-Type"));
+                
+                const contentType = response.headers.get("Content-Type");
+                setMimeType(contentType);
                 setFileUrl(url);
+                
+                // Determine if this is a binary file
+                const filename = url.split('/').pop() || rocrateID.split('/').pop() || '';
+                const isBinary = isBinaryFile(contentType || undefined, filename);
+                
+                if (isBinary) {
+                    // Handle as binary file
+                    const arrayBuffer = await response.arrayBuffer();
+                    setBinaryContent(arrayBuffer);
+                    setFileContent(null); // Clear text content for binary files
+                } else {
+                    // Handle as text file
+                    const text = await response.text();
+                    setFileContent(text);
+                    setBinaryContent(null); // Clear binary content for text files
+                }
+                
                 setLoading(false);
             } catch (err: any) {
                 setError(err.message);
@@ -75,7 +98,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             return;
         }
 
-        if (item && item["@type"] === "File") {
+        if (item && hasType(item, "File")) {
             setLoading(true);
             const fullPath = getFullPath(rocrate, rocrateID);
             console.log(fullPath);
@@ -121,11 +144,11 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                 </div>
             </div>
         );
-        if (!fileContent) return <p>No preview available</p>;
+        if (!fileContent && !binaryContent) return <p>No preview available</p>;
 
         return (
             <div>
-                <FileContentPreview fileContent={fileContent} mimeType={mimeType || "text/plain"} fileUrl={fileUrl || ""} />
+                <FileContentPreview fileContent={fileContent || ""} mimeType={mimeType || "text/plain"} fileUrl={fileUrl || ""} />
             </div>
         );
     };
@@ -168,7 +191,14 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             return;
         }
         // if no downloadUrl is available, use the file content and mimeType to create a Blob
-        const file = new Blob([fileContent || ""], { type: mimeType || "text/plain" });
+        let file: Blob;
+        if (binaryContent) {
+            // Create blob from binary content (ArrayBuffer)
+            file = new Blob([binaryContent], { type: mimeType || "application/octet-stream" });
+        } else {
+            // Create blob from text content
+            file = new Blob([fileContent || ""], { type: mimeType || "text/plain" });
+        }
         element.href = URL.createObjectURL(file);
         element.download = rocrateID.split("/").pop() || "download.txt";
         document.body.appendChild(element);
@@ -177,7 +207,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     return (
         <div id="accordion-collapse" data-accordion="collapse">
-            {item && (item.description || (item["@type"] === "Dataset" && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
+            {item && (item.description || (hasType(item, "Dataset") && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
                 <>
                     <h2 id="accordion-collapse-heading-summary">
                         <button
@@ -218,7 +248,7 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     </div>
                 </>
             )}
-            {item && (item["@type"] === "File" || (item["@type"] === "Dataset" && item["downloadUrl"] !== null && item["downloadUrl"] !== undefined)) && (
+            {item && (hasType(item, "File") || (hasType(item, "Dataset") && item["downloadUrl"] !== null && item["downloadUrl"] !== undefined)) && (
                 <>
                     <h2 id="accordion-collapse-heading-2">
                         <button

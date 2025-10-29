@@ -6,6 +6,7 @@ import PdfPreview from "./PdfPreview";
 import AudioPreview from "./AudioPreview";
 import FacetedTurtlePreview from "./FacetedTurtlePreview"; // Updated import
 import { FaExclamationTriangle } from "react-icons/fa";
+import { isBinaryFile, isExcelFile } from "../../utils/fileTypeUtils";
 
 interface FileContentPreviewProps {
     fileContent: string;
@@ -36,7 +37,7 @@ export const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileConte
                 const text = await response.text();
                 setContent(text);
                 setLoading(false);
-            } catch (err) {
+            } catch (err: any) {
                 setError(err.message);
                 setLoading(false);
             }
@@ -63,6 +64,30 @@ export const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileConte
         );
 
         const isCsv = mimeType.startsWith("text/csv") || mimeType.startsWith("application/vnd.ms-excel");
+        const isExcel = isExcelFile(mimeType);
+        const isBinary = isBinaryFile(mimeType, fileName);
+        
+        // Handle Excel files specifically
+        if (isExcel) {
+            return (
+                <div>
+                    <div className="flex space-x-2 mb-4">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
+                        <span className="bg-green-100 text-green-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Excel Spreadsheet</span>
+                    </div>
+                    <div className="bg-blue-50 text-blue-700 p-4 rounded mb-3 border border-blue-200">
+                        <div className="flex items-center">
+                            <div>
+                                <p className="text-blue-700">🗂️ This is an Excel spreadsheet file (.xlsx/.xls).</p>
+                                <p className="text-blue-700">Use the download button to save and open it in Microsoft Excel, LibreOffice Calc, or Google Sheets.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
         if (isCsv) {
             return <TabularData fileContent={content} mimeType={mimeType} />;
         }
@@ -86,6 +111,27 @@ export const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileConte
 
         if (mimeType.startsWith("audio/")) {
             return <AudioPreview fileUrl={fileUrl} fileSize={fileSize} mimeType={mimeType} />;
+        }
+
+        // Handle other binary files that we don't have specific viewers for
+        if (isBinary && !mimeType.startsWith("image/") && mimeType !== "application/pdf") {
+            return (
+                <div>
+                    <div className="flex space-x-2 mb-4">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">File Size: {fileSize} bytes</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">MIME Type: {mimeType}</span>
+                        <span className="bg-purple-100 text-purple-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">Binary File</span>
+                    </div>
+                    <div className="bg-purple-50 text-purple-700 p-4 rounded mb-3 border border-purple-200">
+                        <div className="flex items-center">
+                            <div>
+                                <p className="text-purple-700">📁 This is a binary file that cannot be previewed as text.</p>
+                                <p className="text-purple-700">Use the download button to save the file to your device.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
         }
 
         switch (mimeType) {

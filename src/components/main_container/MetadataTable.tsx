@@ -53,6 +53,23 @@ const MetadataTable = ({ data, rocrate, onSelect }: MetadataTableProps) => {
                 </div>
             );
         } else if (typeof value === "object" && value !== null) {
+            // If object has @id, render as a clickable entity reference
+            if (value["@id"]) {
+                const entityId = value["@id"];
+                const entity = getIDforItem(entityId, rocrate["@graph"]);
+                // Check if entity was found (object) or just the ID was returned (string)
+                const label = typeof entity === "object" ? getLabelForItem(entity) : entityId;
+                return (
+                    <span
+                        className="truncate cursor-pointer text-blue-600 hover:underline"
+                        onClick={() => onSelect(entityId)}
+                        title={entityId}
+                    >
+                        {label}
+                    </span>
+                );
+            }
+            // Otherwise, render as nested metadata table
             return <MetadataTable data={value} rocrate={rocrate} onSelect={onSelect} />;
         } else {
             const stringValue = value;
