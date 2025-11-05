@@ -100,7 +100,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
     }
 
     // if rocrateid is contextual_entities then get ll spatial entities
-    if (rocrateID === "Contextual_entities") {
+    if (rocrateID === "map_entity") {
       console.log("RO-Crate ID is 'contextual_entities', using all spatial entities in the graph");
       let boundspatialEntities = graph.filter((entity: any) => {
         return spatialFields.some(field => field in entity);
