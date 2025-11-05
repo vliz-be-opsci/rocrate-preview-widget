@@ -397,7 +397,22 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => {
           //console log if the user clicked on a feature
           console.log('Feature clicked:', feature);
-          
+          let rocrateId = (
+            feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+          );
+          if (!rocrateId) rocrateId = '';
+          //onSelect(String(rocrateId));
+
+          //get coordinates where to show the popup
+          const coordinates = event.coordinate;
+          //set popup content
+          if (popupContentRef.current) {
+            popupContentRef.current.innerHTML = `<p>RO-Crate ID: ${rocrateId}</p>`;
+          }
+          //show the popup
+          overlayRef.current?.setPosition(coordinates);
+          return true; // Stop after first feature
+
         });
       }
     });
