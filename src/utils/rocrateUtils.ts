@@ -221,27 +221,91 @@ export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
  * @param rocrate - The RO-Crate object containing the @graph array.
  * @returns A dictionary with component names as keys and boolean values indicating their presence.
  */
-export function getRenderableComponents(rocrate: any, componentTypes: { [key: string]: string[] }): { [key: string]: boolean } {
+/**
+ * Type describing the structure of each component type info.
+ */
+export type ComponentTypeInfo = {
+    URIs: string[];
+    icon?: string;
+    overview_name?: string;
+};
+
+/**
+ * Dictionary of component types and their associated info.
+ * Example:
+ *   map_entity: { URIs: [...], icon: "fa-map", overview_name: "Map entity" }
+ */
+export const componentTypes: { [key: string]: ComponentTypeInfo } = {
+    map_entity: {
+        URIs: ["Place", "http://purl.org/dc/terms/Location", "http://schema.org/Place"],
+        icon: "FaMapMarkerAlt",
+        overview_name: "Map entities"
+    },
+    person_entity: {
+        URIs: ["Person", "http://schema.org/Person"],
+        icon: "FaPersonBooth",
+        overview_name: "Person entities"
+    }
+    // Add more component types as needed, leaving icon/overview_name undefined if unknown
+};
+
+/**
+ * Checks for the presence of certain types of predicates in a RO-Crate and returns
+ * a dictionary indicating which components can be rendered.
+ * The components and their associated types are defined in a dictionary for easy adjustment.
+ * @param rocrate - The RO-Crate object containing the @graph array.
+ * @param componentTypes - Dictionary of component types and their info.
+ * @returns A dictionary with component names as keys and boolean values indicating their presence.
+ */
+/**
+ * Overload for backward compatibility: accepts old shape { [key: string]: string[] }
+ * and internally maps it to the new shape { [key: string]: ComponentTypeInfo }.
+ * This ensures external callers using the old shape do not break.
+ */
+export function getRenderableComponents(
+    rocrate: any,
+    componentTypes: { [key: string]: string[] }
+): { [key: string]: boolean };
+export function getRenderableComponents(
+    rocrate: any,
+    componentTypes: { [key: string]: ComponentTypeInfo }
+): { [key: string]: boolean };
+export function getRenderableComponents(
+    rocrate: any,
+    componentTypes: { [key: string]: string[] } | { [key: string]: ComponentTypeInfo }
+): { [key: string]: boolean } {
     if (!rocrate || !rocrate["@graph"]) {
         return {};
+    }
+
+    // Normalize to new shape if old shape is detected
+    let normalizedTypes: { [key: string]: ComponentTypeInfo };
+    if (
+        Object.values(componentTypes)[0] &&
+        Array.isArray((Object.values(componentTypes)[0] as any))
+    ) {
+        // Old shape: { [key: string]: string[] }
+        normalizedTypes = Object.fromEntries(
+            Object.entries(componentTypes).map(([key, arr]) => [
+                key,
+                { URIs: arr as string[] }
+            ])
+        );
+    } else {
+        // Already new shape
+        normalizedTypes = componentTypes as { [key: string]: ComponentTypeInfo };
     }
 
     const graph = rocrate["@graph"];
     const components: { [key: string]: boolean } = {};
 
-    // Define the component types and their associated types
-    
-
     for (const entity of graph) {
         if (entity["@type"]) {
             const entityTypes = Array.isArray(entity["@type"]) ? entity["@type"] : [entity["@type"]];
             const resolvedEntityTypes = entityTypes.map((type) => getContextLink(rocrate, type));
-            console.log("Entity types:", entityTypes);
-            console.log("Resolved entity types:", resolvedEntityTypes);
-            for (const [component, types] of Object.entries(componentTypes)) {
-                for (const type of types) {
+            for (const [component, info] of Object.entries(normalizedTypes)) {
+                for (const type of info.URIs) {
                     const resolvedType = getContextLink(rocrate, type);
-                    console.log(`Checking entity type: ${type} and resolved type: ${resolvedType}`);
                     if (resolvedEntityTypes.includes(type) || resolvedEntityTypes.includes(resolvedType)) {
                         components[component] = true;
                     }
@@ -250,19 +314,17 @@ export function getRenderableComponents(rocrate: any, componentTypes: { [key: st
         }
 
         // Exit early if all components are found
-        if (Object.keys(components).length === Object.keys(componentTypes).length) {
+        if (Object.keys(components).length === Object.keys(normalizedTypes).length) {
             break;
         }
     }
 
     // Ensure all components are present in the result, defaulting to false
-    for (const component of Object.keys(componentTypes)) {
+    for (const component of Object.keys(normalizedTypes)) {
         if (!(component in components)) {
             components[component] = false;
         }
     }
-
-    console.log("Renderable components:", components);
 
     return components;
 }

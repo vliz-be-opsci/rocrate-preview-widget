@@ -2,7 +2,7 @@
 import * as React from "react";
 import MapView from "./MapView";
 import { useState, useEffect } from "react";
-import { FaFolderOpen, FaMapMarkerAlt } from "react-icons/fa";
+import { FaFolderOpen, FaMapMarkerAlt, FaPersonBooth } from "react-icons/fa";
 import { AiOutlineCluster } from "react-icons/ai";
 // Ensure the icons are used correctly as JSX components
 import DatasetOverview from "./DatasetOverview";
@@ -13,7 +13,7 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
-import { extractRootData, getRoCrateSpecVersion, getRenderableComponents } from "../../utils/rocrateUtils";
+import { extractRootData, getRoCrateSpecVersion, getRenderableComponents, componentTypes } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -77,10 +77,6 @@ export default function MainContainer(props: any) {
     const [renderableComponents, setRenderableComponents] = useState<{ [key: string]: boolean }>({});
 
     // temporary variable that contains all the different renderable components and URI's to test
-    const componentTypes: { [key: string]: string[] } = {
-        map_entity: ["Place", "http://purl.org/dc/terms/Location", "http://schema.org/Place"],
-        person: ["Person", "http://schema.org/Person"],
-    };
 
     const handleSelect = (id: string) => {
         setRocrateID(id);
@@ -238,7 +234,23 @@ export default function MainContainer(props: any) {
                         onClick={() => setRocrateID(componentKey)}
                     >
                         <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <p className="text-lg font-semibold">{componentKey}</p>
+                            {componentTypes[componentKey]?.icon && (
+                                <span className="text-4xl text-gray-500 mr-2">
+                                    {(() => {
+                                        switch (componentTypes[componentKey]?.icon) {
+                                            case "FaMapMarkerAlt":
+                                                return <FaMapMarkerAlt />;
+                                            case "FaPersonBooth":
+                                                return <FaPersonBooth />;
+                                            default:
+                                                return null;
+                                        }
+                                    })()}
+                                </span>
+                            )}
+                            <p className="text-lg font-semibold">
+                                {componentTypes[componentKey]?.overview_name || componentKey}
+                            </p>
                         </div>
                     </div>
                 ))}
