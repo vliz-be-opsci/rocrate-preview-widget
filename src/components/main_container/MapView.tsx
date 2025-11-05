@@ -1,7 +1,7 @@
 // Import the @terraformer/wkt package
 // Use the parse function from @terraformer/wkt to handle WKT strings
 import { wktToGeoJSON } from '@terraformer/wkt';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'ol/ol.css';
 import { Map as OLMap, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
@@ -13,8 +13,6 @@ import { Point, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import GeoJSON from 'ol/format/GeoJSON';
-import Overlay from 'ol/Overlay'; // Popup overlay
-type OverlayType = Overlay;
 
 interface MapViewProps {
   rocrate: Record<string, any>
@@ -25,13 +23,11 @@ interface MapViewProps {
 const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<OLMap | null>(null);
-  const popupRef = useRef<HTMLDivElement | null>(null);
-  const overlayRef = useRef<OverlayType | null>(null);
-  const popupContentRef = useRef<HTMLDivElement | null>(null);
-  // Fix type: anchor not button
-  const popupCloserRef = useRef<HTMLAnchorElement | null>(null);
-  // Flag to prevent double cleanup
-  const isCleanedUp = useRef<boolean>(false);
+  
+  // React state for popup instead of OpenLayers Overlay
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [popupRocrateId, setPopupRocrateId] = useState<string>('');
 
   // Each spatial item now carries rocrateId for traceability and linking.
   type SpatialEntityBase = { rocrateId: string; [k: string]: any };
@@ -44,16 +40,6 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     boundingBoxes?: BoundingBoxItem[];
     geoJson?: GeoJsonItem[];
   }
-
-  function destroyMapAndNavigate(rocrateid: string) {
-      // DON'T dispose the map - just navigate and let React handle cleanup
-      // Trying to manually dispose causes race conditions with React's cleanup
-      
-      // Navigate immediately
-      if (onSelect) {
-        onSelect(rocrateid);
-      }
-    }
 
   /**
    * Extracts spatial data from a RO-Crate JSON-LD object.
@@ -213,18 +199,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const spatialData = extractSpatialData(rocrate, rocrateID);
 
   useEffect(() => {
-    // --- Popup Overlay Lifecycle ---
-    // 1. Render DOM elements via JSX (see below) so refs exist.
-    // 2. Create Overlay only after popupRef.current is non-null.
-    // 3. Add overlay to map after map is created.
-    // 4. Set overlay position on feature click, hide on close.
     if (!mapRef.current) return;
-
-    // Defensive: Clean up previous overlay and listeners before re-init
-    if (overlayRef.current && mapInstance.current) {
-      mapInstance.current.removeOverlay(overlayRef.current);
-      overlayRef.current = null;
-    }
 
     // Initialize map
     mapInstance.current = new OLMap({
@@ -239,39 +214,6 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         zoom: 2,
       }),
     });
-
-    // --- Popup Overlay Setup ---
-    // Defensive: Only create overlay after popupRef.current exists.
-    if (popupRef.current && !overlayRef.current) {
-      // Context7: Overlay must be constructed after popupRef exists and added to map.
-      // See authoritative pattern: https://context7.com/openlayers/openlayers/llms.txt
-      overlayRef.current = new Overlay({
-        element: popupRef.current,
-        autoPan: true,
-        positioning: 'bottom-center',
-        stopEvent: false,  // Don't let overlay manage events
-        insertFirst: false  // Don't try to insert element as first child
-      });
-      // Set autoPan animation duration after construction (OpenLayers API)
-      if (overlayRef.current) {
-        // @ts-ignore: OpenLayers Overlay supports autoPanAnimation but not typed in Options
-        overlayRef.current.setProperties({ autoPanAnimation: { duration: 250 } });
-      }
-      mapInstance.current.addOverlay(overlayRef.current);
-    }
-
-    // Defensive: Set minimal inline styles for popup visibility
-    if (popupRef.current) {
-      // Context7: Inline styles for overlay visibility and z-index.
-      popupRef.current.style.position = 'absolute';
-      popupRef.current.style.background = 'white';
-      popupRef.current.style.padding = '8px';
-      popupRef.current.style.borderRadius = '4px';
-      popupRef.current.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-      popupRef.current.style.zIndex = '10000';
-      popupRef.current.style.minWidth = '120px';
-      popupRef.current.style.display = 'none'; // Hide by default
-    }
 
     // Add points
     if (spatialData?.points) {
@@ -424,101 +366,109 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
       });
     }
 
-    // --- Popup click handler ---
-    // Context7: Use forEachFeatureAtPixel to pick top feature and anchor overlay.
+    // --- Map click handler to show popup ---
     mapInstance.current.on('singleclick', (event) => {
       let foundFeature = false;
-      // Defensive: ensure pointer events are not blocked by CSS
       mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => {
         foundFeature = true;
         let rocrateId = (
           feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
         );
         if (!rocrateId) rocrateId = '';
-        // Set popup content
-        if (popupContentRef.current) {
-          popupContentRef.current.innerHTML = `<p>RO-Crate ID:</p><a href="#" id="popup-link" style="color: #0066cc; text-decoration: underline; cursor: pointer;">${rocrateId}</a>`;
-          // Remove previous listeners to avoid duplicate firing
-          const link = popupContentRef.current.querySelector('#popup-link');
-          if (link && onSelect) {
-            (link as HTMLAnchorElement).onclick = (e: MouseEvent) => {
-              e.preventDefault();
-              e.stopPropagation();
-              destroyMapAndNavigate(rocrateId);
-            };
-          }
+        
+        // Calculate pixel position for popup
+        const pixel = mapInstance.current?.getPixelFromCoordinate(event.coordinate);
+        if (pixel) {
+          setPopupPosition({ x: pixel[0], y: pixel[1] });
+          setPopupRocrateId(rocrateId);
+          setPopupVisible(true);
         }
-        // Show popup at coordinate
-        overlayRef.current?.setPosition(event.coordinate);
-        if (popupRef.current) popupRef.current.style.display = 'block';
         return true; // Stop after first feature
-      }, { hitTolerance: 2 }); // Use hitTolerance for canvas/decluttered layers
+      }, { hitTolerance: 2 });
+      
       // Hide popup if no feature found
       if (!foundFeature) {
-        overlayRef.current?.setPosition(undefined);
-        if (popupRef.current) popupRef.current.style.display = 'none';
+        setPopupVisible(false);
       }
     });
 
-    // --- Popup closer handler ---
-    if (popupCloserRef.current) {
-      popupCloserRef.current.onclick = (e) => {
-        e.preventDefault();
-        // Only hide the popup, do not remove DOM node
-        if (overlayRef.current) {
-          overlayRef.current.setPosition(undefined);
-        }
-        if (popupRef.current && popupRef.current.parentNode) {
-          popupRef.current.style.display = 'none';
-        }
-        return false;
-      };
-    }
     // --- Cleanup on unmount ---
-    // Context7: Clean up overlay and listeners on unmount.
     return () => {
-      // Prevent double cleanup
-      if (isCleanedUp.current) return;
-      isCleanedUp.current = true;
-      
-      // DON'T call any OpenLayers cleanup methods - they try to manipulate React-managed DOM
-      // Just nullify references and let React clean up the DOM naturally
-      mapInstance.current = null;
-      overlayRef.current = null;
+      if (mapInstance.current) {
+        mapInstance.current.setTarget(undefined);
+        mapInstance.current = null;
+      }
     };
   }, [spatialData]);
 
-  // Render map container and popup overlay element
-  // Render map container and popup overlay element
-  // The popup overlay must be rendered in the React tree so its DOM exists before Overlay construction.
+  // Handler for clicking the popup link
+  const handlePopupLinkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPopupVisible(false);
+    if (onSelect && popupRocrateId) {
+      onSelect(popupRocrateId);
+    }
+  };
+
+  // Handler for closing the popup
+  const handleClosePopup = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setPopupVisible(false);
+  };
+
+  // Render map container and popup as React-managed elements
   return (
-    <>
-      <div ref={mapRef} style={{ width: '100%', height: '400px' }} />
-      <div
-        ref={popupRef}
-        id="popup"
-        className="ol-popup"
-        // Inline styles for guaranteed visibility and z-index
-        style={{
-          position: 'absolute',
-          background: 'white',
-          padding: '8px',
-          borderRadius: '4px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          zIndex: 9999,
-          minWidth: '120px',
-          display: 'none'
-        }}
-      >
-        <a
-          href="#"
-          ref={popupCloserRef}
-          id="popup-closer"
-          className="ol-popup-closer"
-        ></a>
-        <div ref={popupContentRef} id="popup-content"></div>
-      </div>
-    </>
+    <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+      {popupVisible && (
+        <div
+          style={{
+            position: 'absolute',
+            left: `${popupPosition.x}px`,
+            top: `${popupPosition.y - 40}px`, // Position above the click point
+            transform: 'translate(-50%, -100%)', // Center horizontally, position above
+            background: 'white',
+            padding: '8px',
+            borderRadius: '4px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            zIndex: 10000,
+            minWidth: '120px',
+            pointerEvents: 'auto',
+          }}
+        >
+          <a
+            href="#"
+            onClick={handleClosePopup}
+            style={{
+              position: 'absolute',
+              top: '4px',
+              right: '4px',
+              textDecoration: 'none',
+              color: '#999',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+            }}
+          >
+            ×
+          </a>
+          <div>
+            <p style={{ margin: '0 0 4px 0' }}>RO-Crate ID:</p>
+            <a
+              href="#"
+              onClick={handlePopupLinkClick}
+              style={{
+                color: '#0066cc',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+              }}
+            >
+              {popupRocrateId}
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
