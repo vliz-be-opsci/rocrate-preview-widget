@@ -30,10 +30,16 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const popupContentRef = useRef<HTMLDivElement | null>(null);
   const popupCloserRef = useRef<HTMLButtonElement | null>(null);
 
+  // Each spatial item now carries rocrateId for traceability and linking.
+  type SpatialEntityBase = { rocrateId: string; [k: string]: any };
+  type PointItem = SpatialEntityBase & { coords: [number, number] };
+  type BoundingBoxItem = SpatialEntityBase & { topLeft: [number, number]; bottomRight: [number, number] };
+  type GeoJsonItem = SpatialEntityBase & { url: string };
+
   interface SpatialData {
-    points?: [number, number][];
-    boundingBoxes?: { topLeft: [number, number]; bottomRight: [number, number] }[];
-    geoJson?: string[];
+    points?: PointItem[];
+    boundingBoxes?: BoundingBoxItem[];
+    geoJson?: GeoJsonItem[];
   }
 
   /**
@@ -45,9 +51,10 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
    * @returns An object containing extracted spatial data, including points, bounding boxes, and GeoJSON Blob URLs
    */
   function extractSpatialData(rocrate: Record<string, any>, rocrateID: string): SpatialData {
-    const points: [number, number][] = [];
-    const boundingBoxes: { topLeft: [number, number]; bottomRight: [number, number] }[] = [];
-    const geoJson: string[] = [];
+    // Each spatial item now carries rocrateId for traceability and linking.
+    const points: PointItem[] = [];
+    const boundingBoxes: BoundingBoxItem[] = [];
+    const geoJson: GeoJsonItem[] = [];
 
     const graph = rocrate['@graph'] || [];
 
@@ -128,8 +135,22 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
       }
     }
 
-    // Process each spatial entity found 
+    // Process each spatial entity found
     for (const entity of spatialEntities) {
+      // Derive canonical rocrateId for each spatial item
+      let canonicalId: string = '';
+      if (typeof entity['@id'] === 'string') {
+        canonicalId = String(entity['@id']);
+      } else if (typeof entity['id'] === 'string') {
+        canonicalId = String(entity['id']);
+      } else if (typeof entity['rocrate'] === 'string') {
+        canonicalId = String(entity['rocrate']);
+      } else if (typeof entity['rocrate_id'] === 'string') {
+        canonicalId = String(entity['rocrate_id']);
+      }
+      // Defensive: if no id found, set to ''
+      if (!canonicalId) canonicalId = '';
+
       // Check if it has a geo property with WKT
       if ('geo' in entity) {
         const geoValue = entity['geo'];
@@ -140,11 +161,12 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         ) {
           try {
             const geojsonObj = wktToGeoJSON(geoValue['@value']);
-            geoJson.push(
-              URL.createObjectURL(
+            geoJson.push({
+              url: URL.createObjectURL(
                 new Blob([JSON.stringify(geojsonObj)], { type: 'application/json' })
-              )
-            );
+              ),
+              rocrateId: canonicalId,
+            });
           } catch (e) {
             // Failed to parse WKT
           }
@@ -153,7 +175,10 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
 
       // Check for point coordinates
       if ('point' in entity && Array.isArray(entity.point)) {
-        points.push(entity.point);
+        points.push({
+          coords: entity.point,
+          rocrateId: canonicalId,
+        });
       }
 
       // Check for bounding box coordinates
@@ -162,6 +187,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         boundingBoxes.push({
           topLeft: [minX, maxY],
           bottomRight: [maxX, minY],
+          rocrateId: canonicalId,
         });
       }
     }
@@ -195,10 +221,19 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     // Add points
     if (spatialData?.points) {
       const pointFeatures = spatialData.points.map(
-        (point) =>
-          new Feature({
-            geometry: new Point(fromLonLat(point)),
-          })
+        (item) => {
+          const feature = new Feature({
+            geometry: new Point(fromLonLat(item.coords)),
+          });
+          // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
+          let rocrateId = item.rocrateId ?? (
+            feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+          );
+          if (!rocrateId) rocrateId = '';
+          if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+          if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+          return feature;
+        }
       );
 
       const pointLayer = new VectorLayer({
@@ -213,15 +248,37 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           }),
         }),
       });
+      // Annotate layer with rocrateId for traceability/UI linking
+      // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
+      const uniqueIds = Array.from(new Set(pointFeatures.map(f => f.get('rocrateId'))));
+      if (uniqueIds.length === 1) {
+        pointLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
+      }
+      // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
+      // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
+      const pointSource = pointLayer.getSource();
+      if (pointSource) {
+        pointSource.on('addfeature', (evt) => {
+          const feature = evt.feature;
+          if (feature) {
+            let rocrateId = (
+              feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+            );
+            if (!rocrateId) rocrateId = '';
+            if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+            if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+          }
+        });
+      }
 
       mapInstance.current.addLayer(pointLayer);
     }
 
     // Add bounding boxes
     if (spatialData?.boundingBoxes) {
-      const boxFeatures = spatialData.boundingBoxes.map((box) => {
-        const topLeft = fromLonLat(box.topLeft);
-        const bottomRight = fromLonLat(box.bottomRight);
+      const boxFeatures = spatialData.boundingBoxes.map((item) => {
+        const topLeft = fromLonLat(item.topLeft);
+        const bottomRight = fromLonLat(item.bottomRight);
         const coordinates = [
           [
             topLeft,
@@ -232,9 +289,18 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           ],
         ];
 
-        return new Feature({
+        const feature = new Feature({
           geometry: new Polygon(coordinates),
         });
+        // Annotate feature with both '@id' and 'rocrateId' for traceability/UI linking
+        // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
+        let rocrateId = item.rocrateId ?? (
+          feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+        );
+        if (!rocrateId) rocrateId = '';
+        if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+        if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+        return feature;
       });
 
       const boxLayer = new VectorLayer({
@@ -246,24 +312,80 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           fill: new Fill({ color: 'rgba(255, 0, 0, 0.2)' }),
         }),
       });
+      // Annotate layer with rocrateId for traceability/UI linking
+      // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
+      const uniqueIds = Array.from(new Set(boxFeatures.map(f => f.get('rocrateId'))));
+      if (uniqueIds.length === 1) {
+        boxLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
+      }
+      // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
+      // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
+      const boxSource = boxLayer.getSource();
+      if (boxSource) {
+        boxSource.on('addfeature', (evt) => {
+          const feature = evt.feature;
+          if (feature) {
+            let rocrateId = (
+              feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+            );
+            if (!rocrateId) rocrateId = '';
+            if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+            if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+          }
+        });
+      }
 
       mapInstance.current.addLayer(boxLayer);
     }
 
     // Add GeoJSON
     if (spatialData?.geoJson?.length) {
-      spatialData.geoJson.forEach((geoJsonUrl) => {
-        fetch(geoJsonUrl)
+      spatialData.geoJson.forEach((item) => {
+        fetch(item.url)
           .then((response) => response.json())
           .then((geoJsonData) => {
+            const features = new GeoJSON().readFeatures(geoJsonData, {
+              featureProjection: 'EPSG:3857',
+            });
+            // Set feature @id to rocrateId for traceability
+            features.forEach((feature: Feature) => {
+              // Annotate feature with both '@id' and 'rocrateId' for traceability/UI linking
+              // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
+              let rocrateId = item.rocrateId ?? (
+                feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+              );
+              if (!rocrateId) rocrateId = '';
+              if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+              if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+            });
             const geoJsonLayer = new VectorLayer({
               source: new VectorSource({
-                features: new GeoJSON().readFeatures(geoJsonData, {
-                  featureProjection: 'EPSG:3857',
-                }),
+                features,
               }),
             });
-    
+            // Annotate layer with rocrateId for traceability/UI linking
+            // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
+            const uniqueIds = Array.from(new Set(features.map(f => f.get('rocrateId'))));
+            if (uniqueIds.length === 1) {
+              geoJsonLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
+            }
+            // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
+            // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
+            const geoJsonSource = geoJsonLayer.getSource();
+            if (geoJsonSource) {
+              geoJsonSource.on('addfeature', (evt) => {
+                const feature = evt.feature;
+                if (feature) {
+                  let rocrateId = (
+                    feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+                  );
+                  if (!rocrateId) rocrateId = '';
+                  if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+                  if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+                }
+              });
+            }
+
             mapInstance.current?.addLayer(geoJsonLayer);
           });
       });
