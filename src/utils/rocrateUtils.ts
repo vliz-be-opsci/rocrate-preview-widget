@@ -60,6 +60,11 @@ export const getIDforItem = (item: any, rocrate_graph:any): any => {
  * @returns The resolved context link or a default schema.org link.
  */
 export function getContextLink(rocrate: any, variable: string): string {
+
+    if (variable.startsWith("http://") || variable.startsWith("https://")) {
+        return variable;
+    }
+
     if (variable.includes(":")) {
         const prefix = variable.split(":")[0];
         const suffix = variable.split(":")[1];
@@ -206,4 +211,60 @@ export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
     }
 
     return undefined;
+}
+
+/**
+ * Checks for the presence of certain types of predicates in a RO-Crate and returns
+ * a dictionary indicating which components can be rendered.
+ * The components and their associated types are defined in a dictionary for easy adjustment.
+ * @param rocrate - The RO-Crate object containing the @graph array.
+ * @returns A dictionary with component names as keys and boolean values indicating their presence.
+ */
+export function getRenderableComponents(rocrate: any): { [key: string]: boolean } {
+    if (!rocrate || !rocrate["@graph"]) {
+        return {};
+    }
+
+    const graph = rocrate["@graph"];
+    const components: { [key: string]: boolean } = {};
+
+    // Define the component types and their associated types
+    const componentTypes: { [key: string]: string[] } = {
+        map_entity: ["Place", "http://purl.org/dc/terms/Location", "http://schema.org/Place"],
+        person: ["Person", "http://schema.org/Person"],
+    };
+
+    for (const entity of graph) {
+        if (entity["@type"]) {
+            const entityTypes = Array.isArray(entity["@type"]) ? entity["@type"] : [entity["@type"]];
+            const resolvedEntityTypes = entityTypes.map((type) => getContextLink(rocrate, type));
+            console.log("Entity types:", entityTypes);
+            console.log("Resolved entity types:", resolvedEntityTypes);
+            for (const [component, types] of Object.entries(componentTypes)) {
+                for (const type of types) {
+                    const resolvedType = getContextLink(rocrate, type);
+                    console.log(`Checking entity type: ${type} and resolved type: ${resolvedType}`);
+                    if (resolvedEntityTypes.includes(type) || resolvedEntityTypes.includes(resolvedType)) {
+                        components[component] = true;
+                    }
+                }
+            }
+        }
+
+        // Exit early if all components are found
+        if (Object.keys(components).length === Object.keys(componentTypes).length) {
+            break;
+        }
+    }
+
+    // Ensure all components are present in the result, defaulting to false
+    for (const component of Object.keys(componentTypes)) {
+        if (!(component in components)) {
+            components[component] = false;
+        }
+    }
+
+    console.log("Renderable components:", components);
+
+    return components;
 }

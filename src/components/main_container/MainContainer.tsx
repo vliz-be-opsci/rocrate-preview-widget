@@ -13,7 +13,7 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
-import { extractRootData, getRoCrateSpecVersion } from "../../utils/rocrateUtils";
+import { extractRootData, getRoCrateSpecVersion, getRenderableComponents } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -118,6 +118,7 @@ export default function MainContainer(props: any) {
     //when rocrate is updated extract the data from it
     useEffect(() => {
         setData(extractData(rocrate));
+        getRenderableComponents(rocrate);
     }, [rocrate]);
 
     useEffect(() => {
