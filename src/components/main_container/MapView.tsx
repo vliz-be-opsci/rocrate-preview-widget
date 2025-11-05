@@ -30,6 +30,8 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const popupContentRef = useRef<HTMLDivElement | null>(null);
   // Fix type: anchor not button
   const popupCloserRef = useRef<HTMLAnchorElement | null>(null);
+  // Flag to prevent double cleanup
+  const isCleanedUp = useRef<boolean>(false);
 
   // Each spatial item now carries rocrateId for traceability and linking.
   type SpatialEntityBase = { rocrateId: string; [k: string]: any };
@@ -44,21 +46,13 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   }
 
   function destroyMapAndNavigate(rocrateid: string) {
-      // Hide popup immediately to prevent any visual artifacts
-      if (overlayRef.current) {
-        overlayRef.current.setPosition(undefined);
+      // DON'T dispose the map - just navigate and let React handle cleanup
+      // Trying to manually dispose causes race conditions with React's cleanup
+      
+      // Navigate immediately
+      if (onSelect) {
+        onSelect(rocrateid);
       }
-      if (popupRef.current) {
-        popupRef.current.style.display = 'none';
-      }
-
-      // Use setTimeout to defer navigation and allow cleanup to complete
-      setTimeout(() => {
-        // Navigate to the specified rocrateID using the onSelect callback
-        if (onSelect) {
-          onSelect(rocrateid);
-        }
-      }, 0);
     }
 
   /**
@@ -254,7 +248,9 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
       overlayRef.current = new Overlay({
         element: popupRef.current,
         autoPan: true,
-        positioning: 'bottom-center'
+        positioning: 'bottom-center',
+        stopEvent: false,  // Don't let overlay manage events
+        insertFirst: false  // Don't try to insert element as first child
       });
       // Set autoPan animation duration after construction (OpenLayers API)
       if (overlayRef.current) {
@@ -481,33 +477,16 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     // --- Cleanup on unmount ---
     // Context7: Clean up overlay and listeners on unmount.
     return () => {
-      if (overlayRef.current) {
-        // Only hide the popup, do not remove DOM node
-        overlayRef.current.setPosition(undefined);
-        if (popupRef.current) popupRef.current.style.display = 'none';
-        // Detach overlay element to prevent OpenLayers from removing React node
-        overlayRef.current.setElement(document.createElement('div'));
-      }
-      if (mapInstance.current) {
-        mapInstance.current.setTarget(undefined);
-      }
+      // Prevent double cleanup
+      if (isCleanedUp.current) return;
+      isCleanedUp.current = true;
+      
+      // DON'T call any OpenLayers cleanup methods - they try to manipulate React-managed DOM
+      // Just nullify references and let React clean up the DOM naturally
+      mapInstance.current = null;
+      overlayRef.current = null;
     };
   }, [spatialData]);
-  // Add cleanup function to detach overlay element
-  useEffect(() => {
-    return () => {
-      if (overlayRef.current) {
-        // Only hide the popup, do not remove DOM node
-        overlayRef.current.setPosition(undefined);
-        if (popupRef.current) popupRef.current.style.display = 'none';
-        // Detach overlay element to prevent OpenLayers from removing React node
-        overlayRef.current.setElement(document.createElement('div'));
-      }
-      if (mapInstance.current) {
-        mapInstance.current.setTarget(undefined);
-      }
-    };
-  }, []);
 
   // Render map container and popup overlay element
   // Render map container and popup overlay element
