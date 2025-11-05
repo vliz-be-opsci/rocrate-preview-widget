@@ -28,7 +28,8 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const popupRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<OverlayType | null>(null);
   const popupContentRef = useRef<HTMLDivElement | null>(null);
-  const popupCloserRef = useRef<HTMLButtonElement | null>(null);
+  // Fix type: anchor not button
+  const popupCloserRef = useRef<HTMLAnchorElement | null>(null);
 
   // Each spatial item now carries rocrateId for traceability and linking.
   type SpatialEntityBase = { rocrateId: string; [k: string]: any };
@@ -202,7 +203,18 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const spatialData = extractSpatialData(rocrate, rocrateID);
 
   useEffect(() => {
+    // --- Popup Overlay Lifecycle ---
+    // 1. Render DOM elements via JSX (see below) so refs exist.
+    // 2. Create Overlay only after popupRef.current is non-null.
+    // 3. Add overlay to map after map is created.
+    // 4. Set overlay position on feature click, hide on close.
     if (!mapRef.current) return;
+
+    // Defensive: Clean up previous overlay and listeners before re-init
+    if (overlayRef.current && mapInstance.current) {
+      mapInstance.current.removeOverlay(overlayRef.current);
+      overlayRef.current = null;
+    }
 
     // Initialize map
     mapInstance.current = new OLMap({
@@ -218,6 +230,37 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
       }),
     });
 
+    // --- Popup Overlay Setup ---
+    // Defensive: Only create overlay after popupRef.current exists.
+    if (popupRef.current && !overlayRef.current) {
+      // Context7: Overlay must be constructed after popupRef exists and added to map.
+      // See authoritative pattern: https://context7.com/openlayers/openlayers/llms.txt
+      overlayRef.current = new Overlay({
+        element: popupRef.current,
+        autoPan: true,
+        positioning: 'bottom-center'
+      });
+      // Set autoPan animation duration after construction (OpenLayers API)
+      if (overlayRef.current) {
+        // @ts-ignore: OpenLayers Overlay supports autoPanAnimation but not typed in Options
+        overlayRef.current.setProperties({ autoPanAnimation: { duration: 250 } });
+      }
+      mapInstance.current.addOverlay(overlayRef.current);
+    }
+
+    // Defensive: Set minimal inline styles for popup visibility
+    if (popupRef.current) {
+      // Context7: Inline styles for overlay visibility and z-index.
+      popupRef.current.style.position = 'absolute';
+      popupRef.current.style.background = 'white';
+      popupRef.current.style.padding = '8px';
+      popupRef.current.style.borderRadius = '4px';
+      popupRef.current.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+      popupRef.current.style.zIndex = '10000';
+      popupRef.current.style.minWidth = '120px';
+      popupRef.current.style.display = 'none'; // Hide by default
+    }
+
     // Add points
     if (spatialData?.points) {
       const pointFeatures = spatialData.points.map(
@@ -225,7 +268,6 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           const feature = new Feature({
             geometry: new Point(fromLonLat(item.coords)),
           });
-          // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
           let rocrateId = item.rocrateId ?? (
             feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
           );
@@ -248,14 +290,10 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           }),
         }),
       });
-      // Annotate layer with rocrateId for traceability/UI linking
-      // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
       const uniqueIds = Array.from(new Set(pointFeatures.map(f => f.get('rocrateId'))));
       if (uniqueIds.length === 1) {
         pointLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
       }
-      // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
-      // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
       const pointSource = pointLayer.getSource();
       if (pointSource) {
         pointSource.on('addfeature', (evt) => {
@@ -292,8 +330,6 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         const feature = new Feature({
           geometry: new Polygon(coordinates),
         });
-        // Annotate feature with both '@id' and 'rocrateId' for traceability/UI linking
-        // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
         let rocrateId = item.rocrateId ?? (
           feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
         );
@@ -312,14 +348,10 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           fill: new Fill({ color: 'rgba(255, 0, 0, 0.2)' }),
         }),
       });
-      // Annotate layer with rocrateId for traceability/UI linking
-      // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
       const uniqueIds = Array.from(new Set(boxFeatures.map(f => f.get('rocrateId'))));
       if (uniqueIds.length === 1) {
         boxLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
       }
-      // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
-      // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
       const boxSource = boxLayer.getSource();
       if (boxSource) {
         boxSource.on('addfeature', (evt) => {
@@ -347,10 +379,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
             const features = new GeoJSON().readFeatures(geoJsonData, {
               featureProjection: 'EPSG:3857',
             });
-            // Set feature @id to rocrateId for traceability
             features.forEach((feature: Feature) => {
-              // Annotate feature with both '@id' and 'rocrateId' for traceability/UI linking
-              // Annotate feature with canonical rocrateId for traceability (first-wins, do not overwrite)
               let rocrateId = item.rocrateId ?? (
                 feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
               );
@@ -363,14 +392,10 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
                 features,
               }),
             });
-            // Annotate layer with rocrateId for traceability/UI linking
-            // Annotate layer with rocrateId if all features share the same rocrateId (single-origin layer)
             const uniqueIds = Array.from(new Set(features.map(f => f.get('rocrateId'))));
             if (uniqueIds.length === 1) {
               geoJsonLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
             }
-            // If features are from multiple rocrates, do not set layer rocrateId (per-feature only)
-            // Defensive: ensure features added asynchronously are annotated with canonical rocrateId
             const geoJsonSource = geoJsonLayer.getSource();
             if (geoJsonSource) {
               geoJsonSource.on('addfeature', (evt) => {
@@ -391,33 +416,62 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
       });
     }
 
-    // Add singleclick handler for popups
+    // --- Popup click handler ---
+    // Context7: Use forEachFeatureAtPixel to pick top feature and anchor overlay.
     mapInstance.current.on('singleclick', (event) => {
-      if (onSelect) {
-        mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => {
-          //console log if the user clicked on a feature
-          console.log('Feature clicked:', feature);
-          let rocrateId = (
-            feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
-          );
-          if (!rocrateId) rocrateId = '';
-          //onSelect(String(rocrateId));
-
-          //get coordinates where to show the popup
-          const coordinates = event.coordinate;
-          //set popup content
-          if (popupContentRef.current) {
-            popupContentRef.current.innerHTML = `<p>RO-Crate ID: ${rocrateId}</p>`;
+      let foundFeature = false;
+      // Defensive: ensure pointer events are not blocked by CSS
+      mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => {
+        foundFeature = true;
+        let rocrateId = (
+          feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+        );
+        if (!rocrateId) rocrateId = '';
+        // Set popup content
+        if (popupContentRef.current) {
+          popupContentRef.current.innerHTML = `<p>RO-Crate ID: ${rocrateId}</p><a href="#" id="popup-link">${rocrateId}</a>`;
+          // Remove previous listeners to avoid duplicate firing
+          const link = popupContentRef.current.querySelector('#popup-link');
+          if (link && onSelect) {
+            (link as HTMLAnchorElement).onclick = (e: MouseEvent) => {
+              e.preventDefault();
+              onSelect(rocrateId);
+              overlayRef.current?.setPosition(undefined);
+              if (popupRef.current) popupRef.current.style.display = 'none';
+              return false;
+            };
           }
-          //show the popup
-          overlayRef.current?.setPosition(coordinates);
-          return true; // Stop after first feature
-
-        });
+        }
+        // Show popup at coordinate
+        overlayRef.current?.setPosition(event.coordinate);
+        if (popupRef.current) popupRef.current.style.display = 'block';
+        return true; // Stop after first feature
+      }, { hitTolerance: 2 }); // Use hitTolerance for canvas/decluttered layers
+      // Hide popup if no feature found
+      if (!foundFeature) {
+        overlayRef.current?.setPosition(undefined);
+        if (popupRef.current) popupRef.current.style.display = 'none';
       }
     });
 
+    // --- Popup closer handler ---
+    if (popupCloserRef.current) {
+      popupCloserRef.current.onclick = (e) => {
+        e.preventDefault();
+        overlayRef.current?.setPosition(undefined);
+        if (popupRef.current) popupRef.current.style.display = 'none';
+        return false;
+      };
+    }
+
+    // --- Cleanup on unmount ---
+    // Context7: Clean up overlay and listeners on unmount.
     return () => {
+      if (overlayRef.current && mapInstance.current) {
+        overlayRef.current.setPosition(undefined);
+        mapInstance.current.removeOverlay(overlayRef.current);
+        overlayRef.current = null;
+      }
       mapInstance.current?.setTarget(undefined);
     };
   }, [spatialData]);
@@ -428,17 +482,27 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   return (
     <>
       <div ref={mapRef} style={{ width: '100%', height: '400px' }} />
-      <div ref={popupRef} id="popup" className="ol-popup">
+      <div
+        ref={popupRef}
+        id="popup"
+        className="ol-popup"
+        // Inline styles for guaranteed visibility and z-index
+        style={{
+          position: 'absolute',
+          background: 'white',
+          padding: '8px',
+          borderRadius: '4px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+          minWidth: '120px',
+          display: 'none'
+        }}
+      >
         <a
           href="#"
           ref={popupCloserRef}
           id="popup-closer"
           className="ol-popup-closer"
-          onClick={(e) => {
-            e.preventDefault();
-            overlayRef.current?.setPosition(undefined);
-            return false;
-          }}
         ></a>
         <div ref={popupContentRef} id="popup-content"></div>
       </div>
