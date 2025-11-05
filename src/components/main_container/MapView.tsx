@@ -43,6 +43,19 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     geoJson?: GeoJsonItem[];
   }
 
+  function destroyMapAndNavigate(rocrateid: string) {
+      // Destroy the map instance
+      if (mapInstance.current) {
+        mapInstance.current.setTarget(undefined);
+        mapInstance.current = null;
+      }
+
+      // Navigate to the specified rocrateID using the onSelect callback
+      if (onSelect) {
+        onSelect(rocrateid);
+      }
+    }
+
   /**
    * Extracts spatial data from a RO-Crate JSON-LD object.
    *
@@ -429,16 +442,12 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         if (!rocrateId) rocrateId = '';
         // Set popup content
         if (popupContentRef.current) {
-          popupContentRef.current.innerHTML = `<p>RO-Crate ID: ${rocrateId}</p><a href="#" id="popup-link">${rocrateId}</a>`;
+          popupContentRef.current.innerHTML = `<p>RO-Crate ID:</p><p id="popup-link">${rocrateId}</p>`;
           // Remove previous listeners to avoid duplicate firing
           const link = popupContentRef.current.querySelector('#popup-link');
           if (link && onSelect) {
             (link as HTMLAnchorElement).onclick = (e: MouseEvent) => {
-              e.preventDefault();
-              onSelect(rocrateId);
-              overlayRef.current?.setPosition(undefined);
-              if (popupRef.current) popupRef.current.style.display = 'none';
-              return false;
+              destroyMapAndNavigate(rocrateId);
             };
           }
         }
@@ -458,23 +467,46 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     if (popupCloserRef.current) {
       popupCloserRef.current.onclick = (e) => {
         e.preventDefault();
-        overlayRef.current?.setPosition(undefined);
-        if (popupRef.current) popupRef.current.style.display = 'none';
+        // Only hide the popup, do not remove DOM node
+        if (overlayRef.current) {
+          overlayRef.current.setPosition(undefined);
+        }
+        if (popupRef.current && popupRef.current.parentNode) {
+          popupRef.current.style.display = 'none';
+        }
         return false;
       };
     }
-
     // --- Cleanup on unmount ---
     // Context7: Clean up overlay and listeners on unmount.
     return () => {
-      if (overlayRef.current && mapInstance.current) {
+      if (overlayRef.current) {
+        // Only hide the popup, do not remove DOM node
         overlayRef.current.setPosition(undefined);
-        mapInstance.current.removeOverlay(overlayRef.current);
-        overlayRef.current = null;
+        if (popupRef.current) popupRef.current.style.display = 'none';
+        // Detach overlay element to prevent OpenLayers from removing React node
+        overlayRef.current.setElement(document.createElement('div'));
       }
-      mapInstance.current?.setTarget(undefined);
+      if (mapInstance.current) {
+        mapInstance.current.setTarget(undefined);
+      }
     };
   }, [spatialData]);
+  // Add cleanup function to detach overlay element
+  useEffect(() => {
+    return () => {
+      if (overlayRef.current) {
+        // Only hide the popup, do not remove DOM node
+        overlayRef.current.setPosition(undefined);
+        if (popupRef.current) popupRef.current.style.display = 'none';
+        // Detach overlay element to prevent OpenLayers from removing React node
+        overlayRef.current.setElement(document.createElement('div'));
+      }
+      if (mapInstance.current) {
+        mapInstance.current.setTarget(undefined);
+      }
+    };
+  }, []);
 
   // Render map container and popup overlay element
   // Render map container and popup overlay element
