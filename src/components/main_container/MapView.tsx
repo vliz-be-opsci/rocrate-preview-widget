@@ -35,7 +35,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   type SpatialEntityBase = { rocrateId: string; [k: string]: any };
   type PointItem = SpatialEntityBase & { coords: [number, number] };
   type BoundingBoxItem = SpatialEntityBase & { topLeft: [number, number]; bottomRight: [number, number] };
-  type GeoJsonItem = SpatialEntityBase & { url: string };
+  type GeoJsonItem = SpatialEntityBase & { data: any };
 
   interface SpatialData {
     points?: PointItem[];
@@ -176,9 +176,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
           try {
             const geojsonObj = wktToGeoJSON(geoValue['@value']);
             geoJson.push({
-              url: URL.createObjectURL(
-                new Blob([JSON.stringify(geojsonObj)], { type: 'application/json' })
-              ),
+              data: geojsonObj,
               rocrateId: canonicalId,
             });
           } catch (e) {
@@ -386,46 +384,42 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
     // Add GeoJSON
     if (spatialData?.geoJson?.length) {
       spatialData.geoJson.forEach((item) => {
-        fetch(item.url)
-          .then((response) => response.json())
-          .then((geoJsonData) => {
-            const features = new GeoJSON().readFeatures(geoJsonData, {
-              featureProjection: 'EPSG:3857',
-            });
-            features.forEach((feature: Feature) => {
-              let rocrateId = item.rocrateId ?? (
+        const features = new GeoJSON().readFeatures(item.data, {
+          featureProjection: 'EPSG:3857',
+        });
+        features.forEach((feature: Feature) => {
+          let rocrateId = item.rocrateId ?? (
+            feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
+          );
+          if (!rocrateId) rocrateId = '';
+          if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
+          if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
+        });
+        const geoJsonLayer = new VectorLayer({
+          source: new VectorSource({
+            features,
+          }),
+        });
+        const uniqueIds = Array.from(new Set(features.map(f => f.get('rocrateId'))));
+        if (uniqueIds.length === 1) {
+          geoJsonLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
+        }
+        const geoJsonSource = geoJsonLayer.getSource();
+        if (geoJsonSource) {
+          geoJsonSource.on('addfeature', (evt) => {
+            const feature = evt.feature;
+            if (feature) {
+              let rocrateId = (
                 feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
               );
               if (!rocrateId) rocrateId = '';
               if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
               if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
-            });
-            const geoJsonLayer = new VectorLayer({
-              source: new VectorSource({
-                features,
-              }),
-            });
-            const uniqueIds = Array.from(new Set(features.map(f => f.get('rocrateId'))));
-            if (uniqueIds.length === 1) {
-              geoJsonLayer.set('rocrateId', String(uniqueIds[0] ?? ''));
             }
-            const geoJsonSource = geoJsonLayer.getSource();
-            if (geoJsonSource) {
-              geoJsonSource.on('addfeature', (evt) => {
-                const feature = evt.feature;
-                if (feature) {
-                  let rocrateId = (
-                    feature.get('@id') ?? feature.get('id') ?? feature.get('rocrate') ?? feature.get('rocrate_id') ?? feature.getId()
-                  );
-                  if (!rocrateId) rocrateId = '';
-                  if (feature.get('@id') === undefined) feature.set('@id', String(rocrateId));
-                  if (feature.get('rocrateId') === undefined) feature.set('rocrateId', String(rocrateId));
-                }
-              });
-            }
-
-            mapInstance.current?.addLayer(geoJsonLayer);
           });
+        }
+
+        mapInstance.current?.addLayer(geoJsonLayer);
       });
     }
 
