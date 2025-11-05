@@ -274,7 +274,7 @@ export default function MainContainer(props: any) {
             ) : rocrateID === "view_dataset_overview" ? (
             <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
             ) : rocrateID === "map_entity" ? (
-            <MapView rocrate={rocrate} rocrateID={rocrateID} />
+            <MapView rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             ) : rocrateID === "person_entity" ? (
             <PersonOverview rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : (

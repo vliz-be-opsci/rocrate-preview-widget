@@ -13,17 +13,22 @@ import { Point, Polygon } from 'ol/geom';
 import { Feature } from 'ol';
 import { Style, Fill, Stroke, Circle as CircleStyle } from 'ol/style';
 import GeoJSON from 'ol/format/GeoJSON';
+import Overlay from 'ol/Overlay'; // Popup overlay
+type OverlayType = Overlay;
 
 interface MapViewProps {
   rocrate: Record<string, any>
   rocrateID: string;
+  onSelect?: (id: string) => void; // Added for popup selection
 };
 
-const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
+const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstance = useRef<OLMap | null>(null);
-  console.log("MapView rocrate", rocrate);
-  console.log("MapView rocrateID", rocrateID);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const overlayRef = useRef<OverlayType | null>(null);
+  const popupContentRef = useRef<HTMLDivElement | null>(null);
+  const popupCloserRef = useRef<HTMLButtonElement | null>(null);
 
   interface SpatialData {
     points?: [number, number][];
@@ -64,14 +69,9 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
 
     // Helper to resolve @id references
     const byId = Object.fromEntries(graph.map((e: any) => [e['@id'], e]));
-    console.log("Graph entities:", graph);
-    console.log("RO-Crate ID map:", rocrateID);
     for (const entity of graph) {
-      console.log("Processing entity:", entity);
       // firt check if the @id is the rocrateID
       if (entity['@id'] === rocrateID) {
-        console.log("Found RO-Crate entity:", entity);
-
         // Find spatial entities referenced by spatial fields in the main entity
         for (const field of spatialFields) {
           const spatialRef = entity[field];
@@ -81,27 +81,25 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
             for (const ref of refs) {
               // If it's an object with @id, resolve it
               if (typeof ref === 'object' && ref['@id'] && byId[ref['@id']]) {
-          spatialEntities.push(byId[ref['@id']]);
+                spatialEntities.push(byId[ref['@id']]);
               }
               // If it's a string, treat as @id
               else if (typeof ref === 'string' && byId[ref]) {
-          spatialEntities.push(byId[ref]);
+                spatialEntities.push(byId[ref]);
               }
               // If it's an inline object, push directly
               else if (typeof ref === 'object') {
-          spatialEntities.push(ref);
+                spatialEntities.push(ref);
               }
             }
           }
         }
-        console.log("Spatial entities in RO-Crate (bound to @id):", spatialEntities);
-      break;
+        break;
       }
     }
 
     // if rocrateid is contextual_entities then get ll spatial entities
     if (rocrateID === "map_entity") {
-      console.log("RO-Crate ID is 'contextual_entities', using all spatial entities in the graph");
       let boundspatialEntities = graph.filter((entity: any) => {
         return spatialFields.some(field => field in entity);
       });
@@ -114,32 +112,27 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
             for (const ref of refs) {
               // If it's an object with @id, resolve it
               if (typeof ref === 'object' && ref['@id'] && byId[ref['@id']]) {
-          spatialEntities.push(byId[ref['@id']]);
+                spatialEntities.push(byId[ref['@id']]);
               }
               // If it's a string, treat as @id
               else if (typeof ref === 'string' && byId[ref]) {
-          spatialEntities.push(byId[ref]);
+                spatialEntities.push(byId[ref]);
               }
               // If it's an inline object, push directly
               else if (typeof ref === 'object') {
-          spatialEntities.push(ref);
+                spatialEntities.push(ref);
               }
             }
           }
         }
-        // get all the entitities that are bound to the boundspatialEntities
-        console.log("Spatial entities in RO-Crate (all):", spatialEntities);
       }
     }
 
     // Process each spatial entity found 
     for (const entity of spatialEntities) {
-      console.log("Processing spatial entity:", entity);
-
       // Check if it has a geo property with WKT
       if ('geo' in entity) {
         const geoValue = entity['geo'];
-        console.log("Geo value found:", geoValue);
         if (
           typeof geoValue === 'object' &&
           geoValue['@type'] === 'geo:wktLiteral' &&
@@ -153,7 +146,7 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
               )
             );
           } catch (e) {
-            console.log('Failed to parse WKT:', geoValue['@value'], e);
+            // Failed to parse WKT
           }
         }
       }
@@ -181,7 +174,6 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
   }
 
   const spatialData = extractSpatialData(rocrate, rocrateID);
-  console.log("Extracted spatial data:", spatialData);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -277,12 +269,44 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID }) => {
       });
     }
 
+    // Add singleclick handler for popups
+    mapInstance.current.on('singleclick', (event) => {
+      if (onSelect) {
+        mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => {
+          //console log if the user clicked on a feature
+          console.log('Feature clicked:', feature);
+          
+        });
+      }
+    });
+
     return () => {
       mapInstance.current?.setTarget(undefined);
     };
   }, [spatialData]);
 
-  return <div ref={mapRef} style={{ width: '100%', height: '400px' }} />;
+  // Render map container and popup overlay element
+  // Render map container and popup overlay element
+  // The popup overlay must be rendered in the React tree so its DOM exists before Overlay construction.
+  return (
+    <>
+      <div ref={mapRef} style={{ width: '100%', height: '400px' }} />
+      <div ref={popupRef} id="popup" className="ol-popup">
+        <a
+          href="#"
+          ref={popupCloserRef}
+          id="popup-closer"
+          className="ol-popup-closer"
+          onClick={(e) => {
+            e.preventDefault();
+            overlayRef.current?.setPosition(undefined);
+            return false;
+          }}
+        ></a>
+        <div ref={popupContentRef} id="popup-content"></div>
+      </div>
+    </>
+  );
 };
 
 export default MapView;
