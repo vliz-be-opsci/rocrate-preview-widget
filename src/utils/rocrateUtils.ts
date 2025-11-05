@@ -60,8 +60,9 @@ export const getIDforItem = (item: any, rocrate_graph:any): any => {
  * @returns The resolved context link or a default schema.org link.
  */
 export function getContextLink(rocrate: any, variable: string): string {
+    console.log("Resolving context link for variable:", variable);
 
-    if (variable.startsWith("http://") || variable.startsWith("https://")) {
+    if (typeof variable === "string" && (variable.startsWith("http://") || variable.startsWith("https://"))) {
         return variable;
     }
 

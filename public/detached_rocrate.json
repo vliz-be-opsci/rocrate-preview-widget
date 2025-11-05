@@ -35,6 +35,11 @@
       ]
     },
     {
+      "@id": "https://orcid.org/0000-0002-4927-979X",
+      "@type": "Person",
+      "name": "Cymon J. Cox"
+    },
+    {
       "@id": "geocontains.txt",
       "@type": "File",
       "name": "Example: Geospatial Contains",
