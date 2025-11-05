@@ -221,7 +221,7 @@ export function getRoCrateSpecVersion(conformsTo: any): string | undefined {
  * @param rocrate - The RO-Crate object containing the @graph array.
  * @returns A dictionary with component names as keys and boolean values indicating their presence.
  */
-export function getRenderableComponents(rocrate: any): { [key: string]: boolean } {
+export function getRenderableComponents(rocrate: any, componentTypes: { [key: string]: string[] }): { [key: string]: boolean } {
     if (!rocrate || !rocrate["@graph"]) {
         return {};
     }
@@ -230,10 +230,7 @@ export function getRenderableComponents(rocrate: any): { [key: string]: boolean 
     const components: { [key: string]: boolean } = {};
 
     // Define the component types and their associated types
-    const componentTypes: { [key: string]: string[] } = {
-        map_entity: ["Place", "http://purl.org/dc/terms/Location", "http://schema.org/Place"],
-        person: ["Person", "http://schema.org/Person"],
-    };
+    
 
     for (const entity of graph) {
         if (entity["@type"]) {

@@ -74,6 +74,13 @@ export default function MainContainer(props: any) {
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [entityCounts, setEntityCounts] = useState<{ [key: string]: number }>({});
+    const [renderableComponents, setRenderableComponents] = useState<{ [key: string]: boolean }>({});
+
+    // temporary variable that contains all the different renderable components and URI's to test
+    const componentTypes: { [key: string]: string[] } = {
+        map_entity: ["Place", "http://purl.org/dc/terms/Location", "http://schema.org/Place"],
+        person: ["Person", "http://schema.org/Person"],
+    };
 
     const handleSelect = (id: string) => {
         setRocrateID(id);
@@ -118,7 +125,7 @@ export default function MainContainer(props: any) {
     //when rocrate is updated extract the data from it
     useEffect(() => {
         setData(extractData(rocrate));
-        getRenderableComponents(rocrate);
+        setRenderableComponents(getRenderableComponents(rocrate, componentTypes));
     }, [rocrate]);
 
     useEffect(() => {
@@ -176,91 +183,77 @@ export default function MainContainer(props: any) {
         <>
             <br/>
             <div className="flex flex-col sm:flex-row justify-between items-center">
-                <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
-                <SearchComponent
-                    rocrate={rocrate}
-                    onSelect={handleSelect}
-                    onFocus={handleSearchFocus}
-                    onResults={handleSearchResults}
-                    onClose={handleSearchClose}
-                />
+            <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
+            <SearchComponent
+                rocrate={rocrate}
+                onSelect={handleSelect}
+                onFocus={handleSearchFocus}
+                onResults={handleSearchResults}
+                onClose={handleSearchClose}
+            />
             </div>
             {showSearchResults ? (
-                <SearchDropdown rocrate={{ "@graph": searchResults }} onSelect={handleSelect} />
+            <SearchDropdown rocrate={{ "@graph": searchResults }} onSelect={handleSelect} />
             ) : (
-                <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
             <br />
             {rocrateID === "" ? (
-                <>
-                <div className="flex flex-col sm:flex-row mt-3">
-                    <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen /></span>
-                            <p className="text-lg font-semibold mr-1">Dataset entities</p>
-                            {Object.keys(entityCounts)
-                                .filter((type) => type === "Dataset" || type === "File")
-                                .map((type, index) => (
-                                    <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                                        {type}: {entityCounts[type]}
-                                    </span>
-                                ))}
-                        </div>
-                    </div>
-                    <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster /></span>
-                            <p className="text-lg font-semibold mr-1">Contextual entities</p>
-                            <div className="flex flex-wrap">
-                                {Object.keys(entityCounts)
-                                    .filter((type) => type !== "Dataset" && type !== "File")
-                                    .map((type, index) => (
-                                        <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-1 px-2.5 py-0.5 rounded">
-                                            {type}: {entityCounts[type]}
-                                        </span>
-                                    ))}
-                            </div>
-                        </div>
+            <>
+            <div className="flex flex-col sm:flex-row mt-3">
+                <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
+                <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                    <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen /></span>
+                    <p className="text-lg font-semibold mr-1">Dataset entities</p>
+                    {Object.keys(entityCounts)
+                    .filter((type) => type === "Dataset" || type === "File")
+                    .map((type, index) => (
+                        <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                        {type}: {entityCounts[type]}
+                        </span>
+                    ))}
+                </div>
+                </div>
+                <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
+                <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                    <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster /></span>
+                    <p className="text-lg font-semibold mr-1">Contextual entities</p>
+                    <div className="flex flex-wrap">
+                    {Object.keys(entityCounts)
+                        .filter((type) => type !== "Dataset" && type !== "File")
+                        .map((type, index) => (
+                        <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-1 px-2.5 py-0.5 rounded">
+                            {type}: {entityCounts[type]}
+                        </span>
+                        ))}
                     </div>
                 </div>
-                <div className="w-full sm:w-1/2 sm:mb-2 sm:mr-1 mt-4 cursor-pointer" onClick={() => setIsMaximized((prev) => true)}>
-                    <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full relative">
-                        <span className="text-4xl text-gray-500 mr-2"><FaMapMarkerAlt /></span>
-                        <div className="flex flex-col">
-                            <p className="text-lg font-semibold mr-1">Map entities</p>
-                            <p className="text-sm text-gray-600">
-                                {isMaximized ? "" : "Click to maximize."}
-                            </p>
-                        </div>
-                        {isMaximized && (
-                            <button
-                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsMaximized(false);
-                                }}
-                                aria-label="Close"
-                            >
-                                ✕
-                            </button>
-                        )}
-                    </div>
-                    {isMaximized && (
-                        <div className="mt-3">
-                            <MapView rocrate={rocrate} rocrateID={rocrateID} />
-                        </div>
-                    )}
                 </div>
-                <MainDashboardCrate data={data} rocrate={rocrate} rocrateID={rocrateID} />
-                
-                </>
-                
+            </div>
+            <div className="flex flex-wrap -mx-1 mt-4">
+                {Object.keys(renderableComponents).map((componentKey, index) => (
+                    <div
+                        key={index}
+                        className="w-full sm:w-1/2 px-1 mb-2 cursor-pointer"
+                        onClick={() => setRocrateID(componentKey)}
+                    >
+                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                            <p className="text-lg font-semibold">{componentKey}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <MainDashboardCrate data={data} rocrate={rocrate} rocrateID={rocrateID} />
+            </>
+            
             ) : rocrateID === "Contextual_entities" ? (
-                <EntityList rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
+            <EntityList rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : rocrateID === "view_dataset_overview" ? (
-                <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
+            <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
+            ) : rocrateID === "map_entity" ? (
+            <MapView rocrate={rocrate} rocrateID={rocrateID} />
             ) : (
-                <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
             
         </>

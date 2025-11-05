@@ -62,8 +62,7 @@ const EntityList = ({ rocrate, onSelect, rocrateID }: EntityListProps) => {
                         </div>
                     </li>
                 ))}
-            </ul>
-            
+            </ul>  
         </div>
     );
 };
