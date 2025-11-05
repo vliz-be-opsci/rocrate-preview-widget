@@ -328,3 +328,47 @@ export function getRenderableComponents(
 
     return components;
 }
+
+/**
+ * Counts occurrences of each type label from the RO-Crate graph.
+ * For each entity in the RO-Crate, it checks if the entity matches any of the types
+ * defined in the provided componentTypes and returns a record of { label: count }.
+ *
+ * @param rocrate - The RO-Crate object containing the @graph array.
+ * @param componentTypes - Dictionary of component types and their info.
+ * @returns Record<string, number> mapping type label to count.
+ */
+export function countTypesFromComponentTypes(
+    rocrate: any,
+    componentTypes: { [key: string]: ComponentTypeInfo }
+): Record<string, number> {
+    if (!rocrate || !rocrate["@graph"]) {
+        return {};
+    }
+
+    const graph = rocrate["@graph"];
+    const tally: Record<string, number> = {};
+
+    for (const entity of graph) {
+        if (entity["@type"]) {
+            const entityTypes = Array.isArray(entity["@type"]) ? entity["@type"] : [entity["@type"]];
+            const resolvedEntityTypes = entityTypes.map((type) => getContextLink(rocrate, type));
+            console.log("Entity types:", entityTypes);
+            console.log("Resolved entity types:", resolvedEntityTypes);
+
+            for (const [_, info] of Object.entries(componentTypes)) {
+                for (const type of info.URIs) {
+                    const resolvedType = getContextLink(rocrate, type);
+                    if (resolvedEntityTypes.includes(type) || resolvedEntityTypes.includes(resolvedType)) {
+                        // Extract label: last fragment after '#' or '/'
+                        const labelMatch = type.match(/([^#/]+)$/);
+                        const label = labelMatch ? labelMatch[1] : type;
+                        tally[label] = (tally[label] || 0) + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    return tally;
+}

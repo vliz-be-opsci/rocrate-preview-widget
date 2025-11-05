@@ -1,6 +1,7 @@
 import React from 'react';
-import { FaFolder, FaFolderOpen, FaFile, FaExclamationCircle } from 'react-icons/fa';
+import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { useState } from 'react';
+import { countTypesFromComponentTypes } from '../../utils/rocrateUtils';
 
 interface DatasetOverviewProps {
   rocrate: Record<string, any>;
@@ -51,10 +52,15 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
           isChild,
           datasetCount,
           fileCount,
+          // Add componentTypes for tallying
+          componentTypes: dataset['componentTypes'] || dataset['@type'],
       };
   
       return info;
   }, {});
+
+// Compute type tally for datasets
+const typeTally = countTypesFromComponentTypes(datasets);
 
   console.log('Dataset Info:', datasetInfo);
 
@@ -88,6 +94,19 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
 
   return (
       <div>
+          <div className="mb-4">
+              {/* Type tally UI */}
+              <div className="flex flex-wrap items-center">
+                  {Object.entries(typeTally).map(([type, count], i) => (
+                      <span
+                          key={`${type}-${i}`}
+                          className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-1 px-2.5 py-0.5 rounded"
+                      >
+                          {type}: {count}
+                      </span>
+                  ))}
+              </div>
+          </div>
           <div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {parentDatasets.map((dataset) => (
@@ -127,10 +146,10 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
                           onMouseLeave={() => { setHoveredCard(null); }}
                       >
                           <div className="text-lg font-bold flex items-center relative">
-                              <FaFile className="mr-2 text-gray-500" />
+                              <span className="mr-2 text-gray-500 text-lg">📄</span>
                               <span className="mr-2">{fileId}</span>
                               <div className="relative group">
-                                  <FaExclamationCircle className="text-orange-500 cursor-pointer" />
+                                  <span className="text-orange-500 cursor-pointer text-lg">⚠️</span>
                                   <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-orange-100 text-orange-800 text-xs font-semibold p-2 rounded shadow-lg w-64">
                                       It is not proper data management to have lingering files that are not connected to a dataset entity.
                                   </div>
