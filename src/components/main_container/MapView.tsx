@@ -44,16 +44,21 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
   }
 
   function destroyMapAndNavigate(rocrateid: string) {
-      // Destroy the map instance
-      if (mapInstance.current) {
-        mapInstance.current.setTarget(undefined);
-        mapInstance.current = null;
+      // Hide popup immediately to prevent any visual artifacts
+      if (overlayRef.current) {
+        overlayRef.current.setPosition(undefined);
+      }
+      if (popupRef.current) {
+        popupRef.current.style.display = 'none';
       }
 
-      // Navigate to the specified rocrateID using the onSelect callback
-      if (onSelect) {
-        onSelect(rocrateid);
-      }
+      // Use setTimeout to defer navigation and allow cleanup to complete
+      setTimeout(() => {
+        // Navigate to the specified rocrateID using the onSelect callback
+        if (onSelect) {
+          onSelect(rocrateid);
+        }
+      }, 0);
     }
 
   /**
@@ -436,11 +441,13 @@ const MapView: React.FC<MapViewProps> = ({ rocrate, rocrateID, onSelect }) => {
         if (!rocrateId) rocrateId = '';
         // Set popup content
         if (popupContentRef.current) {
-          popupContentRef.current.innerHTML = `<p>RO-Crate ID:</p><p id="popup-link">${rocrateId}</p>`;
+          popupContentRef.current.innerHTML = `<p>RO-Crate ID:</p><a href="#" id="popup-link" style="color: #0066cc; text-decoration: underline; cursor: pointer;">${rocrateId}</a>`;
           // Remove previous listeners to avoid duplicate firing
           const link = popupContentRef.current.querySelector('#popup-link');
           if (link && onSelect) {
             (link as HTMLAnchorElement).onclick = (e: MouseEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
               destroyMapAndNavigate(rocrateId);
             };
           }
