@@ -5,14 +5,16 @@ import { getLabelForItem, getIDforItem } from "../../utils/rocrateUtils";
 interface EntityListProps {
     rocrate: any;
     onSelect: (id: string) => void;
+    rocrateID: string;
 }
 
-const EntityList = ({ rocrate, onSelect }: EntityListProps) => {
+const EntityList = ({ rocrate, onSelect, rocrateID }: EntityListProps) => {
     const entities = rocrate["@graph"].filter((item: any) => item["@type"] !== "Dataset" && item["@type"] !== "File");
-
     return (
         <div className="mt-4">
-            <h2 className="text-lg font-semibold mb-2">Entities</h2>
+            <div className="flex items-center mb-2">
+                <h2 className="text-lg font-semibold">Entities</h2>
+            </div>
             <ul className="bg-white border border-gray-200 rounded shadow-lg p-4">
                 {entities.map((entity: any, index: number) => (
                     <li
@@ -23,14 +25,30 @@ const EntityList = ({ rocrate, onSelect }: EntityListProps) => {
                         <div className="flex items-center">
                             {getLabelForItem(getIDforItem(entity["@id"], rocrate["@graph"]))}
                         </div>
-                        <a
-                            href={getContextLink(rocrate, entity["@type"])}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-blue-600 hover:underline"
-                        >
-                            {entity["@type"]}
-                        </a>
+                        <div className="flex items-center space-x-2">
+                            {Array.isArray(entity["@type"]) ? (
+                                entity["@type"].map((type: string, idx: number) => (
+                                    <a
+                                        key={idx}
+                                        href={getContextLink(rocrate, type)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded hover:underline"
+                                    >
+                                        {type}
+                                    </a>
+                                ))
+                            ) : (
+                                <a
+                                    href={getContextLink(rocrate, entity["@type"])}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded hover:underline"
+                                >
+                                    {entity["@type"]}
+                                </a>
+                            )}
+                        </div>
                     </li>
                 ))}
             </ul>

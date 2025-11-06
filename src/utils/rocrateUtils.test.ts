@@ -274,3 +274,56 @@ describe('getRoCrateSpecVersion', () => {
         expect(getRoCrateSpecVersion(arrayWithCustomProp)).toBe("https://w3id.org/ro/crate/1.2");
     });
 });
+describe('countTypesFromComponentTypes', () => {
+    it('counts single type per component', () => {
+        const components = [
+            { componentTypes: 'http://schema.org/Dataset' },
+            { componentTypes: 'http://schema.org/Image' },
+            { componentTypes: 'http://schema.org/Dataset' }
+        ];
+        expect(countTypesFromComponentTypes(components)).toEqual({ Dataset: 2, Image: 1 });
+    });
+
+    it('counts multiple types per component', () => {
+        const components = [
+            { componentTypes: ['http://schema.org/Dataset', 'http://schema.org/Image'] },
+            { componentTypes: 'http://schema.org/Image' }
+        ];
+        expect(countTypesFromComponentTypes(components)).toEqual({ Dataset: 1, Image: 2 });
+    });
+
+    it('handles mixed string/array input', () => {
+        const components = [
+            { componentTypes: 'http://schema.org/Dataset' },
+            { componentTypes: ['http://schema.org/Image', 'http://example.org/types#MyType'] }
+        ];
+        expect(countTypesFromComponentTypes(components)).toEqual({ Dataset: 1, Image: 1, MyType: 1 });
+    });
+
+    it('handles empty input array', () => {
+        expect(countTypesFromComponentTypes([])).toEqual({});
+    });
+
+    it('handles object input', () => {
+        const componentsObj = {
+            a: { componentTypes: 'http://schema.org/Dataset' },
+            b: { componentTypes: ['http://schema.org/Image', 'http://example.org/types#MyType'] }
+        };
+        expect(countTypesFromComponentTypes(componentsObj)).toEqual({ Dataset: 1, Image: 1, MyType: 1 });
+    });
+
+    it('ignores components without componentTypes', () => {
+        const components = [
+            { name: 'foo' },
+            { componentTypes: 'http://schema.org/Dataset' }
+        ];
+        expect(countTypesFromComponentTypes(components)).toEqual({ Dataset: 1 });
+    });
+
+    it('ignores non-string types', () => {
+        const components = [
+            { componentTypes: [null, undefined, 123, 'http://schema.org/Dataset'] }
+        ];
+        expect(countTypesFromComponentTypes(components)).toEqual({ Dataset: 1 });
+    });
+});

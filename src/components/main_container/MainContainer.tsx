@@ -1,8 +1,10 @@
 //this file will contain all other components that wil lbe used in this project
 import * as React from "react";
+import MapView from "./MapView";
 import { useState, useEffect } from "react";
-import { FaFolderOpen } from "react-icons/fa";
+import { FaFolderOpen, FaMapMarkerAlt, FaPersonBooth } from "react-icons/fa";
 import { AiOutlineCluster } from "react-icons/ai";
+// Ensure the icons are used correctly as JSX components
 import DatasetOverview from "./DatasetOverview";
 import SearchComponent from "./SearchComponent";
 import SearchDropdown from "./SearchDropdown";
@@ -11,7 +13,8 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
-import { extractRootData, getRoCrateSpecVersion } from "../../utils/rocrateUtils";
+import PersonOverview from "./PersonOverview";
+import { extractRootData, getRoCrateSpecVersion, getRenderableComponents, componentTypes, countTypesFromComponentTypes } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
@@ -55,7 +58,13 @@ function extractData(rocrate: any) {
     return data;
 }
 
+/**
+ * Main React component for displaying and interacting with RO-Crate data.
+ *
+ * Manages loading, parsing, and stateful navigation of a RO-Crate JSON structure, including metadata extraction, entity selection, search, and dashboard views. Renders appropriate UI components based on user interaction and URL hash state.
+ */
 export default function MainContainer(props: any) {
+    const [isMaximized, setIsMaximized] = useState(false);
     console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
@@ -66,6 +75,10 @@ export default function MainContainer(props: any) {
     const [showSearchResults, setShowSearchResults] = useState(false);
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [entityCounts, setEntityCounts] = useState<{ [key: string]: number }>({});
+    const [renderableComponents, setRenderableComponents] = useState<{ [key: string]: boolean }>({});
+    const [typeCounts, setTypeCounts] = useState<{ [key: string]: number }>({});
+
+    // temporary variable that contains all the different renderable components and URI's to test
 
     const handleSelect = (id: string) => {
         setRocrateID(id);
@@ -110,6 +123,7 @@ export default function MainContainer(props: any) {
     //when rocrate is updated extract the data from it
     useEffect(() => {
         setData(extractData(rocrate));
+        setRenderableComponents(getRenderableComponents(rocrate, componentTypes));
     }, [rocrate]);
 
     useEffect(() => {
@@ -137,6 +151,8 @@ export default function MainContainer(props: any) {
                 }
             });
             setEntityCounts(counts);
+            setTypeCounts(countTypesFromComponentTypes(rocrate,componentTypes));
+            console.log("Type counts:", typeCounts);
         }
     }, [rocrate, loading]);
 
@@ -167,63 +183,102 @@ export default function MainContainer(props: any) {
         <>
             <br/>
             <div className="flex flex-col sm:flex-row justify-between items-center">
-                <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
-                <SearchComponent
-                    rocrate={rocrate}
-                    onSelect={handleSelect}
-                    onFocus={handleSearchFocus}
-                    onResults={handleSearchResults}
-                    onClose={handleSearchClose}
-                />
+            <Breadcrumb rocrate={rocrate} rocrateID={rocrateID} reponame={reponame} onSelect={handleSelect} />
+            <SearchComponent
+            rocrate={rocrate}
+            onSelect={handleSelect}
+            onFocus={handleSearchFocus}
+            onResults={handleSearchResults}
+            onClose={handleSearchClose}
+            />
             </div>
             {showSearchResults ? (
-                <SearchDropdown rocrate={{ "@graph": searchResults }} onSelect={handleSelect} />
+            <SearchDropdown rocrate={{ "@graph": searchResults }} onSelect={handleSelect} />
             ) : (
-                <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
             <br />
-            
             {rocrateID === "" ? (
-                <>
-                <div className="flex flex-col sm:flex-row mt-3">
-                    <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen/></span>
-                            <p className="text-lg font-semibold mr-1">Dataset entities</p>
-                            {Object.keys(entityCounts)
-                                .filter((type) => type === "Dataset" || type === "File")
-                                .map((type, index) => (
-                                    <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                                        {type}: {entityCounts[type]}
-                                    </span>
-                                ))}
-                        </div>
-                    </div>
-                    <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
-                        <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
-                            <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster/></span>
-                            <p className="text-lg font-semibold mr-1">Contextual entities</p>
-                            <div className="flex flex-wrap">
-                                {Object.keys(entityCounts)
-                                    .filter((type) => type !== "Dataset" && type !== "File")
-                                    .map((type, index) => (
-                                        <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-1 px-2.5 py-0.5 rounded">
-                                            {type}: {entityCounts[type]}
-                                        </span>
-                                    ))}
-                            </div>
-                        </div>
+            <>
+            <div className="flex flex-col sm:flex-row mt-3">
+            <div className="w-full sm:w-1/2 sm:mb-0 sm:mr-1" onClick={() => setRocrateID("view_dataset_overview")}>
+            <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                <span className="text-4xl text-gray-500 mr-2"><FaFolderOpen /></span>
+                <p className="text-lg font-semibold mr-1">Dataset entities</p>
+                {Object.keys(entityCounts)
+                .filter((type) => type === "Dataset" || type === "File")
+                .map((type, index) => (
+                <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                {type}: {entityCounts[type]}
+                </span>
+                ))}
+            </div>
+            </div>
+            <div className="w-full sm:w-1/2 sm:ml-1" onClick={() => setRocrateID("Contextual_entities")}>
+            <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                <span className="text-4xl text-gray-500 mr-2"><AiOutlineCluster /></span>
+                <p className="text-lg font-semibold mr-1">Contextual entities</p>
+                <div className="flex flex-wrap">
+                {Object.keys(entityCounts)
+                .filter((type) => type !== "Dataset" && type !== "File")
+                .map((type, index) => (
+                <span key={index} className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 mb-1 px-2.5 py-0.5 rounded">
+                    {type}: {entityCounts[type]}
+                </span>
+                ))}
+                </div>
+            </div>
+            </div>
+            </div>
+            <div className="flex flex-wrap -mx-1 mt-4">
+            {Object.keys(renderableComponents).map((componentKey, index) => (
+                <div
+                key={index}
+                className="w-full sm:w-1/2 px-1 mb-2 cursor-pointer"
+                onClick={() => setRocrateID(componentKey)}
+                >
+                <div className="bg-white shadow-md rounded-lg p-6 flex items-center hover:bg-gradient-to-l hover:from-[#4CAF9C] hover:to-white h-full">
+                    {componentTypes[componentKey]?.icon && (
+                    <span className="text-4xl text-gray-500 mr-2">
+                        {(() => {
+                        switch (componentTypes[componentKey]?.icon) {
+                            case "FaMapMarkerAlt":
+                            return <FaMapMarkerAlt />;
+                            case "FaPersonBooth":
+                            return <FaPersonBooth />;
+                            default:
+                            return null;
+                        }
+                        })()}
+                    </span>
+                    )}
+                    <div className="flex flex-col">
+                    <p className="text-lg font-semibold">
+                        {componentTypes[componentKey]?.overview_name || componentKey}
+                    </p>
+                    {typeCounts[componentKey] && (
+                        <span className="bg-blue-100 text-blue-800 text-xs font-semibold mt-1 px-2.5 py-0.5 rounded">
+                        Count: {typeCounts[componentKey]}
+                        </span>
+                    )}
                     </div>
                 </div>
-                <MainDashboardCrate data={data} rocrate={rocrate} />
-                </>
-                
+                </div>
+            ))}
+            </div>
+            <MainDashboardCrate data={data} rocrate={rocrate} rocrateID={rocrateID} />
+            </>
+            
             ) : rocrateID === "Contextual_entities" ? (
-                <EntityList rocrate={rocrate} onSelect={handleSelect} />
+            <EntityList rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : rocrateID === "view_dataset_overview" ? (
-                <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
+            <DatasetOverview rocrate={rocrate} onSelect={handleSelect} />
+            ) : rocrateID === "map_entity" ? (
+            <MapView rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            ) : rocrateID === "person_entity" ? (
+            <PersonOverview rocrate={rocrate} onSelect={handleSelect} rocrateID={rocrateID} />
             ) : (
-                <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
+            <RocrateIDViewer rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
             
         </>
