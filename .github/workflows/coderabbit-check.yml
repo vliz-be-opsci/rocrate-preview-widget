@@ -12,8 +12,8 @@ jobs:
       - name: Check for CodeRabbit Review
         run: |
           # Fetch PR comments and check if @coderabbitai has posted a review summary
-          COMMENTS=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.author.login == "coderabbitai") | .body')
-          if [[ ! "$COMMENTS" =~ "review summary" ]]; then  # Adjust regex for CodeRabbit's typical summary marker
+          COMMENTS=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.author.login == "coderabbitai" or .author.login == "coderabbitai[bot]" or .author.login == "coderabbit[bot]") | .body')
+          if [[ ! "$COMMENTS" =~ "Review summary" && ! "$COMMENTS" =~ "review summary" && ! "$COMMENTS" =~ "Review Summary" && ! "$COMMENTS" =~ "Review details" ]]; then
             echo "❌ CodeRabbit review required! Comment '@coderabbitai review' to trigger."
             exit 1
           fi
