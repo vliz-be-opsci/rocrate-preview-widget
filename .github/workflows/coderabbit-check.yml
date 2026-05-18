@@ -8,6 +8,7 @@ jobs:
   check-review:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Check for CodeRabbit Review
         run: |
           # Fetch PR comments and check if @coderabbitai has posted a review summary
