@@ -1,0 +1,7 @@
+
+> webcomponent-rocrate-test@0.1.0 serve /app
+> vite preview
+
+  ➜  Local:   http://localhost:4173/
+  ➜  Network: use --host to expose
+ ELIFECYCLE  Command failed.
