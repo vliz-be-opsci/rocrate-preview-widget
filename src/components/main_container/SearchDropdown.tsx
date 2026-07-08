@@ -7,7 +7,7 @@ interface SearchDropdownProps {
     onSelect: (id: string) => void;
 }
 
-export default function SearchDropdown({ results, onSelect }: SearchDropdownProps) {
+export default function SearchDropdown({ results = [], onSelect }: SearchDropdownProps) {
     const getIcon = (type: any) => {
         const types = Array.isArray(type) ? type : [type];
         if (types.includes("Dataset")) {
