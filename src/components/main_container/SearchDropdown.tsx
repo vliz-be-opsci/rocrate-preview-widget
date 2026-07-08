@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FaFolder, FaFile, FaUser, FaInfoCircle, FaTag, FaFolderOpen, FaDownload } from "react-icons/fa";
 import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
+import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 
 interface SearchDropdownProps {
     rocrate: any;
@@ -94,16 +95,16 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                                         </span>
                                     </div>
                                     {downloadUrl && (
-                                        <a
-                                            href={downloadUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                downloadFileFromCrate(downloadUrl, item["@id"], item["name"], item["encodingFormat"]);
+                                            }}
                                             className="text-[#4CAF9C] hover:text-[#3e8e7e] transition-colors p-1.5 rounded-full hover:bg-teal-50 flex-shrink-0"
                                             title="Download File"
                                         >
                                             <FaDownload size={14} />
-                                        </a>
+                                        </button>
                                     )}
                                 </div>
                                 <h4 

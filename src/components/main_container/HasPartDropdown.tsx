@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaFolder, FaFile, FaFolderOpen, FaLink, FaTag, FaUser, FaInfoCircle, FaDownload } from "react-icons/fa";
 import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
+import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
@@ -80,16 +81,16 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                                         </span>
                                     </div>
                                     {downloadUrl && (
-                                        <a
-                                            href={downloadUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                downloadFileFromCrate(downloadUrl, part["@id"], partItem?.name, partItem?.encodingFormat);
+                                            }}
                                             className="text-[#4CAF9C] hover:text-[#3e8e7e] transition-colors p-1.5 rounded-full hover:bg-teal-50 flex-shrink-0"
                                             title="Download File"
                                         >
                                             <FaDownload size={14} />
-                                        </a>
+                                        </button>
                                     )}
                                 </div>
                                 <h4 
