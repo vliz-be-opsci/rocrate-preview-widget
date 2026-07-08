@@ -163,15 +163,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             console.log("Download URL found:", downloadURL);
             console.log("Filename:", filename);
             const encodingFormat = item["encodingFormat"] || "text/plain";
-            // downloadFileFromCrate(downloadURL, filename, encodingFormat)
-            //     .then(() => {
-            //         console.log("File downloaded successfully");
-            //     })
-            //     .catch((error) => {
-            //         console.error(`Error downloading file ${filename}:`, error);
-            //     });
-
-            // this whole process does not work https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#attributes
 
             element.href = downloadURL;
             element.download = filename;
