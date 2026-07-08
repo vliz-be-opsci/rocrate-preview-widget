@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaFolder, FaFile, FaFolderOpen, FaLink, FaTag, FaUser, FaInfoCircle } from "react-icons/fa";
+import { FaFolder, FaFile, FaFolderOpen, FaLink, FaTag, FaUser, FaInfoCircle, FaDownload } from "react-icons/fa";
 import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
@@ -12,17 +12,6 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
 
     const getIcon = (part: any, isHovered: boolean) => {
         const partItem = rocrate["@graph"].find((g: any) => g["@id"] === part["@id"]);
-
-        if (partItem && partItem.downloadUrl) {
-            return (
-                <div className="flex items-center mr-2 flex-shrink-0">
-                    {isHovered ? <FaFolderOpen className="text-[#4CAF9C] text-lg mr-1" /> : <FaFolder className="text-[#4CAF9C] text-lg mr-1" />}
-                    <a href={partItem.downloadUrl} target="_blank" rel="noopener noreferrer">
-                        <FaLink className="text-blue-500 text-sm" />
-                    </a>
-                </div>
-            );
-        }
 
         if (partItem && hasType(partItem, "File") && partItem["@id"].startsWith("#")) {
             return (
@@ -72,6 +61,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                     const typeLabel = Array.isArray(type) ? type.join(", ") : type;
                     const label = getLabelForItem(getIDforItem(part["@id"], rocrate["@graph"]));
                     const partCount = getPartCount(part["@id"]);
+                    const downloadUrl = partItem && (partItem.downloadUrl || partItem.downloadURL);
 
                     return (
                         <div
@@ -82,11 +72,25 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                             className="bg-white border border-gray-200 hover:border-[#4CAF9C] rounded-lg p-4 shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 flex flex-col justify-between"
                         >
                             <div>
-                                <div className="flex items-center mb-2">
-                                    {getIcon(part, hoveredIndex === index)}
-                                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                        {typeLabel}
-                                    </span>
+                                <div className="flex justify-between items-start mb-2">
+                                    <div className="flex items-center">
+                                        {getIcon(part, hoveredIndex === index)}
+                                        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                            {typeLabel}
+                                        </span>
+                                    </div>
+                                    {downloadUrl && (
+                                        <a
+                                            href={downloadUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="text-[#4CAF9C] hover:text-[#3e8e7e] transition-colors p-1.5 rounded-full hover:bg-teal-50 flex-shrink-0"
+                                            title="Download File"
+                                        >
+                                            <FaDownload size={14} />
+                                        </a>
+                                    )}
                                 </div>
                                 <h4 
                                     className="font-bold text-gray-800 text-sm mb-2 break-all line-clamp-2" 
