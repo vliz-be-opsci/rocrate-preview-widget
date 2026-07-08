@@ -177,7 +177,7 @@ export default function MainContainer(props: any) {
                 />
             </div>
             {showSearchResults ? (
-                <SearchDropdown results={searchResults} onSelect={handleSelect} />
+                <SearchDropdown rocrate={{ "@graph": searchResults }} onSelect={handleSelect} />
             ) : (
                 <HasPartDropdown rocrate={rocrate} rocrateID={rocrateID} onSelect={handleSelect} />
             )}
