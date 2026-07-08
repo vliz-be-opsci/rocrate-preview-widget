@@ -2,6 +2,7 @@ export interface SearchMatch {
     item: any;
     matchedPath: string;
     matchedValue: string;
+    query: string;
 }
 
 export function searchRoCrate(rocrate: any, query: string): SearchMatch[] {
@@ -55,7 +56,8 @@ export function searchRoCrate(rocrate: any, query: string): SearchMatch[] {
                 results.push({
                     item,
                     matchedPath: res.path,
-                    matchedValue: res.value
+                    matchedValue: res.value,
+                    query: cleanQuery
                 });
                 break;
             }

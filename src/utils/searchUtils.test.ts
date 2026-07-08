@@ -31,6 +31,7 @@ describe('searchRoCrate', () => {
         expect(results[0].item["@id"]).toBe("./");
         expect(results[0].matchedPath).toBe("@type");
         expect(results[0].matchedValue).toBe("Dataset");
+        expect(results[0].query).toBe("dataset");
     });
 
     test('finds nested matches up to depth 3', () => {
@@ -39,6 +40,7 @@ describe('searchRoCrate', () => {
         expect(results[0].item["@id"]).toBe("file.txt");
         expect(results[0].matchedPath).toBe("author ➔ contactPoint ➔ email");
         expect(results[0].matchedValue).toBe("author@example.com");
+        expect(results[0].query).toBe("author@example.com");
     });
 
     test('ignores @context metadata key', () => {
