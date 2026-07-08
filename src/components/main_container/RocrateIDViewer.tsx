@@ -29,7 +29,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
-    console.log("RocrateIDViewer item", item);
 
     useEffect(() => {
         setError(null); // Reset error state when rocrateID changes
@@ -82,7 +81,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
         //first check if it is really needed to fetch the file content
         if (item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
-            console.log("Download URL found:", item["downloadUrl"]);
             setLoading(true);
             const downloadURL = item["downloadUrl"];
 
@@ -98,7 +96,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         if (item && hasType(item, "File")) {
             setLoading(true);
             const fullPath = getFullPath(rocrate, rocrateID);
-            console.log(fullPath);
             if (fullPath) {
                 fetchFileContent(fullPath, false).catch(() => {
                     // If fetching by full path fails, try fetching by rocrateID
@@ -146,8 +143,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     const downloadFile = () => {
         const element = document.createElement("a");
-        console.log("Download file clicked");
-        console.log("item", item);
         // first check if the item has a downloadUrl and use it if available
         if (item && item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
             const downloadURL = item["downloadUrl"];
@@ -160,12 +155,9 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
                     filename = "download.txt";
                 }
             }
-            console.log("Download URL found:", downloadURL);
-            console.log("Filename:", filename);
             const encodingFormat = item["encodingFormat"] || "text/plain";
             // downloadFileFromCrate(downloadURL, filename, encodingFormat)
             //     .then(() => {
-            //         console.log("File downloaded successfully");
             //     })
             //     .catch((error) => {
             //         console.error(`Error downloading file ${filename}:`, error);
@@ -176,7 +168,6 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
             element.href = downloadURL;
             element.download = filename;
             document.body.appendChild(element);
-            console.log(element);
             element.click();
             document.body.removeChild(element);
             return;

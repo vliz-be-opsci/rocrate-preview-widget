@@ -15,21 +15,15 @@ import { extractRootData, getRoCrateSpecVersion } from "../../utils/rocrateUtils
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
-    console.log(rocrate);
 
     if (typeof rocrate !== "object" || rocrate === null) {
-        console.log("rocrate is not an object:", rocrate);
-        console.log(rocrate["@graph"]);
     }
     let data: { [key: string]: any } = {};
     data["rocrate_context"] = rocrate["@context"];
-    console.log("Rocrate context:", data["rocrate_context"]);
     let rootDataEntity = extractRootData(rocrate["@graph"]);
-    console.log("Root Data Entity:", rootDataEntity);
     //loop over the @graph array and check if the @id is "./" or "ro-crate-metadata.json"
     for (let i in rocrate["@graph"]) {
         let item = rocrate["@graph"][i];
-        console.log(item);
         if (item["@id"] == rootDataEntity["@id"] ) {
             //check if the following attributs exists ["author", "datePublished", "description", "keywords", "license"] if not set them to None
             data["rocrate_author"] = item["publisher"] || item["creator"] || item["author"] || "None";
@@ -51,12 +45,10 @@ function extractData(rocrate: any) {
         }
         i = i + 1;
     }
-    console.log(data);
     return data;
 }
 
 export default function MainContainer(props: any) {
-    console.log(props.container.attributes);
     const preRocrate = props.container.attributes.rocrate.value ||{};
     const [rocrate, setRocrate] = useState(props.container.attributes.rocrate.value ||{});
     const [reponame, setRepoName] = useState(props.container.attributes.rocrate_name.value ||"");
@@ -93,11 +85,9 @@ export default function MainContainer(props: any) {
         }else{
             //check if preRocrate is an object and if it is set it to rocrate
             if (preRocrate !== null) {
-                console.log("Setting preRocrate as rocrate:", preRocrate);
                 //parse the text to json
                 try {
                     const parsedRocrate = JSON.parse(preRocrate);
-                    console.log("Parsed rocrate:", parsedRocrate);
                     setRocrate(parsedRocrate);
                 } catch (error) {
                     console.error("Error parsing preRocrate:", error);

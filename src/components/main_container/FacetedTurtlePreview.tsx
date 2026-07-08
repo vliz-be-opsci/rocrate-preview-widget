@@ -43,7 +43,6 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
         pausedRef.current = false;
 
         const fetchTriples = async () => {
-            console.log("Fetching triples...");
             const engine = new QueryEngine();
             const query = `
                 SELECT ?subject ?predicate ?object
@@ -102,9 +101,6 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
         };
 
         const fetchFacets = async () => {
-            console.log("Fetching facets...");
-            console.log("Store size:", storeRef.current.size);
-            console.log("Store content:", storeRef.current.getQuads(null, null, null, null));
             const engine = new QueryEngine();
             const query = `
                 SELECT ?predicate (COUNT(DISTINCT ?object) AS ?valueCount)
@@ -118,24 +114,17 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
                 const result = await engine.queryBindings(query, {
                     sources: [{ type: 'rdfjsSource', value: storeRef.current }]
                 });
-                console.log("Facets result:", result);
 
                 const facetsData: any[] = [];
                 result.on('data', (binding: any) => {
-                    console.log("Facets binding:", binding);
-                    console.log("Facets valueCount:", binding.get('valueCount'));
-                    console.log("Facets predicate:", binding.get('predicate'));
-                    console.log(binding);
                     facetsData.push({
                         predicate: binding.get('predicate').value,
                         valueCount: binding.get('valueCount').value
                     });
-                    console.log("Final facets data:", facetsData);
                     setFacets(facetsData);
                 });
 
                 result.on('end', () => {
-                    console.log("Facets data:", facetsData);
                     setFacets(facetsData);
                 });
 
@@ -192,7 +181,6 @@ const fetchPrefix = async (facet: string) => {
     try {
         const response = await fetch(`https://prefix.cc/?q=${facet}`, { method: 'HEAD', redirect: 'follow' });
         const redirectedUrl = response.url;
-        console.log('Redirected URL:', redirectedUrl);
         const prefix = redirectedUrl.split('/').pop() || facet;
         if (!prefix.includes(":")) {
             return facet;
@@ -251,7 +239,6 @@ const handleSearch = async () => {
     `;
 
     try {
-        console.log("Facet query:", query);
         const result = await engine.queryBindings(query, {
             sources: [{ type: 'rdfjsSource', value: storeRef.current }]
         });

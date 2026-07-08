@@ -16,7 +16,6 @@ export const getLabelValue = (node) => {
     //skos:prefLabel | http://www.w3.org/2004/02/skos/core#prefLabel | prefLabel
     //rdfs:label | http://www.w3.org/2000/01/rdf-schema#label | label
     //rdfs:comment | http://www.w3.org/2000/01/rdf-schema#comment | comment
-    console.log(node);
     let labelValue = node['@id'];
     
     //first check if keys exist
@@ -46,7 +45,6 @@ export const getLabelValue = (node) => {
 //function to get specific item with @id from graph
 export const getItemFromGraph = (graph, id) => {
     let item = null;
-    console.log(graph);
 
     //check first if graph is an array
     const isGraphArray = Array.isArray(graph);

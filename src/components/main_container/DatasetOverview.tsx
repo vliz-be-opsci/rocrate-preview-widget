@@ -20,7 +20,6 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Extract datasets from the RO-Crate metadata
-  console.log('RO-Crate Metadata:', rocrate);
   const datasets = Object.values(rocrate["@graph"]).filter((item: any) => {
       const type = item['@type'];
       return Array.isArray(type) ? type.includes('Dataset') : type === 'Dataset';
@@ -28,7 +27,6 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
       ...dataset,
       '@type': Array.isArray(dataset['@type']) ? dataset['@type'] : [dataset['@type']],
   }));
-  console.log('Datasets:', datasets);
 
   // Create datasetInfo object
   const datasetInfo = datasets.reduce((info: Record<string, any>, dataset: any) => {
@@ -56,7 +54,6 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
       return info;
   }, {});
 
-  console.log('Dataset Info:', datasetInfo);
 
   // Compute soloFiles: @id's that do not have a parent and are not part of any datasets
   const allIds = new Set(rocrate["@graph"].map((item: any) => item["@id"]));
@@ -74,7 +71,6 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
           return type.includes("File");
       });
 
-  console.log('Solo Files:', soloFiles);
 
   // Filter datasets where isChild is false
   const parentDatasets = Object.entries(datasetInfo)
@@ -84,7 +80,6 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
       ...info,
     }));
 
-  console.log('Parent Datasets:', parentDatasets);
 
   return (
       <div>

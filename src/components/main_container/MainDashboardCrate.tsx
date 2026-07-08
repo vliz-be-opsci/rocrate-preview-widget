@@ -7,8 +7,6 @@ interface MainDashboardCrateProps {
 }
 
 const MainDashboardCrate = ({ data, rocrate }: MainDashboardCrateProps) => {
-    console.log("MainDashboardCrate data", data);
-    console.log("MainDashboardCrate rocrate", rocrate);
 const renderDataItem = (label: string, value: any, Icon: any) => {
     const displayValue = (typeof value === 'object' && value !== null) ? (value.name || value["@id"] || JSON.stringify(value)) : value;
     const isMissing = displayValue === "None" || !displayValue;
