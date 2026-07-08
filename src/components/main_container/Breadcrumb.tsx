@@ -80,7 +80,7 @@ export default function Breadcrumb({ rocrate, rocrateID, reponame, onSelect }: B
     return (
         <>
             <nav aria-label="Breadcrumb" className="flex">
-                <ol className="flex overflow-hidden rounded-lg border border-gray-200 text-gray-600">
+                <ol className="flex overflow-hidden rounded-lg border border-gray-300 shadow-sm text-gray-600">
                     <li className="flex items-center">
                         <a
                             href="#"
