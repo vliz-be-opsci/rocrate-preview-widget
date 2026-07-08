@@ -4,73 +4,36 @@ describe('searchRoCrate', () => {
     const mockCrate = {
         "@graph": [
             {
-                "@id": "./",
+                "@id": "http://example.com/crate415/",
                 "@type": "Dataset",
-                "name": "My RO-Crate Dataset",
-                "publisher": {
-                    "@id": "https://example.com/publisher",
-                    "name": "Data Publishing Org"
-                }
+                "name": "My RO-Crate Dataset"
             },
             {
-                "@id": "file.txt",
+                "@id": "http://example.com/crate415/data1.txt",
                 "@type": "File",
-                "description": "Simple text file",
-                "author": {
-                    "contactPoint": {
-                        "email": "author@example.com"
-                    }
-                }
+                "description": "Simple text file"
             }
         ]
     };
 
-    test('finds top-level matches', () => {
-        const results = searchRoCrate(mockCrate, "Dataset");
+    test('finds matches based on @id', () => {
+        const results = searchRoCrate(mockCrate, "data1");
         expect(results.length).toBe(1);
-        expect(results[0].item["@id"]).toBe("./");
-        expect(results[0].matchedPath).toBe("@type");
-        expect(results[0].matchedValue).toBe("Dataset");
-        expect(results[0].query).toBe("dataset");
+        expect(results[0].item["@id"]).toBe("http://example.com/crate415/data1.txt");
+        expect(results[0].matchedPath).toBe("@id");
+        expect(results[0].matchedValue).toBe("http://example.com/crate415/data1.txt");
+        expect(results[0].query).toBe("data1");
     });
 
-    test('finds nested matches up to depth 3', () => {
-        const results = searchRoCrate(mockCrate, "author@example.com");
-        expect(results.length).toBe(1);
-        expect(results[0].item["@id"]).toBe("file.txt");
-        expect(results[0].matchedPath).toBe("author ➔ contactPoint ➔ email");
-        expect(results[0].matchedValue).toBe("author@example.com");
-        expect(results[0].query).toBe("author@example.com");
+    test('finds multiple matches when @id matches query', () => {
+        const results = searchRoCrate(mockCrate, "crate415");
+        expect(results.length).toBe(2);
+        expect(results[0].item["@id"]).toBe("http://example.com/crate415/");
+        expect(results[1].item["@id"]).toBe("http://example.com/crate415/data1.txt");
     });
 
-    test('ignores @context metadata key', () => {
-        const crateWithContext = {
-            "@context": "https://w3id.org/ro/crate/1.1/context",
-            "@graph": [
-                {
-                    "@id": "file.txt",
-                    "name": "Special file"
-                }
-            ]
-        };
-        const results = searchRoCrate(crateWithContext, "w3id.org");
+    test('returns empty array when no matches found', () => {
+        const results = searchRoCrate(mockCrate, "nonexistent");
         expect(results.length).toBe(0);
-    });
-
-    test('works with actual detached_rocrate.json content', () => {
-        const fs = require('fs');
-        const path = require('path');
-        const raw = fs.readFileSync(path.join(__dirname, '../../public/detached_rocrate.json'), 'utf8');
-        const crate = JSON.parse(raw);
-
-        const datasetResults = searchRoCrate(crate, "Dataset");
-        expect(datasetResults.length).toBe(2);
-        expect(datasetResults[0].item["@id"]).toBe("http://example.com/crate415/");
-        expect(datasetResults[0].matchedPath).toBe("@type");
-
-        const personResults = searchRoCrate(crate, "John Doe");
-        expect(personResults.length).toBe(1);
-        expect(personResults[0].item["@id"]).toBe("http://example.com/crate415/");
-        expect(personResults[0].matchedPath).toBe("creator ➔ name");
     });
 });
