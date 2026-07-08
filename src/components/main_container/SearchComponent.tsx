@@ -1,45 +1,42 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
-import SearchDropdown from "./SearchDropdown";
+import { FaSearch, FaTimes } from "react-icons/fa";
+import { searchRoCrate, SearchMatch } from "../../utils/searchUtils";
 
 interface SearchComponentProps {
     rocrate: any;
     onSelect: (id: string) => void;
     onClose: () => void;
     onFocus: () => void;
-    onResults: (results: any[]) => void;
+    onResults: (results: SearchMatch[]) => void;
 }
 
-export default function SearchComponent({ rocrate, onSelect, onFocus, onResults }: SearchComponentProps) {
+export default function SearchComponent({ rocrate, onSelect, onFocus, onResults, onClose }: SearchComponentProps) {
     const [searchText, setSearchText] = useState("");
-    const [results, setResults] = useState<any[]>([]);
     const searchRef = useRef<HTMLDivElement>(null);
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const text = event.target.value;
         setSearchText(text);
         if (text) {
-            const filteredResults = rocrate["@graph"].filter((item: any) =>
-                item["@id"].includes(text)
-            );
-            setResults(filteredResults);
-            onResults(filteredResults);
+            const matchedResults = searchRoCrate(rocrate, text);
+            onResults(matchedResults);
         } else {
-            setResults([]);
             onResults([]);
         }
     };
 
-    const handleSelect = (id: string) => {
-        onSelect(id);
+    const handleClear = () => {
         setSearchText("");
-        setResults([]);
+        onResults([]);
+        onClose();
     };
 
     const handleClickOutside = (event: MouseEvent) => {
         if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
             setSearchText("");
-            setResults([]);
+            onResults([]);
+            onClose();
         }
     };
 
@@ -51,15 +48,28 @@ export default function SearchComponent({ rocrate, onSelect, onFocus, onResults 
     }, []);
 
     return (
-        <div ref={searchRef}>
-            <input
-                type="text"
-                value={searchText}
-                onChange={handleSearch}
-                onFocus={onFocus}
-                placeholder="Search by @id"
-                className="border p-2 rounded"
-            />
+        <div ref={searchRef} className="relative w-full sm:w-80">
+            <div className="relative flex items-center">
+                <span className="absolute left-3 text-gray-400">
+                    <FaSearch size={14} />
+                </span>
+                <input
+                    type="text"
+                    value={searchText}
+                    onChange={handleSearch}
+                    onFocus={onFocus}
+                    placeholder="Search entities, properties..."
+                    className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-[#4CAF9C] focus:ring-1 focus:ring-[#4CAF9C] transition-all text-sm"
+                />
+                {searchText && (
+                    <button
+                        onClick={handleClear}
+                        className="absolute right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                        <FaTimes size={14} />
+                    </button>
+                )}
+            </div>
         </div>
     );
 }
