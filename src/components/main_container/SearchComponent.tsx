@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState, useRef, useEffect } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import { searchRoCrate } from "../../utils/searchUtils";
 
 interface SearchComponentProps {
     rocrate: any;
@@ -17,12 +18,9 @@ export default function SearchComponent({ rocrate, onSelect, onFocus, onResults,
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const text = event.target.value;
         setSearchText(text);
-        if (text && rocrate && Array.isArray(rocrate["@graph"])) {
-            // Reverted back to the original @id-based filter logic (made case-insensitive for better UX)
-            const filteredResults = rocrate["@graph"].filter((item: any) =>
-                item && item["@id"] && String(item["@id"]).toLowerCase().includes(text.toLowerCase().trim())
-            );
-            onResults(filteredResults);
+        if (text) {
+            const matchedResults = searchRoCrate(rocrate, text);
+            onResults(matchedResults);
         } else {
             onResults([]);
         }
@@ -65,7 +63,7 @@ export default function SearchComponent({ rocrate, onSelect, onFocus, onResults,
                     value={searchText}
                     onChange={handleSearch}
                     onFocus={onFocus}
-                    placeholder="Search by @id..."
+                    placeholder="Search entities, properties..."
                     className="w-full pl-9 pr-8 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-[#4CAF9C] focus:ring-1 focus:ring-[#4CAF9C] transition-all text-sm"
                 />
                 {searchText && (

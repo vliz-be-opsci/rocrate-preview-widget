@@ -35,6 +35,25 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
         return <FaTag className="text-purple-500 text-lg mr-2 flex-shrink-0" />;
     };
 
+    const highlightText = (text: string, highlight: string) => {
+        if (!highlight || !highlight.trim()) return <span>{text}</span>;
+        const regex = new RegExp(`(${highlight.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+        const parts = text.split(regex);
+        return (
+            <span>
+                {parts.map((part, index) => 
+                    regex.test(part) ? (
+                        <mark key={index} className="bg-yellow-100 text-teal-800 font-semibold rounded px-0.5">
+                            {part}
+                        </mark>
+                    ) : (
+                        part
+                    )
+                )}
+            </span>
+        );
+    };
+
     const items = rocrate && Array.isArray(rocrate["@graph"]) ? rocrate["@graph"] : [];
 
     if (items.length === 0) {
@@ -80,6 +99,18 @@ export default function SearchDropdown({ rocrate, onSelect }: SearchDropdownProp
                                 </h4>
                             </div>
                             <div className="mt-auto border-t border-gray-100 pt-2">
+                                {item._matchedPath ? (
+                                    <>
+                                        <div className="flex items-center mb-1">
+                                            <span className="text-[10px] font-semibold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full border border-teal-100 break-all">
+                                                {item._matchedPath}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-gray-600 italic break-all line-clamp-2 mb-2">
+                                            {highlightText(item._matchedValue, item._matchedQuery)}
+                                        </p>
+                                    </>
+                                ) : null}
                                 <p className="text-xs text-gray-600 font-medium break-all">
                                     Name: {label}
                                 </p>
