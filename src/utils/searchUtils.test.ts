@@ -56,4 +56,21 @@ describe('searchRoCrate', () => {
         const results = searchRoCrate(crateWithContext, "w3id.org");
         expect(results.length).toBe(0);
     });
+
+    test('works with actual detached_rocrate.json content', () => {
+        const fs = require('fs');
+        const path = require('path');
+        const raw = fs.readFileSync(path.join(__dirname, '../../public/detached_rocrate.json'), 'utf8');
+        const crate = JSON.parse(raw);
+
+        const datasetResults = searchRoCrate(crate, "Dataset");
+        expect(datasetResults.length).toBe(2);
+        expect(datasetResults[0].item["@id"]).toBe("http://example.com/crate415/");
+        expect(datasetResults[0].matchedPath).toBe("@type");
+
+        const personResults = searchRoCrate(crate, "John Doe");
+        expect(personResults.length).toBe(1);
+        expect(personResults[0].item["@id"]).toBe("http://example.com/crate415/");
+        expect(personResults[0].matchedPath).toBe("creator ➔ name");
+    });
 });

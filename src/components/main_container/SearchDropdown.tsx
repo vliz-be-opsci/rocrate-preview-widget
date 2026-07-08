@@ -51,7 +51,7 @@ export default function SearchDropdown({ results = [], onSelect }: SearchDropdow
     }
 
     return (
-        <div className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 mt-2">
+        <div className="search-results-container w-full bg-gray-50 border border-gray-200 rounded-xl p-4 mt-2">
             <h3 className="text-sm font-semibold text-gray-600 mb-3 px-1">
                 Search Results ({results.length})
             </h3>

@@ -34,6 +34,11 @@ export default function SearchComponent({ rocrate, onSelect, onFocus, onResults,
 
     const handleClickOutside = (event: MouseEvent) => {
         if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+            // Guard against closing immediately when clicking on a search results card
+            const isClickOnResults = (event.target as HTMLElement).closest('.search-results-container');
+            if (isClickOnResults) {
+                return;
+            }
             setSearchText("");
             onResults([]);
             onClose();
