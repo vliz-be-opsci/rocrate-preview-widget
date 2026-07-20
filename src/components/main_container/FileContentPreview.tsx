@@ -146,8 +146,8 @@ export const FileContentPreview = ({ fileContent, mimeType, fileUrl }: FileConte
                             <div className="flex items-center">
                                 <FaExclamationTriangle className="text-yellow-800 mr-1" />
                                 <div>
-                                    <p className="text-yellow-800"> There is not yet a file viewer implementation for {mimeType}. If you want to view the file, please download it.</p>
-                                    <p className="text-yellow-800"> If you want a preview for this filetype , make an issue at <b><a href="https://github.com/vliz-be-opsci/rocrate-preview-widget/issues">vliz-be-opsci</a></b></p>
+                                    <p className="text-yellow-800">This file type cannot be viewed within this page. To view the file, please download it.</p>
+                                    <p className="text-yellow-800">If you want a preview for this file type, you can create an issue on <b><a href="https://github.com/vliz-be-opsci/rocrate-preview-widget/issues">vliz-be-opsci</a></b></p>
                                 </div>
                             </div>
                         </div>
