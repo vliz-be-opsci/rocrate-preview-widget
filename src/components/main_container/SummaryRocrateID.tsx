@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm'
 import { getFullPath } from "./Breadcrumb";
-import { hasType } from "../../utils/rocrateUtils";
+import { hasType, getPartId } from "../../utils/rocrateUtils";
 
 
 interface SummaryRocrateIDProps {
@@ -18,20 +18,16 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
     const item = rocrate["@graph"].find((item: any) => item["@id"] === rocrateID);
 
     useEffect(() => {
-        const fetchReadmeContent = async (url: string, rocrateidsearch: boolean, rocrateID?: string) => {
+        const fetchReadmeContent = async (url: string, rocrateidsearch: boolean, originalRocrateID?: string) => {
             try {
-            let response;
-            if (rocrateidsearch && rocrateID) {
-                response = await fetch(rocrateID);
-            } else {
-                response = await fetch(url);
-            }
+            const response = await fetch(url);
             if (!response.ok) {
                 if (rocrateidsearch) {
-                    throw new Error("Failed to fetch README content. Please check if the path is correct in the RO-Crate metadata.");
-                    return;
+                    throw new Error("Readme not found");
                 }
-                fetchReadmeContent(url, true, rocrateID);
+                if (originalRocrateID) {
+                    fetchReadmeContent(originalRocrateID, true);
+                }
             } else {
                 const text = await response.text();
                 setReadmeContent(text);
@@ -43,15 +39,19 @@ const SummaryRocrateID = ({ rocrate, rocrateID }: SummaryRocrateIDProps) => {
             }
         };
 
-        if (item && hasType(item, "Dataset") && item.hasPart) {
-            const readmeItem = item.hasPart.find((part: any) => part["@id"].toLowerCase().includes("readme"));
+        if (item && hasType(item, "Dataset") && item.hasPart && Array.isArray(item.hasPart)) {
+            const readmeItem = item.hasPart.find((part: any) => {
+                const partId = getPartId(part);
+                return partId && partId.toLowerCase().includes("readme");
+            });
             if (readmeItem) {
+                const readmeId = getPartId(readmeItem);
                 setLoading(true);
-                const fullPath = getFullPath(rocrate, readmeItem["@id"]);
+                const fullPath = getFullPath(rocrate, readmeId);
                 if (fullPath) {
-                    fetchReadmeContent(fullPath, false, readmeItem["@id"]);
+                    fetchReadmeContent(fullPath, false, readmeId);
                 } else {
-                    fetchReadmeContent(readmeItem["@id"], true);
+                    fetchReadmeContent(readmeId, true);
                 }
             }
         }

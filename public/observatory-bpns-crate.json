@@ -1,0 +1,682 @@
+{
+    "@context": "https://w3id.org/ro/crate/1.2/context",
+    "@graph": [
+        {
+            "@id": "./",
+            "@type": [
+                "https://schema.org/Dataset",
+                "Dataset"
+            ],
+            "datePublished": "2023-06-23",
+            "dct:description": "Here you will find all the data collected from the log sheets produced by the European Marine Omics Biodiversity Observation Network (EMO BON) observatory BPNS for their water, sediment sampling activities. Log sheets are filled by the observatory during and after their sampling event, and every few months they are harvested, curated, and processed. The samples are sent for genomics processing: the raw genomic data can be found in ENA under PRJEB51688. The download from this metadata record is a copy of the sampling logsheets for all events for which sequences are available in ENA. It also includes a link to the website where you can find additional information and browse all other data.",
+            "dct:relation": {
+                "@id": "https://github.com/emo-bon/sequencing-data"
+            },
+            "dct:temporal": {
+                "@id": "urn:temporal:coverage"
+            },
+            "dct:title": "Marine genomic sampling (meta)data from EMO BON Observation Network - station BPNS, Belgium",
+            "description": "The sampling activity logsheets for this given observatory",
+            "hasPart": [
+                "all-triples.ttl",
+                "logsheets/transformed/sediment_measured.csv",
+                "logsheets/transformed/sediment_observatory.csv",
+                "logsheets/transformed/sediment_sampling.csv",
+                "logsheets/transformed/water_measured.csv",
+                "logsheets/transformed/water_observatory.csv",
+                "logsheets/transformed/water_sampling.csv"
+            ],
+            "http://www.w3.org/ns/dcat#contactPoint": {
+                "@id": "https://orcid.org/0000-0002-8559-3508"
+            },
+            "https://schema.org/contributor": [
+                {
+                    "@id": "https://orcid.org/0000-0002-5662-5689"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-8781-7915"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0001-9191-9140"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-5400-2891"
+                }
+            ],
+            "https://schema.org/description": "Here you will find all the data collected from the log sheets produced by the European Marine Omics Biodiversity Observation Network (EMO BON) observatory BPNS for their water, sediment sampling activities. Log sheets are filled by the observatory during and after their sampling event, and every few months they are harvested, curated, and processed. The samples are sent for genomics processing: the raw genomic data can be found in ENA under PRJEB51688. The download from this metadata record is a copy of the sampling logsheets for all events for which sequences are available in ENA. It also includes a link to the website where you can find additional information and browse all other data.",
+            "https://schema.org/identifier": {
+                "@id": "https://data.emobon.embrc.eu/observatory-bpns-crate"
+            },
+            "https://schema.org/instrument": [
+                "Bucket",
+                "Niskin Bottle",
+                "Van Veen Grab"
+            ],
+            "https://schema.org/keywords": [
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_01000023"
+                },
+                {
+                    "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=1874687"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00002042"
+                },
+                {
+                    "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=256318"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00002150"
+                },
+                "metagenome",
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_02000049"
+                },
+                {
+                    "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=412755"
+                },
+                {
+                    "@id": "https://inspire.ec.europa.eu/metadata-codelist/TopicCategory/biota"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00003065"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_01000044"
+                },
+                "marine sediment metagenome",
+                "Metazoa",
+                "marine plankton metagenome",
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00002149"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00000447"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_03000034"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_01000024"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00002007"
+                },
+                {
+                    "@id": "http://purl.obolibrary.org/obo/ENVO_00001999"
+                },
+                {
+                    "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=33208"
+                }
+            ],
+            "https://schema.org/measurementTechnique": [
+                "CTD",
+                "LLG PH METER 5",
+                "SEAL QuAAtro analysis system + Skalar AutoAnalyser system",
+                "HPLC",
+                "Hanna Instruments 991001 ph meter"
+            ],
+            "https://schema.org/name": "Marine genomic sampling (meta)data from EMO BON Observation Network - station BPNS, Belgium",
+            "https://schema.org/provider": [
+                {
+                    "@id": "https://edmo.seadatanet.org/report/432"
+                },
+                {
+                    "@id": "https://edmo.seadatanet.org/report/422"
+                },
+                {
+                    "@id": "https://edmo.seadatanet.org/report/449"
+                },
+                {
+                    "@id": "https://edmo.seadatanet.org/report/2248"
+                }
+            ],
+            "https://schema.org/publisher": {
+                "@id": "https://edmo.seadatanet.org/report/5669"
+            },
+            "https://schema.org/spatialCoverage": {
+                "@id": "urn:spatial:BPNS"
+            },
+            "https://schema.org/temporalCoverage": "2021-07-01/2021-12-23",
+            "https://schema.org/variableMeasured": [
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P01/current/CNDCZZ01/"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRAZZXX/"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600278/"
+                },
+                {
+                    "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSurface"
+                },
+                {
+                    "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSurface"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SIGT/"
+                },
+                {
+                    "@id": "https://vocab.lternet.edu/vocab/vocab/index.php?tema=530"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600274/"
+                },
+                {
+                    "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSampledepth"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SLCA/"
+                },
+                {
+                    "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSampledepth"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRIZZXX/"
+                },
+                {
+                    "@id": "http://vocab.nerc.ac.uk/collection/S27/current/CS002896/"
+                }
+            ],
+            "keywords": [
+                "sample",
+                "measurement",
+                "biodiversity",
+                "long-term-changes",
+                "marine-environment",
+                "genetics",
+                "sediment-samples",
+                "water-samples",
+                "benthic-communities"
+            ],
+            "license": {
+                "@id": "https://creativecommons.org/licenses/by/4.0/"
+            },
+            "maintainer": [
+                {
+                    "@id": "https://www.embrc.eu/emo-bon"
+                },
+                {
+                    "@id": "https://orcid.org/0000-0002-8559-3508"
+                }
+            ],
+            "name": "observatory-bpns-crate",
+            "provider": [
+                {
+                    "@id": "https://www.vliz.be"
+                },
+                {
+                    "@id": "https://www.ugent.be"
+                }
+            ],
+            "publisher": {
+                "@id": "https://www.embrc.eu/emo-bon"
+            },
+            "temporalCoverage": "2021-07-01/2024-10-22"
+        },
+        {
+            "@id": "all-triples.ttl",
+            "@type": "File",
+            "encodingFormat": "text/turtle"
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00000447",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00000447"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00001999",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00001999"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00002007",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00002007"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00002042",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00002042"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00002149",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00002149"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00002150",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00002150"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_00003065",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_00003065"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_01000023",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_01000023"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_01000024",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_01000024"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_01000044",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_01000044"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_02000049",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_02000049"
+            }
+        },
+        {
+            "@id": "http://purl.obolibrary.org/obo/ENVO_03000034",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "http://purl.obolibrary.org/obo/ENVO_03000034"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P01/current/CNDCZZ01/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/CNDCZZ01/"
+            },
+            "https://schema.org/name": "conduc",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/CNDCZZ01/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/"
+            },
+            "https://schema.org/name": "diss_oxygen",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRAZZXX/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRAZZXX/"
+            },
+            "https://schema.org/name": "nitrate",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRAZZXX/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRIZZXX/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRIZZXX/"
+            },
+            "https://schema.org/name": "nitrite",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P01/current/NTRIZZXX/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SIGT/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SIGT/"
+            },
+            "https://schema.org/name": "density",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SIGT/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SLCA/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SLCA/"
+            },
+            "https://schema.org/name": "silicate",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/P02/current/SLCA/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600274/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600274/"
+            },
+            "https://schema.org/name": "pressure",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600274/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600278/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600278/"
+            },
+            "https://schema.org/name": "ph",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S06/current/S0600278/"
+            }
+        },
+        {
+            "@id": "http://vocab.nerc.ac.uk/collection/S27/current/CS002896/",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S27/current/CS002896/"
+            },
+            "https://schema.org/name": "chlorophyll",
+            "https://schema.org/propertyID": {
+                "@id": "http://vocab.nerc.ac.uk/collection/S27/current/CS002896/"
+            }
+        },
+        {
+            "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSampledepth",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSampledepth"
+            },
+            "https://schema.org/name": "sea_subsurf_salinity",
+            "https://schema.org/propertyID": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSampledepth"
+            }
+        },
+        {
+            "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSurface",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSurface"
+            },
+            "https://schema.org/name": "sea_surf_salinity",
+            "https://schema.org/propertyID": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#salSurface"
+            }
+        },
+        {
+            "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSampledepth",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSampledepth"
+            },
+            "https://schema.org/name": "sea_subsurf_temp",
+            "https://schema.org/propertyID": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSampledepth"
+            }
+        },
+        {
+            "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSurface",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSurface"
+            },
+            "https://schema.org/name": "sea_surf_temp",
+            "https://schema.org/propertyID": {
+                "@id": "https://data.emobon.embrc.eu/ns/observableproperty_vocab#tempSurface"
+            }
+        },
+        {
+            "@id": "https://edmo.seadatanet.org/report/2248",
+            "@type": "https://schema.org/Organization",
+            "https://schema.org/identifier": {
+                "@id": "https://edmo.seadatanet.org/report/2248"
+            },
+            "https://schema.org/name": "Katholieke Universiteit Leuven"
+        },
+        {
+            "@id": "https://edmo.seadatanet.org/report/422",
+            "@type": "https://schema.org/Organization",
+            "https://schema.org/identifier": {
+                "@id": "https://edmo.seadatanet.org/report/422"
+            },
+            "https://schema.org/name": "Flanders Marine Institute (VLIZ)"
+        },
+        {
+            "@id": "https://edmo.seadatanet.org/report/432",
+            "@type": "https://schema.org/Organization",
+            "https://schema.org/identifier": {
+                "@id": "https://edmo.seadatanet.org/report/432"
+            },
+            "https://schema.org/name": "Royal Belgian Institute of Natural Sciences"
+        },
+        {
+            "@id": "https://edmo.seadatanet.org/report/449",
+            "@type": "https://schema.org/Organization",
+            "https://schema.org/identifier": {
+                "@id": "https://edmo.seadatanet.org/report/449"
+            },
+            "https://schema.org/name": "Ghent University"
+        },
+        {
+            "@id": "https://edmo.seadatanet.org/report/5669",
+            "@type": "https://schema.org/Organization",
+            "https://schema.org/identifier": {
+                "@id": "https://edmo.seadatanet.org/report/5669"
+            },
+            "https://schema.org/name": "European Marine Biological Resource Centre (EMBRC-ERIC)"
+        },
+        {
+            "@id": "https://inspire.ec.europa.eu/metadata-codelist/TopicCategory/biota",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "https://inspire.ec.europa.eu/metadata-codelist/TopicCategory/biota"
+            },
+            "https://schema.org/name": "Biota"
+        },
+        {
+            "@id": "https://orcid.org/0000-0001-9191-9140",
+            "@type": "https://schema.org/Person",
+            "https://schema.org/identifier": {
+                "@id": "https://orcid.org/0000-0001-9191-9140"
+            },
+            "https://schema.org/name": "Rune Lagaisse"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-5400-2891",
+            "@type": "https://schema.org/Person",
+            "https://schema.org/identifier": {
+                "@id": "https://orcid.org/0000-0002-5400-2891"
+            },
+            "https://schema.org/name": "Sander Delacauw"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-5662-5689",
+            "@type": "https://schema.org/Person",
+            "https://schema.org/identifier": {
+                "@id": "https://orcid.org/0000-0002-5662-5689"
+            },
+            "https://schema.org/name": "Lara Macheriotou"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-8559-3508",
+            "@type": "Person",
+            "affiliation": {
+                "@id": "https://www.vliz.be"
+            },
+            "email": "klaas.deneudt@vliz.be",
+            "name": "Klaas Deneudt"
+        },
+        {
+            "@id": "https://orcid.org/0000-0002-8781-7915",
+            "@type": "https://schema.org/Person",
+            "https://schema.org/identifier": {
+                "@id": "https://orcid.org/0000-0002-8781-7915"
+            },
+            "https://schema.org/name": "Jonas Mortelmans"
+        },
+        {
+            "@id": "https://vocab.lternet.edu/vocab/vocab/index.php?tema=530",
+            "@type": "https://schema.org/PropertyValue",
+            "https://schema.org/identifier": {
+                "@id": "https://vocab.lternet.edu/vocab/vocab/index.php?tema=530"
+            },
+            "https://schema.org/name": "sediment_temp",
+            "https://schema.org/propertyID": {
+                "@id": "https://vocab.lternet.edu/vocab/vocab/index.php?tema=530"
+            }
+        },
+        {
+            "@id": "https://www.embrc.eu/emo-bon",
+            "@type": "Project",
+            "email": "emobon@embrc.eu",
+            "name": "EMO BON"
+        },
+        {
+            "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=1874687",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=1874687"
+            },
+            "https://schema.org/name": "marine plankton metagenome"
+        },
+        {
+            "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=256318",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=256318"
+            },
+            "https://schema.org/name": "metagenome"
+        },
+        {
+            "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=33208",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=33208"
+            },
+            "https://schema.org/name": "Metazoa"
+        },
+        {
+            "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=412755",
+            "@type": "https://schema.org/DefinedTerm",
+            "https://schema.org/identifier": {
+                "@id": "https://www.ncbi.nlm.nih.gov/taxonomy/browser/wwwtax.cgi?id=412755"
+            },
+            "https://schema.org/name": "marine sediment metagenome"
+        },
+        {
+            "@id": "https://www.ugent.be",
+            "@type": "Organization",
+            "name": "Ghent University"
+        },
+        {
+            "@id": "https://www.vliz.be",
+            "@type": "Organization",
+            "name": "Flanders Marine Institute"
+        },
+        {
+            "@id": "logsheets/transformed/sediment_measured.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "logsheets/transformed/sediment_observatory.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "logsheets/transformed/sediment_sampling.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "logsheets/transformed/water_measured.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "logsheets/transformed/water_observatory.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "logsheets/transformed/water_sampling.csv",
+            "@type": "File",
+            "encodingFormat": "text/csv"
+        },
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": [
+                "https://schema.org/CreativeWork",
+                "CreativeWork"
+            ],
+            "about": "./",
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.2"
+            }
+        },
+        {
+            "@id": "urn:spatial:BPNS",
+            "@type": "https://schema.org/Place",
+            "dct:isPartOf": [
+                {
+                    "@id": "http://marineregions.org/mrgid/26567"
+                },
+                {
+                    "@id": "http://marineregions.org/mrgid/1912"
+                },
+                {
+                    "@id": "http://marineregions.org/mrgid/2350"
+                }
+            ],
+            "geosparql:hasGeometry": {
+                "@id": "urn:spatial:BPNS:geometry"
+            },
+            "https://schema.org/geo": {
+                "@id": "urn:spatial:BPNS:geometry"
+            },
+            "https://schema.org/name": "BPNS"
+        },
+        {
+            "@id": "urn:spatial:BPNS:geometry",
+            "@type": "Geometry",
+            "asWKT": "<http://www.opengis.net/def/crs/OGC/1.3/CRS84> Point (51.433331 2.808331)"
+        },
+        {
+            "@id": "urn:temporal:coverage",
+            "@type": "dct:PeriodOfTime",
+            "http://www.w3.org/ns/dcat#endDate": {
+                "@type": "http://www.w3.org/2001/XMLSchema#date",
+                "@value": "2021-12-23"
+            },
+            "http://www.w3.org/ns/dcat#startDate": {
+                "@type": "http://www.w3.org/2001/XMLSchema#date",
+                "@value": "2021-07-01"
+            }
+        }
+    ]
+}

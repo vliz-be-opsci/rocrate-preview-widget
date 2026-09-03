@@ -7,7 +7,7 @@ import FileContentPreview from "./FileContentPreview";
 import SummaryRocrateID from "./SummaryRocrateID";
 import ReferencedByList from "./ReferencedByList"; // Import the new component
 import { isBinaryFile } from "../../utils/fileTypeUtils";
-import { hasType } from "../../utils/rocrateUtils";
+import { hasType, getPartId, getFileDownloadUrl } from "../../utils/rocrateUtils";
 
 interface RocrateIDViewerProps {
     rocrate: any;
@@ -81,16 +81,11 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
         };
 
         //first check if it is really needed to fetch the file content
-        if (item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
-            console.log("Download URL found:", item["downloadUrl"]);
+        const downloadURL = item ? getFileDownloadUrl(item) : undefined;
+        if (downloadURL) {
+            console.log("Download URL found:", downloadURL);
             setLoading(true);
-            const downloadURL = item["downloadUrl"];
-
-            if (downloadURL) {
-                setInfo("File is available for download at: " + downloadURL);
-            } else {
-                setError("file is not available for download");
-            }
+            setInfo("File is available for download at: " + downloadURL);
             setLoading(false);
             return;
         }
@@ -145,9 +140,10 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
     };
 
     const downloadFile = () => {
-        // first check if the item has a downloadUrl and use it if available
-        if (item && item["downloadUrl"] !== undefined && item["downloadUrl"] !== null) {
-            downloadFileFromCrate(item["downloadUrl"], rocrateID, item["name"], item["encodingFormat"]);
+        // first check if the item has a downloadUrl or contentUrl and use it if available
+        const directDownloadUrl = item ? getFileDownloadUrl(item) : undefined;
+        if (directDownloadUrl) {
+            downloadFileFromCrate(directDownloadUrl, rocrateID, item?.["name"], item?.["encodingFormat"]);
             return;
         }
         // if no downloadUrl is available, use the file content and mimeType to create a Blob
@@ -169,7 +165,10 @@ const RocrateIDViewer = ({ rocrate, rocrateID, onSelect }: RocrateIDViewerProps)
 
     return (
         <div id="accordion-collapse" data-accordion="collapse">
-            {item && (item.description || (hasType(item, "Dataset") && item.hasPart && item.hasPart.some((part: any) => part["@id"].toLowerCase().includes("readme")))) && (
+            {item && (item.description || (hasType(item, "Dataset") && item.hasPart && Array.isArray(item.hasPart) && item.hasPart.some((part: any) => {
+                const pId = getPartId(part);
+                return pId && pId.toLowerCase().includes("readme");
+            }))) && (
                 <>
                     <h2 id="accordion-collapse-heading-summary">
                         <button

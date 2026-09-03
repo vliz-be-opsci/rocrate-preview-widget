@@ -24,8 +24,8 @@ export const getLabelValue = (node) => {
         labelValue = node['dct:title'] || node['http://purl.org/dc/terms/title'] || node["title"];
         return labelValue;
     }
-    if (node['schema:name'] || node['http://schema.org/name'] || node["name"]) {
-        labelValue = node['schema:name'] || node['http://schema.org/name'] || node["name"];
+    if (node['schema:name'] || node['https://schema.org/name'] || node['http://schema.org/name'] || node["name"]) {
+        labelValue = node['schema:name'] || node['https://schema.org/name'] || node['http://schema.org/name'] || node["name"];
         return labelValue;
     }
     if (node['skos:prefLabel'] || node['http://www.w3.org/2004/02/skos/core#prefLabel'] || node["prefLabel"]) {

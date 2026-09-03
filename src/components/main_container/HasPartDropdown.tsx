@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaFolder, FaFile, FaFolderOpen, FaLink, FaTag, FaUser, FaInfoCircle, FaDownload } from "react-icons/fa";
-import { getLabelForItem, getIDforItem, hasType } from "../../utils/rocrateUtils";
+import { getLabelForItem, getIDforItem, hasType, getPartId, getFileDownloadUrl } from "../../utils/rocrateUtils";
 import { downloadFileFromCrate } from "../../utils/downloadWithFilename";
 
 const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocrateID: string; onSelect: (id: string) => void }) => {
@@ -12,7 +12,8 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
     }
 
     const getIcon = (part: any, isHovered: boolean) => {
-        const partItem = rocrate["@graph"].find((g: any) => g["@id"] === part["@id"]);
+        const partId = getPartId(part);
+        const partItem = rocrate["@graph"].find((g: any) => g["@id"] === partId);
 
         if (partItem && hasType(partItem, "File") && partItem["@id"].startsWith("#")) {
             return (
@@ -57,17 +58,18 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {item.hasPart.map((part: any, index: number) => {
-                    const partItem = rocrate["@graph"].find((g: any) => g["@id"] === part["@id"]);
+                    const partId = getPartId(part);
+                    const partItem = rocrate["@graph"].find((g: any) => g["@id"] === partId);
                     const type = (partItem && partItem["@type"]) || "Unknown";
                     const typeLabel = Array.isArray(type) ? type.join(", ") : type;
-                    const label = getLabelForItem(getIDforItem(part["@id"], rocrate["@graph"]));
-                    const partCount = getPartCount(part["@id"]);
-                    const downloadUrl = partItem && (partItem.downloadUrl || partItem.downloadURL);
+                    const label = getLabelForItem(getIDforItem(partId, rocrate["@graph"]));
+                    const partCount = getPartCount(partId);
+                    const downloadUrl = getFileDownloadUrl(partItem);
 
                     return (
                         <div
                             key={index}
-                            onClick={() => onSelect(part["@id"])}
+                            onClick={() => onSelect(partId)}
                             onMouseEnter={() => setHoveredIndex(index)}
                             onMouseLeave={() => setHoveredIndex(null)}
                             className="bg-white border border-gray-200 hover:border-[#4CAF9C] rounded-lg p-4 shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 flex flex-col justify-between"
@@ -84,7 +86,7 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                downloadFileFromCrate(downloadUrl, part["@id"], partItem?.name, partItem?.encodingFormat);
+                                                downloadFileFromCrate(downloadUrl, partId, partItem?.name, partItem?.encodingFormat);
                                             }}
                                             className="text-[#4CAF9C] hover:text-[#3e8e7e] transition-colors p-1.5 rounded-full hover:bg-teal-50 flex-shrink-0"
                                             title="Download File"
@@ -95,9 +97,9 @@ const HasPartDropdown = ({ rocrate, rocrateID, onSelect }: { rocrate: any; rocra
                                 </div>
                                 <h4 
                                     className="font-bold text-gray-800 text-sm mb-2 break-all line-clamp-2" 
-                                    title={part["@id"]}
+                                    title={partId}
                                 >
-                                    {part["@id"]}
+                                    {partId}
                                 </h4>
                             </div>
                             <div className="mt-auto border-t border-gray-100 pt-2 flex justify-between items-center">

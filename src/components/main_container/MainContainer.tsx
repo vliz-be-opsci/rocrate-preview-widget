@@ -11,46 +11,62 @@ import RocrateIDViewer from "./RocrateIDViewer";
 import HasPartDropdown from "./HasPartDropdown";
 import EntityList from "./EntityList";
 import MainDashboardCrate from "./MainDashboardCrate";
-import { extractRootData, getRoCrateSpecVersion } from "../../utils/rocrateUtils";
+import { extractRootData, getRoCrateSpecVersion, detectRoCrateVersion, hasType } from "../../utils/rocrateUtils";
 
 //function to extract data from the rocrate.json file
 function extractData(rocrate: any) {
     console.log(rocrate);
 
-    if (typeof rocrate !== "object" || rocrate === null) {
-        console.log("rocrate is not an object:", rocrate);
-        console.log(rocrate["@graph"]);
+    if (typeof rocrate !== "object" || rocrate === null || !Array.isArray(rocrate["@graph"])) {
+        return {};
     }
+    const versionInfo = detectRoCrateVersion(rocrate);
+
     let data: { [key: string]: any } = {};
     data["rocrate_context"] = rocrate["@context"];
-    console.log("Rocrate context:", data["rocrate_context"]);
-    let rootDataEntity = extractRootData(rocrate["@graph"]);
-    console.log("Root Data Entity:", rootDataEntity);
-    //loop over the @graph array and check if the @id is "./" or "ro-crate-metadata.json"
-    for (let i in rocrate["@graph"]) {
-        let item = rocrate["@graph"][i];
-        console.log(item);
-        if (item["@id"] == rootDataEntity["@id"] ) {
-            //check if the following attributs exists ["author", "datePublished", "description", "keywords", "license"] if not set them to None
-            data["rocrate_author"] = item["publisher"] || item["creator"] || item["author"] || "None";
-            data["rocrate_datePublished"] = item["datePublished"] || "None";
-            data["rocrate_description"] = item["description"] || "None";
-            data["rocrate_keywords"] = item["keywords"] || "None";
-            data["rocrate_license"] = item["license"] || "None";
-        }
+    data["rocrate_spec_version"] = versionInfo.specVersion;
+    data["rocrate_spec_uri"] = versionInfo.specUri;
+    data["rocrate_is_detached"] = versionInfo.isDetached;
+    data["rocrate_isprofile"] = versionInfo.isProfileCrate;
+    data["rocrate_profiles"] = versionInfo.profiles;
 
-        if (typeof item["@id"] === "string" && item["@id"].endsWith("ro-crate-metadata.json")) {
-            // Check if @type is a string or array and if it is an array check if Profile is in the array
-            if (Array.isArray(item["@type"])) {
-            data["rocrate_isprofile"] = item["@type"].includes("Profile");
-            } else {
-            data["rocrate_isprofile"] = item["@type"] === "Profile";
-            }
-            // Get the @id of conformsTo using the utility function that handles both object and array
-            data["rocrate_conformsto"] = getRoCrateSpecVersion(item["conformsTo"]);
-        }
-        i = i + 1;
+    let rootDataEntity: any = null;
+    try {
+        rootDataEntity = extractRootData(rocrate["@graph"]);
+    } catch (e) {
+        console.warn("Could not extract root data entity:", e);
     }
+
+    if (rootDataEntity) {
+        data["rocrate_author"] = rootDataEntity["publisher"] || rootDataEntity["creator"] || rootDataEntity["author"] || "None";
+        data["rocrate_datePublished"] = rootDataEntity["datePublished"] || "None";
+        data["rocrate_description"] = rootDataEntity["description"] || rootDataEntity["dct:description"] || rootDataEntity["https://schema.org/description"] || "None";
+        data["rocrate_keywords"] = rootDataEntity["keywords"] || rootDataEntity["https://schema.org/keywords"] || "None";
+        data["rocrate_license"] = rootDataEntity["license"] || "None";
+
+        if (!data["rocrate_conformsto"]) {
+            data["rocrate_conformsto"] = getRoCrateSpecVersion(rootDataEntity["conformsTo"]);
+        }
+    }
+
+    for (const item of rocrate["@graph"]) {
+        if (!item || typeof item !== "object") continue;
+        if (typeof item["@id"] === "string" && (item["@id"].endsWith("ro-crate-metadata.json") || item["@id"] === "ro-crate-metadata.jsonld")) {
+            if (Array.isArray(item["@type"])) {
+                data["rocrate_isprofile"] = item["@type"].includes("Profile") || data["rocrate_isprofile"];
+            } else {
+                data["rocrate_isprofile"] = item["@type"] === "Profile" || data["rocrate_isprofile"];
+            }
+            if (!data["rocrate_conformsto"]) {
+                data["rocrate_conformsto"] = getRoCrateSpecVersion(item["conformsTo"]);
+            }
+        }
+    }
+
+    if (!data["rocrate_conformsto"] && versionInfo.specUri) {
+        data["rocrate_conformsto"] = versionInfo.specUri;
+    }
+
     console.log(data);
     return data;
 }
@@ -129,11 +145,19 @@ export default function MainContainer(props: any) {
     
             const counts: { [key: string]: number } = {};
             rocrate["@graph"].forEach((item: any) => {
-                const type = Array.isArray(item["@type"]) ? item["@type"][0] : item["@type"];
-                if (counts[type]) {
-                    counts[type]++;
+                if (!item || typeof item !== "object") return;
+                if (hasType(item, "Dataset")) {
+                    counts["Dataset"] = (counts["Dataset"] || 0) + 1;
+                } else if (hasType(item, "File")) {
+                    counts["File"] = (counts["File"] || 0) + 1;
                 } else {
-                    counts[type] = 1;
+                    const rawType = Array.isArray(item["@type"]) ? item["@type"][0] : item["@type"];
+                    const type = typeof rawType === "string" && rawType.startsWith("https://schema.org/")
+                        ? rawType.replace("https://schema.org/", "")
+                        : typeof rawType === "string" && rawType.startsWith("http://schema.org/")
+                        ? rawType.replace("http://schema.org/", "")
+                        : rawType || "Unknown";
+                    counts[type] = (counts[type] || 0) + 1;
                 }
             });
             setEntityCounts(counts);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaFolder, FaFolderOpen, FaFile, FaExclamationCircle } from 'react-icons/fa';
 import { useState } from 'react';
+import { hasType, getPartId } from '../../utils/rocrateUtils';
 
 interface DatasetOverviewProps {
   rocrate: Record<string, any>;
@@ -22,8 +23,7 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
   // Extract datasets from the RO-Crate metadata
   console.log('RO-Crate Metadata:', rocrate);
   const datasets = Object.values(rocrate["@graph"]).filter((item: any) => {
-      const type = item['@type'];
-      return Array.isArray(type) ? type.includes('Dataset') : type === 'Dataset';
+      return hasType(item, 'Dataset');
   }).map((dataset: any) => ({
       ...dataset,
       '@type': Array.isArray(dataset['@type']) ? dataset['@type'] : [dataset['@type']],
@@ -33,19 +33,19 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
   // Create datasetInfo object
   const datasetInfo = datasets.reduce((info: Record<string, any>, dataset: any) => {
       const isChild = datasets.some((parent: any) =>
-          parent.hasPart?.some((part: any) => part['@id'] === dataset['@id'])
+          Array.isArray(parent.hasPart) && parent.hasPart.some((part: any) => getPartId(part) === dataset['@id'])
       );
-      const datasetCount = dataset.hasPart?.filter((part: any) => {
-          const partEntry = rocrate["@graph"].find((entry: any) => entry["@id"] === part["@id"]);
-          const type = Array.isArray(partEntry?.["@type"]) ? partEntry["@type"] : [partEntry?.["@type"]];
-          return type.includes('Dataset');
-      }).length || 0;
+      const datasetCount = Array.isArray(dataset.hasPart) ? dataset.hasPart.filter((part: any) => {
+          const partId = getPartId(part);
+          const partEntry = rocrate["@graph"].find((entry: any) => entry["@id"] === partId);
+          return hasType(partEntry, 'Dataset');
+      }).length : 0;
       
-      const fileCount = dataset.hasPart?.filter((part: any) => {
-          const partEntry = rocrate["@graph"].find((entry: any) => entry["@id"] === part["@id"]);
-          const type = Array.isArray(partEntry?.["@type"]) ? partEntry["@type"] : [partEntry?.["@type"]];
-          return type.includes('File');
-      }).length || 0;
+      const fileCount = Array.isArray(dataset.hasPart) ? dataset.hasPart.filter((part: any) => {
+          const partId = getPartId(part);
+          const partEntry = rocrate["@graph"].find((entry: any) => entry["@id"] === partId);
+          return hasType(partEntry, 'File');
+      }).length : 0;
   
       info[dataset['@id']] = {
           isChild,
@@ -63,15 +63,14 @@ const DatasetOverview: React.FC<DatasetOverviewProps> = ({ rocrate, onSelect }) 
   const datasetIds = new Set(datasets.map((dataset: any) => dataset["@id"]));
   const parentIds = new Set(
       datasets.flatMap((dataset: any) =>
-          dataset.hasPart?.map((part: any) => part["@id"]) || []
+          Array.isArray(dataset.hasPart) ? dataset.hasPart.map((part: any) => getPartId(part)) : []
       )
   );
   const soloFiles: string[] = Array.from(allIds)
       .filter((id): id is string => typeof id === 'string' && !datasetIds.has(id) && !parentIds.has(id))
       .filter((id) => {
           const entry = rocrate["@graph"].find((item: any) => item["@id"] === id);
-          const type = Array.isArray(entry?.["@type"]) ? entry["@type"] : [entry?.["@type"]];
-          return type.includes("File");
+          return hasType(entry, "File");
       });
 
   console.log('Solo Files:', soloFiles);

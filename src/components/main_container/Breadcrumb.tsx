@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaFolder, FaFile, FaHome } from "react-icons/fa";
 import { PiGraphFill } from "react-icons/pi";
+import { getPartId } from "../../utils/rocrateUtils";
 interface BreadcrumbProps {
     rocrate: any;
     rocrateID: string;
@@ -20,7 +21,9 @@ const findPath = (rocrate: any, targetID: string, currentPath: string[] = ["./"]
     }
 
     for (const part of currentItem.hasPart) {
-        const newPath = [...currentPath, part["@id"]];
+        const partId = getPartId(part);
+        if (!partId) continue;
+        const newPath = [...currentPath, partId];
         const result = findPath(rocrate, targetID, newPath);
         if (result) {
             return result;

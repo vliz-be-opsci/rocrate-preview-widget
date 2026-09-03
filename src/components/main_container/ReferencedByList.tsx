@@ -8,10 +8,14 @@ interface ReferencedByListProps {
 
 const ReferencedByList = ({ rocrate, rocrateID, onSelect }: ReferencedByListProps) => {
     const referencedBy = rocrate["@graph"].filter((item: any) => {
+        if (!item || typeof item !== "object") return false;
         return Object.values(item).some((value: any) => {
+            if (typeof value === "string") {
+                return value === rocrateID;
+            }
             if (typeof value === "object" && value !== null) {
                 if (Array.isArray(value)) {
-                    return value.some((v: any) => v["@id"] === rocrateID);
+                    return value.some((v: any) => (typeof v === "string" ? v : v?.["@id"]) === rocrateID);
                 } else {
                     return value["@id"] === rocrateID;
                 }
