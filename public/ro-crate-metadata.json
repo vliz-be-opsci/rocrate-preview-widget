@@ -107,7 +107,6 @@
                     "@id": "./data/imis6293.xml"
                 },
                 {
-                    "@id": "./data/package.json"
                 },
                 {
                     "@id": "./data/README.md"
@@ -372,9 +371,8 @@
             "@type": "File"
         },
         {
-            "@id": "./data/package.json",
+            "@id": "./data/sample.json",
             "@type": "File",
-            "label": "package.json"
         },
         {
             "@id": "./data/README.md",

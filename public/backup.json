@@ -109,7 +109,6 @@
                     "@id": "./data/imis6293.xml"
                 },
                 {
-                    "@id": "./data/package.json"
                 },
                 {
                     "@id": "./data/README.md"
@@ -213,7 +212,6 @@
             "label": "./",
             "author": "mpo",
             "author2b": {
-
                 "@id": "https://orcid.org/0000-0002-9648-6484"
             },
             "hasPart": [
@@ -381,9 +379,8 @@
             "label": "./data/imis6293.xml"
         },
         {
-            "@id": "./data/package.json",
+            "@id": "./data/sample.json",
             "@type": "File",
-            "label": "./data/package.json"
         },
         {
             "@id": "./data/README.md",
