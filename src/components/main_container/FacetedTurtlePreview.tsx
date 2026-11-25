@@ -116,7 +116,7 @@ const FacetedTurtlePreview = ({ fileContent, mimeType, fileUrl }: FacetedTurtleP
             `;
             try {
                 const result = await engine.queryBindings(query, {
-                    sources: [{ type: 'rdfjsSource', value: storeRef.current }]
+                    sources: [{ type: 'rdfjs', value: storeRef.current }]
                 });
                 console.log("Facets result:", result);
 
@@ -253,7 +253,7 @@ const handleSearch = async () => {
     try {
         console.log("Facet query:", query);
         const result = await engine.queryBindings(query, {
-            sources: [{ type: 'rdfjsSource', value: storeRef.current }]
+            sources: [{ type: 'rdfjs', value: storeRef.current }]
         });
 
         const newTriples: any[] = [];

@@ -12,7 +12,7 @@ export async function fetchFacetValues(storeRef: any, predicate: string): Promis
     `;
     console.log("Query:", query);
     const result = await engine.queryBindings(query, {
-        sources: [{ type: 'rdfjsSource', value: storeRef}]
+        sources: [{ type: 'rdfjs', value: storeRef }]
     });
     console.log("Facets result:", result);
 
